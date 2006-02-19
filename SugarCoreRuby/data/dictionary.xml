@@ -1,0 +1,72 @@
+<glycanDict xmlns="http://penguins.mooh.org/research/glycan-dict-0.1"
+			xmlns:dkfz="http://glycosciences.de" 
+			xmlns:ic="http://www.iupac.org/condensed">
+	<unit ic:name="Ara" >
+		<name type="alternate" value="dkfz:L-ARA-F" />
+		<property name="ringsize" value="5"/>
+		<property name="class" value="ic:Pent"/>
+	</unit>
+	<unit ic:name="Fuc" >
+		<name type="alternate" value="dkfz:L-FUC-P" />
+		<property name="ringsize" value="6"/>
+		<property name="class" value="ic:DeoxyHex"/>
+	</unit>
+	<unit ic:name="Gal" >
+		<name type="alternate" value="dkfz:D-GAL-P" />
+		<property name="ringsize" value="6"/>
+		<property name="class" value="ic:Hex"/>
+	</unit>
+	<unit ic:name="GalNAc">
+		<name type="alternate" value="dkfz:D-GALNAC-P" />
+		<property name="ringsize" value="6"/>
+		<property name="class" value="ic:HexNAc"/>
+	</unit>
+	<unit ic:name="GalN">
+		<name type="alternate" value="dkfz:D-GALN-P" />		
+		<property name="ringsize" value="6"/>
+		<property name="class" value="ic:HexN"/>
+	</unit>
+	<unit ic:name="Glc">
+		<name type="alternate" value="dkfz:D-GLC-P" />	
+		<property name="ringsize" value="6"/>
+		<property name="class" value="ic:Hex"/>
+	</unit>	
+	<unit ic:name="GlcA">
+		<name type="alternate" value="dkfz:D-GLCA-P" />
+		<property name="ringsize" value="6"/>
+		<property name="class" value="ic:HexA"/>
+	</unit>
+	<unit ic:name="GlcNAc">
+		<name type="alternate" value="dkfz:D-GLCNAC-P" />
+		<property name="ringsize" value="6"/>
+		<property name="class" value="ic:HexNAc"/>
+	</unit>
+	<unit ic:name="GlcN">
+		<name type="alternate" value="dkfz:D-GLCN-P" />		
+		<property name="ringsize" value="6"/>
+		<property name="class" value="ic:HexN"/>
+	</unit>
+	<unit ic:name="IdoA">
+		<name type="alternate" value="dkfz:L-IDO" />		
+	</unit>
+	<unit ic:name="Man">
+		<name type="alternate" value="dkfz:D-MAN-P" />
+		<property name="ringsize" value="6"/>
+		<property name="class" value="ic:Hex"/>
+	</unit>
+	<unit ic:name="NeuGc">
+		<name type="alternate" value="dkfz:D-NEU" />
+	</unit>
+	<unit ic:name="NeuAc">
+		<name type="alternate" value="dkfz:D-NEU" />
+	</unit>
+	<unit ic:name="Rha">
+		<name type="alternate" value="dkfz:L-MAN-P" />
+		<property name="ringsize" value="6"/>
+		<property name="class" value="ic:DeoxyHex"/>
+	</unit>	
+	<unit ic:name="Xyl">
+		<name type="alternate" value="dkfz:D-XYL" />
+		<property name="class" value="ic:Pent"/>
+	</unit>
+</glycanDict>

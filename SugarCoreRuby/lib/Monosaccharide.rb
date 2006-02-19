@@ -2,12 +2,17 @@
 require 'DebugLog'
 require 'Linkage'
 
+require 'rexml/document'
+include REXML
+
 class Monosaccharide
     include DebugLog
 
 	LINKAGE_ANOMER = 'linkage_anomer'
 	LINKAGE_FIRST_POS = 'linkage_first_pos'
 	LINKAGE_SECOND_POS = 'linkage_second_pos'
+
+	MONO_DATA = XPath.match(Document.new( File.new("data/dictionary.xml") ), "/glycanDict")
     
     attr_reader :name
     
@@ -16,6 +21,7 @@ class Monosaccharide
         @name = name
         @children = {}
         @ring_positions = {}
+        @alternate_name = {}
         initialize_from_data()
     end
     
@@ -41,6 +47,10 @@ class Monosaccharide
         @children[linkage] = mono
         return mono
     end
+
+	def alternate_name(namespace)
+		return @alternate_name[namespace]
+	end
 
     def children
         newarray = @children.sort { |a,b|
@@ -109,7 +119,18 @@ class Monosaccharide
     
     def initialize_from_data
         info "Initialising "+self.name()
-        
+
+		mono_data_node = XPath.first(MONO_DATA, "./unit[@ic:name='#{@name}']", { "m" => "http://www.iupac.org/condensed" } )
+
+#		string(namespace::*[name() =substring-before(@type, ':')]) 
+
+		XPath.each(mono_data_node, "./name[@type='alternate']/@value") { |altname|
+			namevals = altname.value().split(':',2)
+			namespace = namevals[0]
+			alternate_name = namevals[1]
+			@alternate_name[altname.namespace(namespace)] = alternate_name
+		}
+
         # FIXME - ADD ATTACHMENT POSITION INFORMATION
     end
     
