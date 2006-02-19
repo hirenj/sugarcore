@@ -1,10 +1,11 @@
-
+require 'test/unit'
 require "DebugLog"
 require "Monosaccharide"
 
 class Sugar
+	#mixin Debugging tools
     include DebugLog
-
+		
     def initialize(sequence)
         info "Input sequence is " + sequence
         @root = parse_bold_format(sequence)
@@ -13,24 +14,24 @@ class Sugar
     def sequence_from_child(root_element)
         info "Creating sequence"
         string_rep = ''
-        children = root_element.children
+        children = root_element.children.reverse
         first_child = children.shift
         if ( first_child )
-	        string_rep += sequence_from_child(first_child[1]) + '(' + first_child[0] + ')'
+	        string_rep += sequence_from_child(first_child[1]) + '(' + first_child[0].to_sequence + ')'
 	    end
         children.reverse.each { |branch|
-        	string_rep += '[' + sequence_from_child(branch[1]) + '(' + branch[0] + ')]' 
+        	string_rep += '[' + sequence_from_child(branch[1]) + '(' + branch[0].to_sequence + ')]' 
         }
         string_rep += root_element.name
         return string_rep
     end
     
-    def composition
-    	return @root.composition
+    def residue_composition(start_residue=@root)
+    	return start_residue.residue_composition
     end
     
-    def composition_of(name)
-    	return composition().delete_if { |mono| 
+    def composition_of_residues(name)
+    	return residue_composition().delete_if { |mono| 
     		mono.name != name
     	}
     end
@@ -43,8 +44,36 @@ class Sugar
         return @root.to_s
     end
     
+    def paths
+    	return get_leaves(@root).map{ |leaf|
+    		leaf.get_path_to_root()
+    	}
+    end
     
+    def get_leaves(start_residue=@root)
+		return residue_composition(start_residue).delete_if { |residue|
+			residue.children.length != 0
+		}    	
+    end
     
+    def subtract(sugar)
+    	return sugar.get_leaves().map { |leaf|
+    		self.sequence_from_child(
+    			find_residue_by_linkage_path(
+    				leaf.get_attachment_point_path_to_root().reverse()
+    			)
+    		)
+    	}
+    end
+    
+    def find_residue_by_linkage_path(linkage_path)
+    	loop_residue = @root
+    	linkage_path.each{ |linkage_position|
+			warn linkage_position
+    		loop_residue = loop_residue.get_residue_at_position(linkage_position)
+    	}
+    	return loop_residue
+    end
     
     private
         def parse_bold_format(input_string)
@@ -82,7 +111,7 @@ class Sugar
         end
 end
 
-#class TC_MonosaccharideTest < Test::Unit::TestCase
+class TC_SugarTest < Test::Unit::TestCase
 #
 #  def test_initialisation
 #
@@ -94,5 +123,19 @@ end
 #  
 #  end
 #
-#end
+	def test_sequences
+		assert_nothing_raised {
+			sugar = Sugar.new('Man(a1-3)GalNAc')
+		}
+		
+	end
+
+	def test_composition
+		assert_nothing_raised {
+			sugar = Sugar.new('Man(a1-3)GalNAc')
+			sugar.residue_composition()
+			sugar.composition_of_residues('Man')
+		}
+	end
+end
 
