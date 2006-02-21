@@ -25,6 +25,10 @@ class Monosaccharide
         initialize_from_data()
     end
     
+    def Monosaccharide.factory( classname, identifier )
+    	classname.new(identifier)
+    end
+    
     public
     
     def add_child(mono,linkage)
@@ -67,8 +71,7 @@ class Monosaccharide
 	end
 
 	def release_attachment_position(attachment_position)
-		#@ring_positions[attachment_position]
-		# DELETE FROM HASH
+		@ring_positions.delete(attachment_position)
 		# FIXME - NEED TO HAVE LIST OF POSITIONS TO CONSUME
 	end
 
@@ -82,11 +85,15 @@ class Monosaccharide
     end
 
 	def get_residue_at_position(attachment_position)
-		if ( @ring_positions[attachment_position] )
-			return @ring_positions[attachment_position].get_paired_residue(self)
+		if ( get_linkage_at_position(attachment_position) )
+			return get_linkage_at_position(attachment_position).get_paired_residue(self)
 		else
 			return
 		end
+	end
+
+	def get_linkage_at_position(attachment_position)
+		return @ring_positions[attachment_position]
 	end
 
 	def parent
@@ -104,7 +111,7 @@ class Monosaccharide
 		if ( ! parent )
 			return []
 		end
-		linkage = @ring_positions['1'];
+		linkage = get_linkage_at_position('1');
 		return [ linkage.get_position_for(linkage.get_paired_residue(self)),
 				 self.parent.get_attachment_point_path_to_root() ].flatten;
 	end
@@ -118,20 +125,6 @@ class Monosaccharide
     private
     
     def initialize_from_data
-        info "Initialising "+self.name()
-
-		mono_data_node = XPath.first(MONO_DATA, "./unit[@ic:name='#{@name}']", { "m" => "http://www.iupac.org/condensed" } )
-
-#		string(namespace::*[name() =substring-before(@type, ':')]) 
-
-		XPath.each(mono_data_node, "./name[@type='alternate']/@value") { |altname|
-			namevals = altname.value().split(':',2)
-			namespace = namevals[0]
-			alternate_name = namevals[1]
-			@alternate_name[altname.namespace(namespace)] = alternate_name
-		}
-
-        # FIXME - ADD ATTACHMENT POSITION INFORMATION
     end
     
     def parse_linkage(linkage_string)
@@ -142,6 +135,30 @@ class Monosaccharide
     	result[LINKAGE_SECOND_POS] = $3
     	return result
     end
+end
+
+class IUPAC_Monosaccharide < Monosaccharide
+
+	IUPAC_NAMESPACE =  "http://www.iupac.org/condensed"
+
+	def initialise_from_data
+        info "Initialising "+self.name()
+
+		mono_data_node = XPath.first(	MONO_DATA, 
+										"./unit[@ic:name='#{@name}']",
+										{ "ic" => IUPAC_NAMESPACE } )
+
+#		string(namespace::*[name() =substring-before(@type, ':')]) 
+
+		XPath.each(mono_data_node, "./name[@type='alternate']/@value") { |altname|
+			namevals = altname.value().split(':',2)
+			namespace = namevals[0]
+			alternate_name = namevals[1]
+			@alternate_name[altname.namespace(namespace)] = alternate_name
+		}
+
+        # FIXME - ADD ATTACHMENT POSITION INFORMATION	
+	end
 end
 
 #class TC_MonosaccharideTest < Test::Unit::TestCase
