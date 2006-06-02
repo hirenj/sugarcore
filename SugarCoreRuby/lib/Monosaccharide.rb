@@ -1,6 +1,8 @@
 #require 'test/unit'
 require 'DebugLog'
 require 'Linkage'
+require 'SugarException'
+
 
 require 'rexml/document'
 include REXML
@@ -12,13 +14,16 @@ class Monosaccharide
 	LINKAGE_FIRST_POS = 'linkage_first_pos'
 	LINKAGE_SECOND_POS = 'linkage_second_pos'
 
-	MONO_DATA = XPath.match(Document.new( File.new("data/dictionary.xml") ), "/glycanDict")
+    def Monosaccharide.Load_Definitions(datafile="data/dictionary.xml")
+		@@MONO_DATA = XPath.match(Document.new( File.new(datafile) ), "/glycanDict")
+    end
     
     attr_reader :name
+    attr		:namespace
     
     def initialize(name)
-        info "Doing the initialisation for #{name}"
-        @name = name
+        debug "Doing the initialisation for #{name}."
+        @name = name.strip
         @children = {}
         @ring_positions = {}
         @alternate_name = {}
@@ -33,8 +38,7 @@ class Monosaccharide
     
     def add_child(mono,linkage)
         if mono.class == String
-        	# FIXME - SHOULD BE USING A FACTORY
-            mono = Monosaccharide.new(mono)
+            mono = Monosaccharide.factory(self.class, mono)
         end
         
         # FIXME - SHOULD CHECK INHERITANCE HERE
@@ -53,6 +57,9 @@ class Monosaccharide
     end
 
 	def alternate_name(namespace)
+		if ( ! @alternate_name[namespace] )
+			raise MonosaccharideException.new("No name defined in namespace #{namespace} for #{name}")
+		end
 		return @alternate_name[namespace]
 	end
 
@@ -122,18 +129,38 @@ class Monosaccharide
         stringified += "]\n" 
     end
     
+    def finish
+
+        @children.each { |link,node| 
+        	link.finish()
+        	node.finish()
+        }
+
+    	@children = {}
+
+        @ring_positions.each { |pos,node| 
+        	node.finish()
+        }
+
+    	@ring_positions = {}
+    end
+    
     private
     
     def initialize_from_data
+    	raise "Trying to initialize base Monosaccharide"
     end
     
     def parse_linkage(linkage_string)
-    	linkage_string =~ /([abu])([\d\?u])-([\d\?u])/
-    	result = {}
-    	result[LINKAGE_ANOMER] = $1
-    	result[LINKAGE_FIRST_POS] = $2
-    	result[LINKAGE_SECOND_POS] = $3
-    	return result
+    	if linkage_string =~ /([abu])([\d\?u])-([\d\?u])/
+			result = {}
+			result[LINKAGE_ANOMER] = $1
+			result[LINKAGE_FIRST_POS] = $2
+			result[LINKAGE_SECOND_POS] = $3
+			return result
+    	else
+    		raise MonosaccharideException.new("Linkage #{linkage_string} is not a valid linkage")
+    	end
     end
 end
 
@@ -141,24 +168,32 @@ class IUPAC_Monosaccharide < Monosaccharide
 
 	IUPAC_NAMESPACE =  "http://www.iupac.org/condensed"
 
-	def initialise_from_data
-        info "Initialising "+self.name()
-
-		mono_data_node = XPath.first(	MONO_DATA, 
+	def initialize_from_data
+        debug "Initialising #{name}."
+		mono_data_node = XPath.first(	@@MONO_DATA, 
 										"./unit[@ic:name='#{@name}']",
 										{ "ic" => IUPAC_NAMESPACE } )
 
 #		string(namespace::*[name() =substring-before(@type, ':')]) 
+		
+		if ( mono_data_node == nil )
+			raise MonosaccharideException.new("Residue #{self.name} not found in default IUPAC namespace")
+		end
+
+		@alternate_name[IUPAC_NAMESPACE] = self.name()
+
 
 		XPath.each(mono_data_node, "./name[@type='alternate']/@value") { |altname|
 			namevals = altname.value().split(':',2)
 			namespace = namevals[0]
 			alternate_name = namevals[1]
 			@alternate_name[altname.namespace(namespace)] = alternate_name
+			debug "Adding #{alternate_name} in namespace #{namespace} for #{name}."
 		}
 
         # FIXME - ADD ATTACHMENT POSITION INFORMATION	
 	end
+	
 end
 
 #class TC_MonosaccharideTest < Test::Unit::TestCase

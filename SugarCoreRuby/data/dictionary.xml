@@ -2,71 +2,120 @@
 			xmlns:dkfz="http://glycosciences.de" 
 			xmlns:ic="http://www.iupac.org/condensed">
 	<unit ic:name="Ara" >
-		<name type="alternate" value="dkfz:L-ARA-F" />
+		<name type="alternate" value="dkfz:D-Araf" />
 		<property name="ringsize" value="5"/>
 		<property name="class" value="ic:Pent"/>
 	</unit>
+	<unit ic:name="Fruf">
+		<name type="alternate" value="dkfz:D-Fruf" />
+		<property name="ringsize" value="5"/>
+		<property name="class" value="ic:Hex"/>
+	</unit>
 	<unit ic:name="Fuc" >
-		<name type="alternate" value="dkfz:L-FUC-P" />
+		<name type="alternate" value="dkfz:D-Galp|6d" />
+		<property name="ringsize" value="6"/>
+		<property name="class" value="ic:DeoxyHex"/>
+	</unit>
+	<unit ic:name="LFuc" >
+		<name type="alternate" value="dkfz:L-Galp|6d" />
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:DeoxyHex"/>
 	</unit>
 	<unit ic:name="Gal" >
-		<name type="alternate" value="dkfz:D-GAL-P" />
+		<name type="alternate" value="dkfz:D-Galp" />
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
 	</unit>
 	<unit ic:name="GalNAc">
-		<name type="alternate" value="dkfz:D-GALNAC-P" />
+		<name type="alternate" value="dkfz:D-Galp|2NAc" />
 		<property name="ringsize" value="6"/>
-		<property name="class" value="ic:HexNAc"/>
+		<property name="class" value="ic:Hex"/>
 	</unit>
 	<unit ic:name="GalN">
-		<name type="alternate" value="dkfz:D-GALN-P" />		
+		<name type="alternate" value="dkfz:D-Galp|2n" />		
 		<property name="ringsize" value="6"/>
-		<property name="class" value="ic:HexN"/>
+		<property name="class" value="ic:Hex"/>
 	</unit>
 	<unit ic:name="Glc">
-		<name type="alternate" value="dkfz:D-GLC-P" />	
+		<name type="alternate" value="dkfz:D-Glcp" />	
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
 	</unit>	
 	<unit ic:name="GlcA">
-		<name type="alternate" value="dkfz:D-GLCA-P" />
+		<name type="alternate" value="dkfz:D-Glcp|6a" />
 		<property name="ringsize" value="6"/>
-		<property name="class" value="ic:HexA"/>
+		<property name="class" value="ic:Hex"/>
 	</unit>
 	<unit ic:name="GlcNAc">
-		<name type="alternate" value="dkfz:D-GLCNAC-P" />
+		<name type="alternate" value="dkfz:D-Glcp|2nac" />
 		<property name="ringsize" value="6"/>
-		<property name="class" value="ic:HexNAc"/>
+		<property name="class" value="ic:Hex"/>
 	</unit>
 	<unit ic:name="GlcN">
-		<name type="alternate" value="dkfz:D-GLCN-P" />		
+		<name type="alternate" value="dkfz:D-Glcp|2n" />		
 		<property name="ringsize" value="6"/>
-		<property name="class" value="ic:HexN"/>
+		<property name="class" value="ic:Hex"/>
+	</unit>
+	<unit ic:name="Ido">
+		<name type="alternate" value="dkfz:D-Idop" />	
+		<property name="class" value="ic:Hex"/>
 	</unit>
 	<unit ic:name="IdoA">
-		<name type="alternate" value="dkfz:L-IDO" />		
+		<name type="alternate" value="dkfz:D-Idop|6a" />	
+		<property name="class" value="ic:Hex"/>
+	</unit>
+	<unit ic:name="Kdo">
+		<name type="alternate" value="dkfz:D-Kdo"/>
+		<property name="class" value="ic:Oct"/>
 	</unit>
 	<unit ic:name="Man">
-		<name type="alternate" value="dkfz:D-MAN-P" />
+		<name type="alternate" value="dkfz:D-Manp" />
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
 	</unit>
 	<unit ic:name="NeuGc">
-		<name type="alternate" value="dkfz:D-NEU" />
+		<name type="alternate" value="dkfz:D-Neu|1a|2keto|3d|5ngc" />
+		<property name="class" value="ic:Neu"/>
+	</unit>
+	<unit ic:name="Neu5Gc">
+		<name type="alternate" value="dkfz:D-Neu|1a|2keto|3d|5ngc" />
+		<property name="class" value="ic:Neu"/>
 	</unit>
 	<unit ic:name="NeuAc">
-		<name type="alternate" value="dkfz:D-NEU" />
+		<name type="alternate" value="dkfz:D-Neu|1a|2keto|3d|5nac" />
+		<property name="class" value="ic:Neu"/>
+	</unit>
+	<unit ic:name="Neu5Ac">
+		<name type="alternate" value="dkfz:D-Neu|1a|2keto|3d|5nac" />
+		<property name="class" value="ic:Neu"/>
 	</unit>
 	<unit ic:name="Rha">
-		<name type="alternate" value="dkfz:L-MAN-P" />
+		<name type="alternate" value="dkfz:D-Manp|6d" />
 		<property name="ringsize" value="6"/>
-		<property name="class" value="ic:DeoxyHex"/>
+		<property name="class" value="ic:Hex"/>
 	</unit>	
 	<unit ic:name="Xyl">
-		<name type="alternate" value="dkfz:D-XYL" />
+		<name type="alternate" value="dkfz:D-Xylf" />
 		<property name="class" value="ic:Pent"/>
+	</unit>
+	<unit ic:name="Cer">
+		<name type="alternate" value="dkfz:Cer"/>
+		<property name="class" value="ic:AA"/>
+	</unit>
+	<unit ic:name="Asn">
+		<name type="alternate" value="dkfz:Asn"/>
+		<property name="class" value="ic:AA"/>
+	</unit>
+	<unit ic:name="Thr">
+		<name type="alternate" value="dkfz:Thr"/>
+		<property name="class" value="ic:AA"/>
+	</unit>
+	<unit ic:name="Ser">
+		<name type="alternate" value="dkfz:Ser"/>
+		<property name="class" value="ic:AA"/>
+	</unit>
+	<unit ic:name="S">
+		<name type="alternate" value="dkfz:HSO3"/>
+		<property name="class" value="ic:HSO3"/>
 	</unit>
 </glycanDict>

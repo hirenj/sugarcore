@@ -1,4 +1,12 @@
 require "logger"
+
+# 0 DEBUG
+# 1 INFO
+# 2 WARN
+# 3 ERROR
+# 4 FATAL
+# 5 UNKNOWN
+
 module DebugLog
 
     @@logger = Logger.new(STDERR)
@@ -33,13 +41,26 @@ module DebugLog
     end
         
     public
+
+	def DebugLog.log_level(log_level)
+		@@logger.level = log_level
+	end
+
     
     def warn(message)
-        self.class.logger.error(caller(1)[0] + ' ' + message)
+        self.class.logger.warn(caller(1)[0] + ' ' + message)
+    end
+
+    def error(message)
+        self.class.logger.error(self.class.name + ' ' + message)
     end
     
     def info(message)
         self.class.logger.info(self.class.name + " : " + message)
+    end
+    
+    def debug(message)
+        self.class.logger.debug(self.class.name + " : " + message)    	
     end
     
     def logger=(newlogger)

@@ -11,11 +11,11 @@ module CondensedIupacSugarBuilder
 		while unit_array.length > 0 do
 			unit = unit_array.shift
 			if ( unit == ']' )
-				info "Branching on #{root_mono.name}"
+				debug "Branching on #{root_mono.name}"
 				child_info = create_bold_branch(unit_array)
 				root_mono.add_child(child_info.shift,child_info.shift)
 			elsif ( unit == '[' )
-				info "Branch closed"
+				debug "Branch closed"
 				return
 			else
 				child_info = unit.split(/\(/)
@@ -27,7 +27,7 @@ module CondensedIupacSugarBuilder
 	def create_bold_branch(unit_array)
 		unit = unit_array.shift
 		child_info = unit.split(/\(/)
-		mono = Monosaccharide.new(child_info.shift)
+		mono = Monosaccharide.factory(IUPAC_Monosaccharide, child_info.shift)
 		linkage = child_info.shift
 		create_bold_tree(mono,unit_array)
 		return [mono,linkage]

@@ -10,13 +10,17 @@ class Sugar
 	end
     
     def sequence=(seq)
-        info "Input sequence is " + seq
+    	if (@root)
+    		@root.finish()
+    		@root = nil
+    	end
+        debug "Input sequence is " + seq
         @root = parse_sequence(seq)
     end
     
     
     def sequence_from_child(root_element)
-        info "Creating sequence"
+        debug "Creating sequence"
 		write_sequence(root_element)
     end
     

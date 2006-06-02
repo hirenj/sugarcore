@@ -1,4 +1,5 @@
 require 'DebugLog'
+require 'SugarException'
 
 class Linkage
 	include DebugLog
@@ -6,10 +7,10 @@ class Linkage
 	attr_reader :first_position, :second_position
 	attr_reader :first_residue, :second_residue
 
-	def initialize( first_residue, first_position, 
-					second_residue, second_position )
+	def initialize( first_residue=nil, first_position="?", 
+					second_residue=nil, second_position="?" )
 
-		info "Creating a linkage between #{first_position} on "+
+		debug "Creating a linkage between #{first_position} on "+
 			 "#{first_residue.name} and #{second_position} on "+
 			 "#{second_residue.name}"
 			 
@@ -46,8 +47,7 @@ class Linkage
 		elsif residue == @second_residue
 			return @second_position
 		else
-			# FIXME - THROW AN EXCEPTION
-			return 0
+			raise LinkageException.new("Residue #{residue} not in linkage")
 		end
 	
 	end
@@ -58,9 +58,13 @@ class Linkage
 		elsif residue == @second_residue
 			return @first_residue
 		else
-			#THROW EXCEPTION
-			return 0
+			raise LinkageException.new("Residue #{residue} not in linkage")
 		end
+	end
+	
+	def finish
+		@first_residue = nil
+		@second_residue = nil
 	end
 	
 	private
@@ -81,6 +85,6 @@ class GlycosidicLinkage < Linkage
 
 	public
 	def to_sequence
-		return self.anomer + self.first_position + '-' + self.second_position
+		return "#{self.anomer}#{self.first_position}-#{self.second_position}"
 	end
 end
