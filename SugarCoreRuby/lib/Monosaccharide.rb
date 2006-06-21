@@ -164,23 +164,35 @@ class Monosaccharide
     end
 end
 
-class IUPAC_Monosaccharide < Monosaccharide
+class Namespaced_Monosaccharide < Monosaccharide
 
 	IUPAC_NAMESPACE =  "http://www.iupac.org/condensed"
+	GS_NAMESPACE = "http://glycosciences.de"
+	
+	
+	@@DEFAULT_NAMESPACE = IUPAC_NAMESPACE
+
+	def Namespaced_Monosaccharide.Default_Namespace
+		@@DEFAULT_NAMESPACE
+	end
+
+	def Namespaced_Monosaccharide.Default_Namespace=(ns)
+		@@DEFAULT_NAMESPACE = ns
+	end
 
 	def initialize_from_data
         debug "Initialising #{name}."
 		mono_data_node = XPath.first(	@@MONO_DATA, 
-										"./unit[@ic:name='#{@name}']",
-										{ "ic" => IUPAC_NAMESPACE } )
-
+										"./unit[@xyz:name='#{@name}']",
+										{ 'xyz' => @@DEFAULT_NAMESPACE }
+										 )
 #		string(namespace::*[name() =substring-before(@type, ':')]) 
 		
 		if ( mono_data_node == nil )
-			raise MonosaccharideException.new("Residue #{self.name} not found in default IUPAC namespace")
+			raise MonosaccharideException.new("Residue #{self.name} not found in default namespace #{self.class.Default_Namespace}")
 		end
 
-		@alternate_name[IUPAC_NAMESPACE] = self.name()
+		@alternate_name[self.class.Default_Namespace] = self.name()
 
 
 		XPath.each(mono_data_node, "./name[@type='alternate']/@value") { |altname|

@@ -2,7 +2,7 @@ module CondensedIupacSugarBuilder
 	def parse_sequence(input_string)
 		units = input_string.reverse.split(/([\]\[])/)
 		units = units.collect { |unit| unit.reverse.split(/\)/).reverse }.flatten.compact
-		root = Monosaccharide.factory( IUPAC_Monosaccharide, units.shift )
+		root = Monosaccharide.factory( Namespaced_Monosaccharide, units.shift )
 		create_bold_tree(root,units)
 		return root
 	end
@@ -27,7 +27,7 @@ module CondensedIupacSugarBuilder
 	def create_bold_branch(unit_array)
 		unit = unit_array.shift
 		child_info = unit.split(/\(/)
-		mono = Monosaccharide.factory(IUPAC_Monosaccharide, child_info.shift)
+		mono = Monosaccharide.factory(Namespaced_Monosaccharide, child_info.shift)
 		linkage = child_info.shift
 		create_bold_tree(mono,unit_array)
 		return [mono,linkage]

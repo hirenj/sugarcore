@@ -7,7 +7,9 @@ require 'Sugar'
 require 'Sugar/IO/CondensedIupacSugarBuilder'
 require 'Sugar/IO/CondensedIupacSugarWriter'
 
-Sugar.log_level(Logger::ERROR)
+Sugar.log_level(0)
+
+Monosaccharide.Load_Definitions('data/ic-dictionary.xml')
 
 inseq = 'Man(b1-3)[Man(b1-3)[Man(b1-5)][Man(b1-4)]Man(b1-4)]GlcNAc'
 sugar = Sugar.new()
@@ -27,3 +29,8 @@ sugar.paths().each { |path|
 	}
 }
 puts sugar.subtract(sugar2)
+
+sugar3 = Sugar.new()
+sugar3.extend( CondensedIupacSugarBuilder )
+sugar3.extend( CondensedIupacSugarWriter )
+sugar3.sequence = "Ser"
