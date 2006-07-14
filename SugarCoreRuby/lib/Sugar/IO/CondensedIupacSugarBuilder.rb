@@ -4,6 +4,10 @@ module CondensedIupacSugarBuilder
       return Namespaced_Monosaccharide
   end
 
+  def monosaccharide_factory(prototype)
+      return Monosaccharide.factory(Monosaccharide_Class(),prototype)
+  end
+
 	def parse_sequence(input_string)
 		units = input_string.reverse.split(/([\]\[])/)
 		units = units.collect { |unit| unit.reverse.split(/\)/).reverse }.flatten.compact

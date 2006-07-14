@@ -102,10 +102,11 @@ class Monosaccharide
   end
 
   # The residues which are attached to this residue
+  #FIXME - We need to enshrine a sorting algorithm into the branches
   def children
     newarray = @children.sort { |a,b|
-    	linkagea = a[0].get_position_for(a[1])
-    	linkageb = b[0].get_position_for(b[1])
+    	linkagea = a[0].get_position_for(self)
+    	linkageb = b[0].get_position_for(self)
       linkagea<=>linkageb
     }
     return newarray

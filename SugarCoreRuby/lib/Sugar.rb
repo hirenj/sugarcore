@@ -21,13 +21,13 @@ class Sugar
     # Compute the sequence for this sugar. This method is an alias for computing 
     # sequence_from_child() with a start_residue of root.
     def sequence
-    	sequence_from_child(@root)
+    	sequence_from_residue(@root)
     end
     
     # Compute the sequence for this sugar from a particular start residue.
     # If no residue is specified, the sequence is calculated from the root 
     # of the sugar.
-    def sequence_from_child(start_residue=@root)
+    def sequence_from_residue(start_residue=@root)
       debug "Creating sequence"
 		  write_sequence(start_residue)
     end
@@ -53,8 +53,8 @@ class Sugar
     end
     
     # Find the paths from the leaves in this sugar to the root
-    def paths
-    	return leaves(@root).map{ |leaf|
+    def paths(start_residue=@root)
+    	return leaves(start_residue).map{ |leaf|
     		get_path_to_root(leaf)
     	}
     end
@@ -108,8 +108,14 @@ class Sugar
     
     protected
     
+    # Any mixins for reading sequences must overwrite this method
     def parse_sequence(sequence)
       raise SugarException.new("Could not parse sequence. Perhaps you haven't added parsing capability to this sugar")
+    end
+
+    # Any mixins for reading sequences must overwrite this method
+    def write_sequence(sequence)
+      raise SugarException.new("Could not write sequence. Perhaps you haven't added writing capability to this sugar")
     end
 
 end
