@@ -7,7 +7,7 @@
 		<property name="ringsize" value="5"/>
 		<property name="class" value="ic:Pent"/>
 	</unit>
-	<unit ic:name="Fruf" dkfz:name="D-Araf" >
+	<unit ic:name="Fruf" dkfz:name="D-Fruf" >
 		<name type="alternate" value="dkfz:D-Fruf" />
 		<name type="alternate" value="ic:Fruf" />
 		<property name="ringsize" value="5"/>
