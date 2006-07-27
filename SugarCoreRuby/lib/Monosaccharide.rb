@@ -70,11 +70,11 @@ class Monosaccharide
   # as a Monosaccharide object, and the linkage can either be 
   # specified as a string or a Linkage object
   def add_child(mono,linkage)
-  	if ! mono.class.ancestors().detect { |aClass| aClass == Monosaccharide }
+  	if ! mono.class.ancestors().include?(Monosaccharide)
       mono = Monosaccharide.factory(self.class, mono)
     end
     
-  	if ! linkage.class.ancestors().detect { |aClass| aClass == Linkage }
+  	if ! linkage.class.ancestors().include?(Linkage)
   		linkage_info = parse_linkage(linkage)
 # FIXME - SHOULD BE USING A FACTORY
   		linkage = GlycosidicLinkage.new(mono,
@@ -102,6 +102,7 @@ class Monosaccharide
   end
 
   # The residues which are attached to this residue
+  # Returns an array of tuples of linkage and attached residue
   #FIXME - We need to enshrine a sorting algorithm into the branches
   def children
     newarray = @children.sort { |a,b|
@@ -145,6 +146,19 @@ class Monosaccharide
 	def linkage_at_position(attachment_position)
 		return @ring_positions[attachment_position]
 	end
+
+  # Consumed positions on the ring
+  def consumed_positions
+    return @ring_positions.keys
+  end
+
+  # The position this residue is linked to on the parent
+  def paired_residue_position(attachment_position=1)
+    if (linkage_at_position(attachment_position) == nil)
+      return nil
+    end
+    linkage_at_position(attachment_position).get_position_for(residue_at_position(attachment_position))
+  end
 
   # The residue composition of this monosaccharide and all of its attached
   # residue

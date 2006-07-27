@@ -76,7 +76,7 @@ class Sugar
   	end
 
     # The linkage position path from the specified residue to the root.
-  	def get_attachment_point_path_to_root(start_reside=@root)
+  	def get_attachment_point_path_to_root(start_residue=@root)
   		if ( ! start_residue.parent )
   			return []
   		end
@@ -85,27 +85,116 @@ class Sugar
   				 get_attachment_point_path_to_root(start_residue.parent) ].flatten;
   	end
 
-    # Subtract one sugar from the other, and return the difference
+    # Subtract one sugar from the other, and return the difference. Assume both sugars are 
+    # rooted at the same point (i.e. requiring no alignment)
     def subtract(sugar)
-    	return sugar.get_leaves().map { |leaf|
-    		self.sequence_from_child(
-    			find_residue_by_linkage_path(
-    				leaf.get_attachment_point_path_to_root().reverse()
-    			)
-    		)
-    	}
+      this_sugar = self
+      results = Array.new()
+      visited = Hash.new()
+      residue_comparator = lambda { |a, b|
+        unless visited[a] && visited[b]
+          if this_sugar.paths(a) != sugar.paths(b)
+            results << sugar.sequence_from_residue(b)
+            this_sugar.residue_composition(a).each { |res| 
+              visited[res] = true
+            }
+            sugar.residue_composition(b).each { |res| 
+              visited[res] = true
+            }            
+          end
+        end
+        true
+      }
+      compare_by_block(sugar, :breadth_first_traversal, &residue_comparator)
+      puts results
     end
 
+    # Run a comparator across the residues in a sugar, passing a block to use as a comparator, and optionally specifying a method
+    # to use as a traverser. By default, a depth first traversal is performed.
+    # The comparator block for residues is a simple true or false comparator, evaluating to true if the two
+    # residues are the same, and false if they are different
+    def compare_by_block(sugar, traverser=:depth_first_traversal)
+      raise SugarException.new("No comparator block for residues provided") unless ( block_given? )
+      raise SugarException.new("Traverser method does not belong to Sugar being compared") unless(
+        respond_to?(traverser) && sugar.respond_to?(traverser)
+      )
+      myresidues = self.method(traverser).call()
+      compresidues = sugar.method(traverser).call()
+      sugars_equal = true
+      while ! myresidues.empty? && ! compresidues.empty? && sugars_equal = yield(myresidues.shift, compresidues.shift)
+      end
+      return sugars_equal && myresidues.empty? && compresidues.empty?
+    end
+
+
     # Search for a residue based upon a traversal using the linkage path.
+    # FIXME - UNTESTED
     def find_residue_by_linkage_path(linkage_path)
     	loop_residue = @root
     	linkage_path.each{ |linkage_position|
-			warn linkage_position
-    		loop_residue = loop_residue.get_residue_at_position(linkage_position)
+			  warn "#{linkage_position}"
+    		loop_residue = loop_residue.residue_at_position(linkage_position)
     	}
     	return loop_residue
     end
-    
+
+    # Depth first traversal of a sugar. If you pass an optional block to the method, you will visit
+    # the residue and perform the block action on that node
+    def depth_first_traversal(start_residue=@root)
+       dfs = lambda { | start, children | 
+        results = []
+        if block_given?
+          results.push(yield(start))
+        else
+          results.push(start)
+        end
+        children.each { |linkage_residue_tuple|
+          residue = linkage_residue_tuple[1]
+          results += dfs.call( residue, residue.children )
+        }
+        results
+      }
+      perform_traversal_with_algorithm(start_residue, &dfs)
+    end
+
+    # Breadth first traversal of a sugar. If you pass an optional block to the method, you will visit
+    # the residue and perform the block action on that node
+    def breadth_first_traversal(start_residue=@root)
+
+      # Scoped variables and blocks - let's see you do this in Java! 
+      queue = []
+      results = []
+
+      bfs = lambda { | start, children | 
+        if block_given?
+          results.push(yield(start))
+        else
+          results.push(start)
+        end
+        queue += children.collect { |link_res_tuple| link_res_tuple[1] }
+        current = queue.shift
+        if (current != nil)
+          bfs.call( current, current.children )
+        else
+          results
+        end
+      }
+      perform_traversal_with_algorithm(start_residue, &bfs)
+      return results
+    end
+
+    # Perform a traversal of the sugar using a specified block to choose residues to
+    # traverse over. If no block is given, a depth first search is performed
+    def perform_traversal_with_algorithm(start_residue=@root)
+      if block_given?
+        results = []
+        results += yield( start_residue, start_residue.children )
+        return results        
+      else
+        return depth_first_traversal(start_residue)
+      end
+    end
+
     protected
     
     # Any mixins for reading sequences must overwrite this method
