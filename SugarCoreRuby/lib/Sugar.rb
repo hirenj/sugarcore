@@ -69,10 +69,7 @@ class Sugar
 
     # The path to the root residue from the specified residue
   	def get_path_to_root(start_residue=@root)
-  		if ( ! start_residue.parent )
-  			return [ start_residue ]
-  		end
-  		return [ start_residue , get_path_to_root(start_residue.parent) ].flatten
+      node_to_root_traversal(start_residue)
   	end
 
     # The linkage position path from the specified residue to the root.
@@ -85,28 +82,45 @@ class Sugar
   				 get_attachment_point_path_to_root(start_residue.parent) ].flatten;
   	end
 
-    # Subtract one sugar from the other, and return the difference. Assume both sugars are 
-    # rooted at the same point (i.e. requiring no alignment)
-    def subtract(sugar)
-      this_sugar = self
-      results = Array.new()
-      visited = Hash.new()
-      residue_comparator = lambda { |a, b|
-        unless visited[a] && visited[b]
-          if this_sugar.paths(a) != sugar.paths(b)
-            results << sugar.sequence_from_residue(b)
-            this_sugar.residue_composition(a).each { |res| 
-              visited[res] = true
-            }
-            sugar.residue_composition(b).each { |res| 
-              visited[res] = true
-            }            
+    # Calculate the intersection of two sugars aligned together at the root
+    # returns the residues which have matched up with the given sugar
+    def intersect(sugar)
+      matched = Hash.new()
+      sugar.paths.each { |path|
+        mypath = path.reverse
+        path_follower = lambda { |residue, children|
+          if residue 
+            test_residue = mypath.shift
+            if (residue.name == test_residue.name)
+              matched[residue] = true
+            end
+            if (mypath[0])
+              path_follower.call(residue.residue_at_position(mypath[0].paired_residue_position(1)), nil)
+            end
           end
-        end
-        true
+          [true]
+        }
+        perform_traversal_with_algorithm(&path_follower)
       }
-      compare_by_block(sugar, :breadth_first_traversal, &residue_comparator)
-      puts results
+      return matched.keys
+    end
+
+    def subtract(sugar)
+      matched = intersect(sugar)
+      results = Array.new()
+      leaves.each {|leaf|
+        has_not_matched = true;
+        node_to_root_traversal(leaf) { |residue|
+          if matched.include?(residue) && has_not_matched 
+            results << residue
+            has_not_matched = false 
+          end
+        }
+      }
+      puts results.collect() { |res|
+        sequence_from_residue(res)
+      }
+       
     end
 
     # Run a comparator across the residues in a sugar, passing a block to use as a comparator, and optionally specifying a method
@@ -183,8 +197,27 @@ class Sugar
       return results
     end
 
+    def node_to_root_traversal(start_residue)
+      results = Array.new()
+      root_traversal = lambda { | start, children |
+        if block_given?
+          results.push(yield(start))
+        else
+          results.push(start)
+        end
+        if (start.parent)
+          root_traversal.call( start.parent, nil)
+        else
+          results
+        end
+      }
+      perform_traversal_with_algorithm(start_residue, &root_traversal)
+      return results
+    end
+
     # Perform a traversal of the sugar using a specified block to choose residues to
     # traverse over. If no block is given, a depth first search is performed
+    # FIXME - This should work a bit more like collect
     def perform_traversal_with_algorithm(start_residue=@root)
       if block_given?
         results = []

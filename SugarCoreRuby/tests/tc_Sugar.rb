@@ -12,6 +12,7 @@ class TC_Sugar < Test::Unit::TestCase
   LARGE_STRUCTURE = "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc"
   SMALL_STRUCTURE = "GlcNAc(b1-4)GlcNAc"
   SMALL_STRUCTURE_2 = "GlcNAc(b1-3)GlcNAc"
+  SMALL_STRUCTURE_3 = "GalNAc(b1-3)GalNAc"
 
 
 	DebugLog.log_level(5)
@@ -183,9 +184,31 @@ class TC_Sugar < Test::Unit::TestCase
 
   end
   
+  def test_sugar_interesction
+		sugar = build_sugar_from_string( SMALL_STRUCTURE )
+    sugar2 = build_sugar_from_string( LARGE_STRUCTURE )
+    sugar3 = build_sugar_from_string( SMALL_STRUCTURE_2 )
+    sugar4 = build_sugar_from_string( SMALL_STRUCTURE_3 )
+
+
+    assert_equal( ['GlcNAc', 'GlcNAc'], sugar.intersect(sugar2).collect { |residue| 
+      residue.name
+    })
+    assert_equal( ['GlcNAc', 'GlcNAc'], sugar.intersect(sugar).collect { |residue| 
+      residue.name
+    })
+    assert_equal( ['GlcNAc'], sugar.intersect(sugar3).collect { |residue| 
+      residue.name
+    })
+    assert_equal( [], sugar.intersect(sugar4).collect { |residue| 
+      residue.name
+    })
+
+  end
+  
   def test_sugar_subtraction
-		sugar = build_sugar_from_string( LARGE_STRUCTURE )
-    sugar2 = build_sugar_from_string( SMALL_STRUCTURE )
+    sugar = build_sugar_from_string( LARGE_STRUCTURE )
+		sugar2 = build_sugar_from_string( SMALL_STRUCTURE )
     sugar.subtract(sugar2)
   end
   
