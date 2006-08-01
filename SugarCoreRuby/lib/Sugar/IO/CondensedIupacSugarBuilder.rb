@@ -1,5 +1,6 @@
 # Condensed IUPAC-based builder
 module CondensedIupacSugarBuilder
+
   def Monosaccharide_Class
       return Namespaced_Monosaccharide
   end
@@ -41,4 +42,5 @@ module CondensedIupacSugarBuilder
 		create_bold_tree(mono,unit_array)
 		return [mono,linkage]
 	end
+	
 end

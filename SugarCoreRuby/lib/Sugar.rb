@@ -1,11 +1,27 @@
 require "DebugLog"
 require "Monosaccharide"
 
+# Default implementation of a reader and writer for sugar sequences
+module DefaultReaderWriter
+    
+    # Any mixins for reading sequences must overwrite this method
+    def parse_sequence(sequence)
+      raise SugarException.new("Could not parse sequence. Perhaps you haven't added parsing capability to this sugar")
+    end
+
+    # Any mixins for reading sequences must overwrite this method
+    def write_sequence(sequence)
+      raise SugarException.new("Could not write sequence. Perhaps you haven't added writing capability to this sugar")
+    end
+
+end
+
 # Sugar class for representing sugars for various bioinformatic manipulations
 class Sugar
 	  #mixin Debugging tools
     include DebugLog
-		
+    include DefaultReaderWriter
+				
     # Set the sequence for this sugar. The Sugar must be able to 
     # parse this sequence (done by extending the Sugar), otherwise
     # it will raise a SugarException
@@ -117,9 +133,9 @@ class Sugar
           end
         }
       }
-      puts results.collect() { |res|
-        sequence_from_residue(res)
-      }
+#      puts results.collect() { |res|
+#        sequence_from_residue(res)
+#      }
        
     end
 
@@ -226,18 +242,6 @@ class Sugar
       else
         return depth_first_traversal(start_residue)
       end
-    end
-
-    protected
-    
-    # Any mixins for reading sequences must overwrite this method
-    def parse_sequence(sequence)
-      raise SugarException.new("Could not parse sequence. Perhaps you haven't added parsing capability to this sugar")
-    end
-
-    # Any mixins for reading sequences must overwrite this method
-    def write_sequence(sequence)
-      raise SugarException.new("Could not write sequence. Perhaps you haven't added writing capability to this sugar")
     end
 
 end

@@ -79,6 +79,14 @@ class TC_Sugar < Test::Unit::TestCase
       sugar = Sugar.new()
       sugar.sequence
     }
+    
+    sugar = Sugar.new()
+		sugar.extend(  CondensedIupacSugarBuilder )
+		sugar.extend(  CondensedIupacSugarWriter )
+    sugar.sequence = LARGE_STRUCTURE
+    
+    assert_equal( LARGE_STRUCTURE, sugar.sequence)
+    
     assert_nothing_raised {
       sugar = Sugar.new()
 			sugar.extend(  CondensedIupacSugarBuilder )
@@ -115,7 +123,7 @@ class TC_Sugar < Test::Unit::TestCase
 	
 	def test_subcomponents
 	  results = build_sugar_from_components()
-	  assert_not_equal("Man(a1-3)[Man(a1-6)]Man",
+	  assert_equal("Man(a1-3)[Man(a1-6)]Man",
 	               results['sugar'].sequence_from_residue(
 	                  results['monos'][2]
 	                )

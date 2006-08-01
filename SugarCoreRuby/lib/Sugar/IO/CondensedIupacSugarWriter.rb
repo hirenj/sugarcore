@@ -4,27 +4,33 @@ module CondensedIupacSugarWriter
 		
 		super
 		
+		@@target_namespace = nil
+				
 		def includingClass.Target_Namespace=(ns)
 			@@target_namespace = ns
 		end
 
 		def includingClass.Target_Namespace
-			@target_namespace ? @target_namespace : includingClass.Monosaccharide_Class.Default_Namespace
+			@target_namespace ? @target_namespace : @@target_namespace
 		end
 
 	end
-
+	
 	def target_namespace=(ns)
 		@target_namespace = ns
 	end
 
 	def target_namespace
-		@target_namespace ? @target_namespace : @root.class.Default_Namespace
+	  if (self.class.respond_to?(:Target_Namespace))
+		  self.class.Target_Namespace() ? self.class.Target_Namespace() : @root.class.Default_Namespace
+		else
+      @target_namespace ? @target_namespace : @root.class.Default_Namespace
+	  end
 	end
 
 	def write_sequence(root_element)
     string_rep = ''
-    children = root_element.children.reverse
+    children = root_element.children
     first_child = children.shift
     if ( first_child )
       string_rep += sequence_from_residue(first_child[1]) + '(' + first_child[0].to_sequence + ')'
