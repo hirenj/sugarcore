@@ -48,19 +48,19 @@ module DebugLog
 
     
     def warn(message)
-        self.class.logger.warn(caller(1)[0] + ' ' + message)
+        self.class.logger.warn('[WARN] ' + caller(1)[0] + ' ' + message)
     end
 
     def error(message)
-        self.class.logger.error(self.class.name + ' ' + message)
+        self.class.logger.error('[ERROR] ' + self.class.name + ' ' + message)
     end
     
     def info(message)
-        self.class.logger.info(self.class.name + " : " + message)
+        self.class.logger.info('[INFO] '+ self.class.name + " : " + message)
     end
     
     def debug(message)
-        self.class.logger.debug(self.class.name + " : " + message)    	
+        self.class.logger.debug('[DEBUG] ' + self.class.name + " : " + message)    	
     end
     
     def logger=(newlogger)

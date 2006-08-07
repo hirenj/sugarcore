@@ -6,3 +6,6 @@ end
 
 class LinkageException < SugarException
 end
+
+class SugarTraversalBreakSignal < SugarException
+end

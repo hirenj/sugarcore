@@ -121,22 +121,22 @@ class Sugar
       return matched.keys
     end
 
+    # Subtract the given sugar from this sugar. Returns a list of residues which exist in this sugar, but do
+    # not exist in the sugar given as an argument
     def subtract(sugar)
       matched = intersect(sugar)
       results = Array.new()
-      leaves.each {|leaf|
-        has_not_matched = true;
+      leaves.each { |leaf|
         node_to_root_traversal(leaf) { |residue|
-          if matched.include?(residue) && has_not_matched 
+          if ! matched.include?(residue) && ! results.include?(residue)
             results << residue
-            has_not_matched = false 
+          end
+          if matched.include?(residue.parent)
+            raise SugarTraversalBreakSignal.new()
           end
         }
       }
-#      puts results.collect() { |res|
-#        sequence_from_residue(res)
-#      }
-       
+      results
     end
 
     # Run a comparator across the residues in a sugar, passing a block to use as a comparator, and optionally specifying a method
@@ -171,18 +171,22 @@ class Sugar
     # Depth first traversal of a sugar. If you pass an optional block to the method, you will visit
     # the residue and perform the block action on that node
     def depth_first_traversal(start_residue=@root)
-       dfs = lambda { | start, children | 
-        results = []
-        if block_given?
-          results.push(yield(start))
-        else
-          results.push(start)
-        end
-        children.each { |linkage_residue_tuple|
-          residue = linkage_residue_tuple[1]
-          results += dfs.call( residue, residue.children )
-        }
-        results
+        dfs = lambda { | start, children |
+          begin
+            results = []
+            if block_given?
+              results.push(yield(start))
+            else
+              results.push(start)
+            end
+            children.each { |linkage_residue_tuple|
+              residue = linkage_residue_tuple[1]
+              results += dfs.call( residue, residue.children )
+            }
+            results
+          rescue SugarTraversalBreakSignal
+            results
+          end
       }
       perform_traversal_with_algorithm(start_residue, &dfs)
     end
@@ -196,34 +200,44 @@ class Sugar
       results = []
 
       bfs = lambda { | start, children | 
-        if block_given?
-          results.push(yield(start))
-        else
-          results.push(start)
-        end
-        queue += children.collect { |link_res_tuple| link_res_tuple[1] }
-        current = queue.shift
-        if (current != nil)
-          bfs.call( current, current.children )
-        else
+        begin
+          if block_given?
+            results.push(yield(start))
+          else
+            results.push(start)
+          end
+          queue += children.collect { |link_res_tuple| link_res_tuple[1] }
+          current = queue.shift
+          if (current != nil)
+            bfs.call( current, current.children )
+          else
+            results
+          end
+        rescue SugarTraversalBreakSignal
           results
         end
       }
       perform_traversal_with_algorithm(start_residue, &bfs)
       return results
     end
-
+    
+    # Traverse the sugar from a given node to the root of the structure. If you pass an optional
+    # block to the method, you will visit the residue and perform the block action on that node
     def node_to_root_traversal(start_residue)
       results = Array.new()
       root_traversal = lambda { | start, children |
-        if block_given?
-          results.push(yield(start))
-        else
-          results.push(start)
-        end
-        if (start.parent)
-          root_traversal.call( start.parent, nil)
-        else
+        begin
+          if block_given?
+            results.push(yield(start))
+          else
+            results.push(start)
+          end
+          if (start.parent)
+            root_traversal.call( start.parent, nil)
+          else
+            results
+          end
+        rescue SugarTraversalBreakSignal
           results
         end
       }

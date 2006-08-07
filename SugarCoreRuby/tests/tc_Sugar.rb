@@ -217,7 +217,16 @@ class TC_Sugar < Test::Unit::TestCase
   def test_sugar_subtraction
     sugar = build_sugar_from_string( LARGE_STRUCTURE )
 		sugar2 = build_sugar_from_string( SMALL_STRUCTURE )
-    sugar.subtract(sugar2)
+    assert_equal( ['Fuc','Man','Man','Man'], sugar.subtract(sugar2).collect{ |residue|
+      residue.name
+    }.sort)
+    
+    sugar = build_sugar_from_string( 'LFuc(a1-2)[GalNAc(a1-3)]Gal(b1-3)GlcNAc(b1-3)Gal')
+    sugar2 = build_sugar_from_string( 'LFuc(a1-2)Gal(b1-3)GlcNAc(b1-3)Gal')
+    assert_equal( ['GalNAc'], sugar.subtract(sugar2).collect{ |residue|
+      residue.name
+    })
+    
   end
   
 end

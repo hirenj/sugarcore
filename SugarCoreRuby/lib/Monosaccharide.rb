@@ -113,6 +113,11 @@ class Monosaccharide
     return newarray
   end
 
+  # Test for seeing if a residue is a parent of this residue
+  def child_of?(residue)
+    residue.residue_composition.include?(self)
+  end
+
   # Consume an attachment position on the ring
 	def consume_attachment_position(attachment_position, linkage)
 		@ring_positions[attachment_position] = linkage
@@ -161,7 +166,7 @@ class Monosaccharide
   end
 
   # The residue composition of this monosaccharide and all of its attached
-  # residue
+  # residues
   def residue_composition
   	descendants = [self]
   	kids = children.collect { |child| child[1] }
