@@ -10,11 +10,6 @@ include REXML
 class Monosaccharide
     include DebugLog
 
-	LINKAGE_ANOMER = 'linkage_anomer'
-	LINKAGE_FIRST_POS = 'linkage_first_pos'
-	LINKAGE_SECOND_POS = 'linkage_second_pos'
-
-
   # Load the definitions for a particular Monosaccharide dataset
   # This method must be called before any monosaccharides can be
   # instantiated
@@ -27,15 +22,17 @@ class Monosaccharide
   # the identifier as specified
   #
   # For example:<br/>
-  # <tt>Monosaccharide.factory( NamespacedMonosaccharide, 'Gal' )</tt>
+  # <tt>Monosaccharide.Factory( NamespacedMonosaccharide, 'Gal' )</tt>
   # or
-  # <tt>Monosaccharide.factory( NamespacedMonosaccharide, 'D-Fruf' )</tt>
-  def Monosaccharide.factory( classname, identifier )
+  # <tt>Monosaccharide.Factory( NamespacedMonosaccharide, 'D-Fruf' )</tt>
+  def Monosaccharide.Factory( classname, identifier )
   	classname.new_mono(identifier)
   end
   
   # The name/identifier for this monosaccharide
   attr_reader :name
+
+  attr_accessor :anomer
 
   # The namespace that the name of this identifier is found within
   attr		:namespace
@@ -70,20 +67,9 @@ class Monosaccharide
   # as a Monosaccharide object, and the linkage can either be 
   # specified as a string or a Linkage object
   def add_child(mono,linkage)
-  	if ! mono.class.ancestors().include?(Monosaccharide)
-      mono = Monosaccharide.factory(self.class, mono)
-    end
-    
-  	if ! linkage.class.ancestors().include?(Linkage)
-  		linkage_info = parse_linkage(linkage)
-# FIXME - SHOULD BE USING A FACTORY
-  		linkage = GlycosidicLinkage.new(mono,
-  										linkage_info[LINKAGE_FIRST_POS],
-  										self,
-  										linkage_info[LINKAGE_SECOND_POS],
-  										linkage_info[LINKAGE_ANOMER])
-  	end
     @children[linkage] = mono
+    linkage.set_first_residue(mono)
+    linkage.set_second_residue(self)
     return mono
   end
   
@@ -208,23 +194,11 @@ class Monosaccharide
   def initialize_from_data
   	raise MonosaccharideException.new("Trying to initialize base Monosaccharide")
   end
-    
-  def parse_linkage(linkage_string)
-  	if linkage_string =~ /([abu])([\d\?u])-([\d\?u])/
-		result = {}
-		result[LINKAGE_ANOMER] = $1
-		result[LINKAGE_FIRST_POS] = $2.to_i
-		result[LINKAGE_SECOND_POS] = $3.to_i
-		return result
-  	else
-  		raise MonosaccharideException.new("Linkage #{linkage_string} is not a valid linkage")
-  	end
-  end
 
 end
 
 # Residue entity that implements a namespaced monosaccharide
-class Namespaced_Monosaccharide < Monosaccharide
+class NamespacedMonosaccharide < Monosaccharide
 
 	IUPAC_NAMESPACE =  "http://www.iupac.org/condensed"
 	GS_NAMESPACE = "http://glycosciences.de"
@@ -234,18 +208,18 @@ class Namespaced_Monosaccharide < Monosaccharide
 
   # The Default Namespace that new residues will be created in, and in which
   # their names will be validated
-	def Namespaced_Monosaccharide.Default_Namespace
+	def NamespacedMonosaccharide.Default_Namespace
 		@@DEFAULT_NAMESPACE
 	end
 
   # Set the default namespace to initialise residues from
   # and validate their names in
-	def Namespaced_Monosaccharide.Default_Namespace=(ns)
+	def NamespacedMonosaccharide.Default_Namespace=(ns)
 		@@DEFAULT_NAMESPACE = ns
 	end
 
   # List of supported namespaces
-  def Namespaced_Monosaccharide.Supported_Namespaces
+  def NamespacedMonosaccharide.Supported_Namespaces
     return [ GS_NAMESPACE, IUPAC_NAMESPACE ]
   end
 

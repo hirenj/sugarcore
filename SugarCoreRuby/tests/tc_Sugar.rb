@@ -4,6 +4,7 @@ require 'Sugar'
 class TC_Sugar < Test::Unit::TestCase
 	require 'Sugar/IO/CondensedIupacSugarBuilder'
 	require 'Sugar/IO/CondensedIupacSugarWriter'
+	require 'Sugar/IO/GlycoCTWriter'
 
   IUPAC_CORE_N_LINKED_FUC = "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc"
   IUPAC_DISACCHARIDE = "Man(a1-3)GalNAc"
@@ -28,10 +29,10 @@ class TC_Sugar < Test::Unit::TestCase
             ]
     sugar.sequence = 'GlcNAc'
     root_mono = sugar.residue_composition.shift
-    root_mono.add_child(monos[0],'b1-4')
-    monos[0].add_child(monos[1],'b1-4')
-    monos[1].add_child(monos[2],'a1-3')
-    monos[1].add_child(monos[3],'a1-6')
+    root_mono.add_child(monos[0],sugar.linkage_factory('b1-4'))
+    monos[0].add_child(monos[1],sugar.linkage_factory('b1-4'))
+    monos[1].add_child(monos[2],sugar.linkage_factory('a1-3'))
+    monos[1].add_child(monos[3],sugar.linkage_factory('a1-6'))
     return { "sugar" => sugar , "monos" => [root_mono]+monos }
   end
 
@@ -92,8 +93,15 @@ class TC_Sugar < Test::Unit::TestCase
 			sugar.extend(  CondensedIupacSugarBuilder )
 			sugar.extend(  CondensedIupacSugarWriter )
       sugar.sequence = IUPAC_DISACCHARIDE
-      sugar.target_namespace = Namespaced_Monosaccharide::GS_NAMESPACE
+      sugar.target_namespace = NamespacedMonosaccharide::GS_NAMESPACE
     }
+    
+    sugar = Sugar.new()
+    sugar.extend( CondensedIupacSugarBuilder )
+    sugar.extend( GlycoCTWriter )
+    sugar.sequence = LARGE_STRUCTURE
+    sugar.target_namespace = NamespacedMonosaccharide::GS_NAMESPACE
+    puts sugar.sequence
   end 
 
 

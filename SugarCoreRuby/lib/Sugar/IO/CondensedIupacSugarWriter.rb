@@ -15,7 +15,7 @@ module CondensedIupacSugarWriter
 		end
 
 	end
-	
+
 	def target_namespace=(ns)
 		@target_namespace = ns
 	end
@@ -33,12 +33,20 @@ module CondensedIupacSugarWriter
     children = root_element.children
     first_child = children.shift
     if ( first_child )
+      first_child[0].extend(CondensedIupacLinkageWriter)
       string_rep += sequence_from_residue(first_child[1]) + '(' + first_child[0].to_sequence + ')'
     end
     children.reverse.each { |branch|
+      branch[0].extend(CondensedIupacLinkageWriter)
       string_rep += '[' + sequence_from_residue(branch[1]) + '(' + branch[0].to_sequence + ')]' 
     }
     string_rep += self.target_namespace ? root_element.alternate_name(self.target_namespace) : root_element.name()
     return string_rep	
+	end
+end
+
+module CondensedIupacLinkageWriter
+  def to_sequence
+		return "#{self.first_residue.anomer}#{self.first_position}-#{self.second_position}"
 	end
 end
