@@ -47,8 +47,21 @@ end
 
 module CondensedIupacLinkageBuilder
 
-  # TODO - Overwrite the set_first_residue method so that it sets the anomer in the residue
   attr :anomer
+
+  def CondensedIupacLinkageBuilder.extend_object(object)
+    super
+    class << object 
+      alias_method :base_set_first_residue, :set_first_residue unless method_defined?(:base_set_first_residue)
+      alias_method :set_first_residue, :set_anomer_on_first_residue      
+    end
+  end
+
+  
+  def set_anomer_on_first_residue(residue, position=@first_position)
+    base_set_first_residue(residue,position)
+    residue.anomer = @anomer
+  end
 
   def read_linkage(linkage_string)
   	if linkage_string =~ /([abu])([\d\?u])-([\d\?u])/

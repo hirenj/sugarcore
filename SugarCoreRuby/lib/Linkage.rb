@@ -22,9 +22,6 @@ class Linkage
 		end
 		residue.consume_attachment_position(position,self)
 
-    #FIXME - Should not be in here
-    residue.anomer = anomer
-
 		@first_residue = residue
 		@first_position = position
 	end

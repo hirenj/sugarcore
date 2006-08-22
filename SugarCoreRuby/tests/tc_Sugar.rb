@@ -14,7 +14,13 @@ class TC_Sugar < Test::Unit::TestCase
   SMALL_STRUCTURE = "GlcNAc(b1-4)GlcNAc"
   SMALL_STRUCTURE_2 = "GlcNAc(b1-3)GlcNAc"
   SMALL_STRUCTURE_3 = "GalNAc(b1-3)GalNAc"
-
+  LARGE_STRUCTURE_AS_CT = <<__FOO__
+1b:b-D-Glcp|2nac
+2b:b-D-Manp
+3b:a-D-Manp
+4b:a-D-Manp
+5b:a-D-Galp|6d
+__FOO__
 
 	DebugLog.log_level(5)
 
@@ -95,13 +101,13 @@ class TC_Sugar < Test::Unit::TestCase
       sugar.sequence = IUPAC_DISACCHARIDE
       sugar.target_namespace = NamespacedMonosaccharide::GS_NAMESPACE
     }
-    
     sugar = Sugar.new()
     sugar.extend( CondensedIupacSugarBuilder )
     sugar.extend( GlycoCTWriter )
     sugar.sequence = LARGE_STRUCTURE
     sugar.target_namespace = NamespacedMonosaccharide::GS_NAMESPACE
-    puts sugar.sequence
+
+    assert_equal( LARGE_STRUCTURE_AS_CT, sugar.sequence)
   end 
 
 
