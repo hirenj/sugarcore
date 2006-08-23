@@ -76,12 +76,18 @@ class TC_Monosaccharide < Test::Unit::TestCase
             mono1.residue_at_position(4) == mono3,
             "Attachment positions correctly mapped to residues")
     assert_equal([3,4], mono1.consumed_positions.sort)
+    
+    mono4 = Monosaccharide.Factory( NamespacedMonosaccharide, 'Man')
+    
+    assert_raise( MonosaccharideException ) {
+      mono1.add_child(mono4, Linkage.Factory( CondensedIupacLinkageBuilder, "b1-4"))
+    }
+    
     mono2.finish()
     mono3.finish()
+    mono4.finish()
     mono1.finish()
   end
-
-
 
 end
 

@@ -63,14 +63,21 @@ class Monosaccharide
   public
   
   # Add a paired residue to this residue, using the specified
-  # linkage. The residue can be either specified as a string, or 
-  # as a Monosaccharide object, and the linkage can either be 
-  # specified as a string or a Linkage object
+  # linkage. The residue can be either specified as a  
+  # Monosaccharide object, and the linkage can be 
+  # specified as a Linkage object
   def add_child(mono,linkage)
+    if (! can_accept?(linkage))
+      raise MonosaccharideException.new("Cannot attach linkage to this monosaccharide, attachment point already consumed")
+    end
     @children[linkage] = mono
     linkage.set_first_residue(mono)
     linkage.set_second_residue(self)
     return mono
+  end
+
+  def can_accept?(linkage)
+    ! self.attachment_position_consumed?(linkage.second_position)
   end
   
   # Retrieve an alternate name for this residue, as found in another 

@@ -21,7 +21,7 @@ class Sugar
 	  #mixin Debugging tools
     include DebugLog
     include DefaultReaderWriter
-				
+		
     # Set the sequence for this sugar. The Sugar must be able to 
     # parse this sequence (done by extending the Sugar), otherwise
     # it will raise a SugarException
@@ -233,7 +233,7 @@ class Sugar
             results.push(start)
           end
           if (start.parent)
-            root_traversal.call( start.parent, nil)
+            root_traversal.call( start.parent, nil )
           else
             results
           end

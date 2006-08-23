@@ -5,7 +5,7 @@ module CondensedIupacSugarWriter
 		super
 		
 		@@target_namespace = nil
-				
+		
 		def includingClass.Target_Namespace=(ns)
 			@@target_namespace = ns
 		end
