@@ -31,7 +31,9 @@ class Monosaccharide
   
   # The name/identifier for this monosaccharide
   attr_reader :name
-
+  attr :children
+  attr :ring_positions
+  attr :alternate_name
   attr_accessor :anomer
 
   # The namespace that the name of this identifier is found within
@@ -44,6 +46,12 @@ class Monosaccharide
     @ring_positions = {}
     @alternate_name = {}
     initialize_from_data()
+  end
+    
+  def deep_clone
+    cloned = self.dup
+    cloned.initialize_from_copy(self)
+    cloned
   end
     
   private
@@ -195,8 +203,18 @@ class Monosaccharide
     }
     @ring_positions = {}
   end
+
+	def initialize_from_copy(original)
+	  @ring_positions = {}
+	  @children = {}
+	  original.children.each { |link, child|
+	    add_child(child.deep_clone, link.deep_clone)
+	  }
+  end
+
     
   private
+
     
   def initialize_from_data
   	raise MonosaccharideException.new("Trying to initialize base Monosaccharide")
@@ -259,5 +277,5 @@ class NamespacedMonosaccharide < Monosaccharide
 
       # FIXME - ADD ATTACHMENT POSITION INFORMATION	
 	end
-	
+		
 end

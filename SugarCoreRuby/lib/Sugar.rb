@@ -21,14 +21,32 @@ class Sugar
 	  #mixin Debugging tools
     include DebugLog
     include DefaultReaderWriter
+
+    attr :root
+
+		def finish
+		  if (@root != nil)
+		    @root.finish
+		    @root = nil
+	    end
+	  end
 		
+    def deep_clone
+      cloned = self.dup
+      cloned.initialize_from_copy(self)
+      cloned
+    end
+
+		def initialize_from_copy(original)
+		  @root = original.get_path_to_root[0].deep_clone
+	  end
+	  
     # Set the sequence for this sugar. The Sugar must be able to 
     # parse this sequence (done by extending the Sugar), otherwise
     # it will raise a SugarException
     def sequence=(seq)
-    	if (@root)
-    		@root.finish()
-    		@root = nil
+    	if (@root != nil)
+    		finish
     	end
       debug "Input sequence is " + seq
       @root = parse_sequence(seq)

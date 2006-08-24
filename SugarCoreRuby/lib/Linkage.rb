@@ -19,6 +19,10 @@ class Linkage
   
 	public
 	
+	def deep_clone
+	  self.dup
+  end
+	
 	def set_first_residue( residue, position=@first_position )
 		residue.consume_attachment_position(position,self)
 
