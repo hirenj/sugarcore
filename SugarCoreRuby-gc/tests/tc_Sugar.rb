@@ -243,5 +243,11 @@ __FOO__
     
   end
   
+  def test_sugar_clone
+    sugar = build_sugar_from_string( LARGE_STRUCTURE )
+    sugar2 = sugar.dup
+		sugar2.extend(  CondensedIupacSugarWriter )    
+    assert_equal(LARGE_STRUCTURE, sugar2.sequence)
+  end
 end
 
