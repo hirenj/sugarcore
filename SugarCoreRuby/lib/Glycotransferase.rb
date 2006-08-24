@@ -5,7 +5,7 @@ class Glycotransferase
   def acceptors(sugar)
     results = Array.new()
     sugar.depth_first_traversal { |residue|
-      if substrate_pattern.name == residue.name
+      if substrate_pattern.name == residue.name && residue.can_accept?(donor)
         residue
       end
     }.compact
@@ -16,14 +16,19 @@ class Glycotransferase
   end
   
   def apply(sugar)
-    cloned = sugar.clone
-    puts cloned.object_id
-    puts cloned.root.object_id
-    puts sugar.root.object_id
+    cloned = sugar.deep_clone
+    apply!(cloned)
+    cloned
   end
   
-  def apply!(sugar)
-    acceptors(sugar).each { |residue|
+  def apply!(sugar,acceptor=nil)
+    acceptors(sugar).find_all { |residue|
+      if (acceptor)
+        acceptor == residue
+      else
+        true
+      end
+    }.each { |residue|
       link = donor.clone
       res = link.first_residue.clone
       link.set_first_residue(res)
@@ -32,5 +37,16 @@ class Glycotransferase
       end
     }
     sugar
+  end
+  
+  def apply_to_each_substrate(sugar)
+    results = Array.new()
+    acceptor_count = acceptors(sugar).length - 1
+    (0..acceptor_count).each do
+      target = sugar.dup
+      apply!(target,acceptors(target)[results.length])
+      results << target
+    end
+    results
   end
 end
