@@ -69,6 +69,44 @@ class TC_Glycotransferase < Test::Unit::TestCase
 	  donor_linkage = Linkage.Factory(CondensedIupacLinkageBuilder, 'a1-3')
 	  donor_linkage.set_first_residue(donor_residue)
 	  enzyme.donor = donor_linkage
-    enzyme.apply_to_each_substrate(sugar)
+    enzyme.apply_to_each_substrate(sugar).each { |sug|
+      p sug.sequence
+    }
+    p "I'm done"
   end
+  
+  def test_build_structure_set
+	  sugar = build_sugar_from_string(LARGE_STRUCTURE)
+	  enzymelist = Array.new()
+	  enzyme = Glycotransferase.new()
+	  enzyme.substrate_pattern = Monosaccharide.Factory(NamespacedMonosaccharide, 'Man')
+	  donor_residue = Monosaccharide.Factory(NamespacedMonosaccharide, 'Gal')
+	  donor_linkage = Linkage.Factory(CondensedIupacLinkageBuilder, 'a1-3')
+	  donor_linkage.set_first_residue(donor_residue)
+	  enzyme.donor = donor_linkage
+	  enzymelist << enzyme
+	  
+	  enzyme = Glycotransferase.new()
+	  enzyme.substrate_pattern = Monosaccharide.Factory(NamespacedMonosaccharide, 'Gal')
+	  donor_residue = Monosaccharide.Factory(NamespacedMonosaccharide, 'Fuc')
+	  donor_linkage = Linkage.Factory(CondensedIupacLinkageBuilder, 'a1-2')
+	  donor_linkage.set_first_residue(donor_residue)
+	  enzyme.donor = donor_linkage
+	  enzymelist << enzyme
+	  
+	  enzyme = Glycotransferase.new()
+	  enzyme.substrate_pattern = Monosaccharide.Factory(NamespacedMonosaccharide, 'Man')
+	  donor_residue = Monosaccharide.Factory(NamespacedMonosaccharide, 'Man')
+	  donor_linkage = Linkage.Factory(CondensedIupacLinkageBuilder, 'a1-3')
+	  donor_linkage.set_first_residue(donor_residue)
+	  enzyme.donor = donor_linkage
+	  enzymelist << enzyme
+
+	  results = Glycotransferase.Apply_Set(enzymelist, sugar)
+	  results.each { |sug|
+	    puts "#{sug.size} #{sug.sequence}"
+	  }
+	  p results.size
+  end
+  
 end
