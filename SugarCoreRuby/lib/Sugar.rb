@@ -71,6 +71,10 @@ class Sugar
     	return start_residue.residue_composition
     end
     
+    def size(start_residue=@root)
+      return residue_composition(start_residue).size
+    end
+    
     # Find the residues which comprise this sugar that match a particular prototype
     def composition_of_residue(prototype,start_residue=@root)
       if (prototype.class == String)
