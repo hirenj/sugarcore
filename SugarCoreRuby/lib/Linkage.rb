@@ -20,13 +20,15 @@ class Linkage
 	public
 	
 	def deep_clone
-	  self.dup
+	  new_link = self.dup
+	  new_link.initialize_from_copy(self)
+	  new_link
   end
 	
 	def set_first_residue( residue, position=@first_position )
 		residue.consume_attachment_position(position,self)
 
-		if @first_residue
+		if @first_residue && @first_residue != residue
 		  @first_residue.release_attachment_position(@first_position)
 		end
 
@@ -37,7 +39,7 @@ class Linkage
 	def set_second_residue( residue, position=@second_position )
 		residue.consume_attachment_position(position,self)
 
-    if @second_residue
+    if @second_residue && @second_residue != residue
 		  @second_residue.release_attachment_position(@second_position)
 		end
 		@second_residue = residue
@@ -69,6 +71,13 @@ class Linkage
 		@first_residue = nil
 		@second_residue = nil
 	end
+	
+	def initialize_from_copy(original)
+	  @first_position = original.first_position
+	  @second_position = original.second_position
+	  @first_residue = nil
+	  @second_residue = nil
+  end
 	
 	private
 	
