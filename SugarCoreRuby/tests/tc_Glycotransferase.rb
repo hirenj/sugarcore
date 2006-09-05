@@ -15,6 +15,7 @@ class TC_Glycotransferase < Test::Unit::TestCase
 
   LARGE_STRUCTURE = "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc"
   LARGE_STRUCTURE_AFTER_APPLY = "Gal(a1-3)Man(a1-3)[Gal(a1-3)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc"
+  LARGE_STRUCTURE_ALL_RESULT =  [ 'Gal(a1-3)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc' , 'Man(a1-3)[Gal(a1-3)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc' ]
 
   def build_sugar_from_string(sequence)
     sugar = Sugar.new()
@@ -69,10 +70,7 @@ class TC_Glycotransferase < Test::Unit::TestCase
 	  donor_linkage = Linkage.Factory(CondensedIupacLinkageBuilder, 'a1-3')
 	  donor_linkage.set_first_residue(donor_residue)
 	  enzyme.donor = donor_linkage
-    enzyme.apply_to_each_substrate(sugar).each { |sug|
-      p sug.sequence
-    }
-    p "I'm done"
+    assert_equal( LARGE_STRUCTURE_ALL_RESULT, enzyme.apply_to_each_substrate(sugar).collect { |sug| sug.sequence } )
   end
   
   def test_build_structure_set
@@ -102,11 +100,8 @@ class TC_Glycotransferase < Test::Unit::TestCase
 	  enzyme.donor = donor_linkage
 	  enzymelist << enzyme
 
-	  results = Glycotransferase.Apply_Set(enzymelist, sugar)
-	  results.each { |sug|
-	    puts "#{sug.size} #{sug.sequence}"
-	  }
-	  p results.size
+	  results = Glycotransferase.Apply_Set(enzymelist, sugar, 10)
+	  assert_equal(60, results.size)
   end
   
 end

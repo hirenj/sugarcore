@@ -8,7 +8,7 @@ class Glycotransferase
   attr_accessor :substrate_pattern, :donor
   attr  :seen
 
-  def Glycotransferase.Apply_Set(enzymes, sugar)
+  def Glycotransferase.Apply_Set(enzymes, sugar, max_size=10)
     sugarset = Array.new()
     seen_sugars = Set.new([ sugar.sequence ])
     sugarset << sugar
@@ -19,7 +19,7 @@ class Glycotransferase
         resultset = Array.new()
         resultset += sugarset
         sugarset.each { |sugar|
-          if ( sugar.size < 20 )
+          if ( sugar.size < max_size )
             enzyme.acceptors(sugar)
             new_sugars = enzyme.apply_to_each_substrate(sugar)
             enzyme.acceptors(sugar)
@@ -37,6 +37,14 @@ class Glycotransferase
       }
     end
     sugarset
+  end
+
+  def Glycotransferase.CreateFromSugar(sugar)
+    enzyme = Glycotransferase.new()
+    enzyme.substrate_pattern = sugar.get_path_to_root()[0].shallow_clone
+    enzyme.donor = sugar.get_path_to_root()[0].children[0][0].deep_clone
+    enzyme.donor.set_first_residue(enzyme.substrate_pattern)
+    return enzyme
   end
 
   def acceptors(sugar)
@@ -78,10 +86,7 @@ class Glycotransferase
 
   def apply_to_each_substrate(sugar)
     if ( @seen[sugar] )
-      debug "Applying enzyme to #{sugar.sequence} again for donor #{donor.first_residue.name}"
       return []
-    else
-      debug "Applying enzyme to #{sugar.sequence} for donor #{donor.first_residue.name}"
     end
     @seen[sugar] = true
     results = Array.new()

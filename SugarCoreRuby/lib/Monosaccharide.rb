@@ -54,6 +54,9 @@ class Monosaccharide
     cloned
   end
     
+  def shallow_clone
+    Monosaccharide.Factory(self.class, @name)
+  end
   private
   
   # New method which is hidden to avoid direct instantiation of the 
