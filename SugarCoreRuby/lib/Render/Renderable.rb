@@ -10,17 +10,43 @@ module Rectangle
 end
 
 module Renderable
+  
+  attr_accessor :position, :prototype, :size
 
-  attr_accessor :position, :prototype, :node_number
+  def centre
+    { :x => ( position[:x1] + position[:x2] ) / 2 , :y => ( position[:y1] + position[:y2] ) / 2 }
+  end
+
+  def size
+    if ( @size == nil )
+      return { :width => 0, :height => 0}
+    end
+    return @size
+  end
+
+  def width
+    return position[:x2] - position[:x1]
+  end
+
+  def height    
+    return position[:y2] - position[:y1]
+  end
+
+  def distance(other)
+    p1 = centre
+    p2 = other.centre
+    Math.sqrt((p1[:x] - p2[:x])**2 + (p1[:y] - p2[:y])**2)
+  end
 
   def position 
-    if self.kind_of? Linkage
-      position_linkage
-    end
     if (@position == nil)
-      @position = { :x1 => 0, :x2 => 10, :y1 => 0, :y2 => 10 }.extend(Rectangle)
+      @position = { :x1 => 0, :x2 => size[:width], :y1 => 0, :y2 => size[:height] }.extend(Rectangle)
     end
-    @position
+    return @position
+  end
+
+  def translate(deltax=0,deltay=0)
+    move(deltax,deltay)
   end
 
   def move(deltax=0, deltay=0)
@@ -30,70 +56,40 @@ module Renderable
     position[:y2] = position[:y2] + deltay
   end
   
+end
+
+module Renderable::Residue
+  include Renderable
+  
+  attr_accessor :offsets
+  
   def translate(deltax=0,deltay=0)
     move(deltax,deltay)
     children.each { |link, residue|
-      link.move(deltax,deltay)
       residue.translate(deltax,deltay)
     }
   end
-
-  def centre
-    { :x => ( position[:x1] + position[:x2] ) / 2 , :y => ( position[:y1] + position[:y2] ) / 2 }
+  
+  def offset( linkage )
+    if ( an_offset = offsets[linkage.get_position_for(self)] ) != nil
+      return  an_offset
+    end
+    @offsets[0]
   end
 
-  def distance(other)
-    p1 = centre
-    p2 = other.centre
-    Math.sqrt((p1[:x] - p2[:x])**2 + (p1[:y] - p2[:y])**2)
+  def offsets
+    if ( @offsets == nil )
+      return [{ :x => 0, :y => 0 }]
+    end
+    @offsets
   end
 
   def box
-    if self.kind_of? Sugar
-      box_sugar
-    elsif self.kind_of? Monosaccharide
-      box_monosaccharide
-    elsif self.kind_of? Linkage
-      box_linkage
-    end
-  end
-  
-  private
-  
-  def position_linkage
-    left_residue = second_residue
-    right_residue = first_residue
-
-    if first_residue.position[:x1] < second_residue.position[:x2]
-      left_residue = first_residue
-      right_residue = second_residue
-    end
-
-    bottom_residue = second_residue
-    top_residue = first_residue
-    
-    if first_residue.position[:y1] < second_residue.position[:y2]
-      bottom_residue = first_residue
-      top_residue = second_residue
-    end
-    
-    { :x1 => left_residue.position[:x1] + 5,
-      :x2 => right_residue.position[:x1] + 5,
-      :y1 => bottom_residue.position[:y1] + 5,
-      :y2 => top_residue.position[:y1] + 5,
-    }.extend(Rectangle)
-  end
-  
-  def box_sugar
-    @root.box
-  end
-
-  def box_monosaccharide
-    
-    min_x = 1000
-    min_y = 1000
-    max_x = -1000
-    max_y = -1000
+    # FIXME - This should be using Integer min and max values
+    min_x = 100000
+    min_y = 100000
+    max_x = -100000
+    max_y = -100000
     
     
     children.each { |link,child|
@@ -129,12 +125,46 @@ module Renderable
 
   end
   
-  def box_linkage
+end
 
-    min_x = 1000
-    min_y = 1000
-    max_x = -1000
-    max_y = -999
+module Renderable::Link
+  include Renderable
+  
+  def position
+    left_residue = second_residue
+    right_residue = first_residue
+
+    if first_residue.position[:x1] < second_residue.position[:x2]
+      left_residue = first_residue
+      right_residue = second_residue
+    end
+
+    bottom_residue = second_residue
+    top_residue = first_residue
+    
+    if first_residue.position[:y1] < second_residue.position[:y2]
+      bottom_residue = first_residue
+      top_residue = second_residue
+    end
+
+    result= { :x1 => left_residue.position[:x1] + left_residue.offset(self)[:x],
+      :x2 => right_residue.position[:x1] + right_residue.offset(self)[:x],
+      :y1 => bottom_residue.position[:y1] + bottom_residue.offset(self)[:y],
+      :y2 => top_residue.position[:y1] + top_residue.offset(self)[:y],
+    }.extend(Rectangle)
+    if bottom_residue != left_residue
+      result[:y1] = top_residue.position[:y1] + top_residue.offset(self)[:y]
+      result[:y2] = bottom_residue.position[:y1] + bottom_residue.offset(self)[:y]
+    end
+    return result
+  end
+
+  def box
+    # FIXME - This should be using Integer min and max values
+    min_x = 100000
+    min_y = 100000
+    max_x = -100000
+    max_y = -100000
     
     if position[:x1] < min_x
       min_x = position[:x1]
@@ -174,6 +204,14 @@ module Renderable
     
     return { :x1 => min_x, :x2 => max_x, :y1 => min_y, :y2 => max_y }.extend(Rectangle)
 
+  end  
+
+end
+
+module Renderable::Sugar
+  include Renderable
+  
+  def box
+    @root.box
   end
-    
 end

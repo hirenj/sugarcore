@@ -4,19 +4,20 @@ require 'Sugar/IO/CondensedIupacSugarBuilder'
 require 'Sugar/IO/CondensedIupacSugarWriter'
 require 'Render/Renderable'
 require 'Render/CondensedLayout'
+require 'Render/SvgRenderer'
 
 class Sugar
   include CondensedIupacSugarBuilder
   include CondensedIupacSugarWriter
-  include Renderable
+  include Renderable::Sugar
 end
 
 class Monosaccharide
-  include Renderable
+  include Renderable::Residue
 end
 
 class Linkage
-  include Renderable
+  include Renderable::Link
 end
 
 DebugLog.log_level(5)
@@ -40,18 +41,23 @@ class TC_SugarLayout < Test::Unit::TestCase
 
   def a_sugar
     sugar = Sugar.new()
-    sugar.sequence = 'Gal(b1-3)[Man(b1-4)][Fuc(b1-5)][Glc(b1-6)]Gal(b1-3)[Man(b1-4)][Fuc(b1-5)][Glc(b1-6)]GlcNAc'
+    sugar.sequence = 'NeuAc(a2-3)Man(b1-6)[Man(b1-3)]Man(a1-3)Man(b1-6)[Man(b1-3)]Man(a1-3)Man(b1-6)[Man(b1-3)]Man(a1-3)GlcNAc(b1-4)GlcNAc'
     sugar
   end
   
   def test_layout
     sugar = a_sugar
     node_num = 0
-    CondensedLayout.layout(sugar)
+    renderer = SvgRenderer.new()
+    renderer.sugar = sugar
+    renderer.initialise_prototypes()
+
+    CondensedLayout.new().layout(sugar)
 #    p sugar.box
 #    sugar.depth_first_traversal { |res|
 #      p sugar.sequence_from_residue(res)
 #      p res.position      
 #    }
+    renderer.render(sugar)
   end
 end
