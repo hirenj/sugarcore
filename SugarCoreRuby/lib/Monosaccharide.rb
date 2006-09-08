@@ -34,7 +34,9 @@ class Monosaccharide
   attr :children
   attr :ring_positions
   attr :alternate_name
+  attr_writer :parent_position
   attr_accessor :anomer
+  attr_reader :raw_data_node
 
   # The namespace that the name of this identifier is found within
   attr		:namespace
@@ -84,6 +86,7 @@ class Monosaccharide
     @children[linkage] = mono
     linkage.set_first_residue(mono)
     linkage.set_second_residue(self)
+    mono.parent_position = linkage.get_position_for(mono)
     return mono
   end
 
@@ -151,8 +154,8 @@ class Monosaccharide
 	end
 
   # The linkage object associated with any residue attached at the given 
-  # attachment position
-	def linkage_at_position(attachment_position)
+  # attachment position using the parent position as default
+	def linkage_at_position(attachment_position=@parent_position)
 		return @ring_positions[attachment_position]
 	end
 
@@ -161,8 +164,8 @@ class Monosaccharide
     return @ring_positions.keys
   end
 
-  # The position this residue is linked to on the parent
-  def paired_residue_position(attachment_position=1)
+  # The position this residue is linked to on to at a given position ( uses the parent position by default)
+  def paired_residue_position(attachment_position=@parent_position)
     if (linkage_at_position(attachment_position) == nil)
       return nil
     end
@@ -181,9 +184,9 @@ class Monosaccharide
   end
 
   # The Parent residue of this residue - an alias for retrieving the residue found 
-  # attached at position 1.
+  # attached at the parent position.
 	def parent
-		self.residue_at_position(1)
+		self.residue_at_position(@parent_position)
 	end
 
   # String representation of this residue
@@ -277,6 +280,8 @@ class NamespacedMonosaccharide < Monosaccharide
   		@alternate_name[altname.namespace(namespace)] = alternate_name
   		debug "Adding #{alternate_name} in namespace #{namespace} for #{name}."
   	}
+
+    @raw_data_node = mono_data_node
 
       # FIXME - ADD ATTACHMENT POSITION INFORMATION	
 	end

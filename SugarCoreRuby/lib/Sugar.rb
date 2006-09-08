@@ -115,7 +115,7 @@ class Sugar
   		if ( ! start_residue.parent )
   			return []
   		end
-  		linkage = start_residue.linkage_at_position(1);
+  		linkage = start_residue.linkage_at_position();
   		return [ linkage.get_position_for(linkage.get_paired_residue(start_residue)),
   				 get_attachment_point_path_to_root(start_residue.parent) ].flatten;
   	end
@@ -133,7 +133,7 @@ class Sugar
               matched[residue] = true
             end
             if (mypath[0])
-              path_follower.call(residue.residue_at_position(mypath[0].paired_residue_position(1)), nil)
+              path_follower.call(residue.residue_at_position(mypath[0].paired_residue_position()), nil)
             end
           end
           [true]
@@ -201,8 +201,7 @@ class Sugar
             else
               results.push(start)
             end
-            children.each { |linkage_residue_tuple|
-              residue = linkage_residue_tuple[1]
+            children.each { |link, residue|
               results += dfs.call( residue, residue.children )
             }
             results
@@ -228,7 +227,7 @@ class Sugar
           else
             results.push(start)
           end
-          queue += children.collect { |link_res_tuple| link_res_tuple[1] }
+          queue += children.collect { |link, residue| residue }
           current = queue.shift
           if (current != nil)
             bfs.call( current, current.children )
