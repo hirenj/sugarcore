@@ -6,18 +6,23 @@ require 'Render/Renderable'
 require 'Render/CondensedLayout'
 require 'Render/SvgRenderer'
 
-class Sugar
+class SvgSugar < Sugar
   include CondensedIupacSugarBuilder
   include CondensedIupacSugarWriter
   include Renderable::Sugar
-end
 
-class Monosaccharide
-  include Renderable::Residue
-end
-
-class Linkage
-  include Renderable::Link
+  def monosaccharide_factory(proto)
+    mono = super(proto)
+    mono.extend(Renderable::Residue)
+    return mono
+  end
+  
+  def linkage_factory(proto)
+    linkage = super(proto)
+    linkage.extend(Renderable::Link)
+    return linkage    
+  end
+  
 end
 
 DebugLog.log_level(5)
@@ -34,13 +39,13 @@ class TC_SugarLayout < Test::Unit::TestCase
 		}
 	
 		assert_nothing_raised {
-			sugar = Sugar.new()
+			sugar = SvgSugar.new()
 		}
  
 	end
 
   def a_sugar
-    sugar = Sugar.new()
+    sugar = SvgSugar.new()
     sugar.sequence = 'NeuAc(a2-3)Man(b1-6)[Man(b1-3)]Man(a1-3)Man(b1-6)[Man(b1-3)]Man(a1-3)Man(b1-6)[Man(b1-3)]Man(a1-3)GlcNAc(b1-4)GlcNAc'
     sugar
   end

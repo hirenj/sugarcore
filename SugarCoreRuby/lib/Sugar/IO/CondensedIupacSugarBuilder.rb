@@ -2,11 +2,11 @@
 module CondensedIupacSugarBuilder
 
   def monosaccharide_factory(prototype)
-      return Monosaccharide.Factory(NamespacedMonosaccharide,prototype)
+    return Monosaccharide.Factory(NamespacedMonosaccharide,prototype)
   end
   
   def linkage_factory(prototype)
-      return Linkage.Factory(CondensedIupacLinkageBuilder, prototype)
+    return Linkage.Factory(CondensedIupacLinkageBuilder, prototype)
   end
   
 	def parse_sequence(input_string)

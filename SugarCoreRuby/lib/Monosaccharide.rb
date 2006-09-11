@@ -57,7 +57,9 @@ class Monosaccharide
   end
     
   def shallow_clone
-    Monosaccharide.Factory(self.class, @name)
+    result = Monosaccharide.Factory(self.class, @name)
+    result.anomer = anomer
+    return result
   end
   private
   

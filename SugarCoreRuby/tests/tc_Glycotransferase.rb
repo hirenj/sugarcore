@@ -104,4 +104,14 @@ class TC_Glycotransferase < Test::Unit::TestCase
 	  assert_equal(60, results.size)
   end
   
+  def test_from_sugar
+    sug = Sugar.new()
+    sug.sequence = "Gal(b1-3)GlcNAc"
+    target = Sugar.new()
+    target.sequence = "GlcNAc"
+    enzyme = Glycotransferase.CreateFromSugar(sug)
+    sugars = enzyme.apply(target)
+    assert_equal(sug.sequence, sugars.sequence)
+  end
+  
 end
