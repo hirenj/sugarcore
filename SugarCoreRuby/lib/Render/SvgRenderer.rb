@@ -36,6 +36,7 @@ class SvgRenderer
   	doc.root.add_attribute('version', '1.1')
   	doc.root.add_attribute('width', '100%')
   	doc.root.add_attribute('height', '100%')
+  	doc.root.add_attribute('id', sugar.name)
   	doc.root.add_namespace('svg', SVG_ELEMENT_NS)
   	doc.root.add_namespace('xlink', XLINK_NS)
     definitions = doc.root.add_element('svg:defs')  		
@@ -50,7 +51,7 @@ class SvgRenderer
 
       if ( prototypes[res_id] != nil )
         icon = Element.new('svg:use')
-        icon.add_attribute('xlink:href' , "#sug#{sugar.name}-proto-#{res_id}")
+        icon.add_attribute('xlink:href' , "##{sugar.name}-proto-#{res_id}")
       end
       if ( res.prototype != nil )
         icon = Document.new(res.prototype.to_s).root
@@ -72,6 +73,10 @@ class SvgRenderer
         max_y = res.position[:y2]
       end
       
+      if res.labels.length > 0 
+        icon.add_attribute('class', res.labels.join(" "))
+      end
+      
       residues.add_element icon
       
       res.children.each { |linkage,child|
@@ -81,12 +86,15 @@ class SvgRenderer
         line.add_attribute('x2',linkage.position[:x2])
         line.add_attribute('y2',linkage.position[:y2])
         line.add_attribute('stroke-width',3)
-        line.add_attribute('stroke','black')        
+        line.add_attribute('stroke','black')
+        if linkage.labels.length > 0
+          line.add_attribute('class', linkage.labels.join(" "))
+        end
       }
     }
     prototypes.each { |key,val|
       proto_copy = Document.new(val.to_s).root
-      proto_copy.add_attribute('id', "sug#{sugar.name}-proto-#{key}")
+      proto_copy.add_attribute('id', "#{sugar.name}-proto-#{key}")
       proto_copy.add_attribute('class', "#{key}")
       definitions.add_element(proto_copy)
     }

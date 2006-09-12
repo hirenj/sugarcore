@@ -11,7 +11,14 @@ end
 
 module Renderable
   
-  attr_accessor :position, :prototype, :dimensions
+  attr_accessor :position, :prototype, :dimensions, :labels
+
+  def labels
+    if ( ! @labels )
+      @labels = Array.new()
+    end
+    @labels
+  end
 
   def centre
     { :x => ( position[:x1] + position[:x2] ) / 2 , :y => ( position[:y1] + position[:y2] ) / 2 }

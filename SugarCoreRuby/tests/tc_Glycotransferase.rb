@@ -100,7 +100,7 @@ class TC_Glycotransferase < Test::Unit::TestCase
 	  enzyme.donor = donor_linkage
 	  enzymelist << enzyme
 
-	  results = Glycotransferase.Apply_Set(enzymelist, sugar, 10)
+	  results = Glycotransferase.Apply_Set(enzymelist, sugar, 10) { |enzyme, sugar, link| p link.first_position }
 	  assert_equal(60, results.size)
   end
   

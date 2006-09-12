@@ -21,7 +21,13 @@ class Glycotransferase
         sugarset.each { |sugar|
           if ( sugar.size < max_size )
             enzyme.acceptors(sugar)
-            new_sugars = enzyme.apply_to_each_substrate(sugar)
+            callback = nil
+            if block_given?
+              callback = lambda { |sugar,link|
+                yield(enzyme,sugar,link)
+              }
+            end
+            new_sugars = enzyme.apply_to_each_substrate(sugar, &callback)
             enzyme.acceptors(sugar)
             new_sugars.each { |sug|
               seq = sug.sequence
@@ -62,9 +68,9 @@ class Glycotransferase
     acceptors(sugar).length > 0
   end
   
-  def apply(sugar)
+  def apply(sugar, &callback)
     cloned = sugar.deep_clone
-    apply_in_place(cloned)
+    apply_in_place(cloned, &callback)
     cloned
   end
   
@@ -81,12 +87,15 @@ class Glycotransferase
       link.set_first_residue(res)      
       if (residue.can_accept?(link))
         residue.add_child(res, link)
+        if block_given?
+          yield(sugar,link)
+        end
       end
     }
     sugar
   end
 
-  def apply_to_each_substrate(sugar)
+  def apply_to_each_substrate(sugar, &callback)
     if ( @seen[sugar] )
       return []
     end
@@ -95,7 +104,7 @@ class Glycotransferase
     acceptor_count = acceptors(sugar).length - 1
     (0..acceptor_count).each do
       target = sugar.deep_clone
-      apply_in_place(target,acceptors(target)[results.length])
+      apply_in_place(target,acceptors(target)[results.length], &callback)
       results << target
     end
     results
