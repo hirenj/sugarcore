@@ -23,6 +23,7 @@ class Sugar
     include DefaultReaderWriter
 
     attr :root
+    attr_accessor :name
 
 		def finish
 		  if (@root != nil)

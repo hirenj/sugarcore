@@ -50,7 +50,7 @@ class SvgRenderer
 
       if ( prototypes[res_id] != nil )
         icon = Element.new('svg:use')
-        icon.add_attribute('xlink:href' , "#proto-#{res_id}")
+        icon.add_attribute('xlink:href' , "#sug#{sugar.name}-proto-#{res_id}")
       end
       if ( res.prototype != nil )
         icon = Document.new(res.prototype.to_s).root
@@ -86,14 +86,14 @@ class SvgRenderer
     }
     prototypes.each { |key,val|
       proto_copy = Document.new(val.to_s).root
-      proto_copy.add_attribute('id', "proto-#{key}")
+      proto_copy.add_attribute('id', "sug#{sugar.name}-proto-#{key}")
+      proto_copy.add_attribute('class', "#{key}")
       definitions.add_element(proto_copy)
     }
   	doc.root.add_attribute('viewBox', "0 0 #{max_x+200} #{max_y+200}")
   	doc.root.add_attribute('preserveAspectRatio', 'xMinYMin')
   	drawing.add_attribute('transform',"scale(-1,-1) translate(#{-1*(max_x+100)},#{-1*(max_y+100)})")
-  	#doc << XMLDecl.new()
-    return doc.to_s
+    return doc
   end
   
   def initialize()
