@@ -38,18 +38,48 @@ end
 # Condensed IUPAC-based builder
 module CondensedIupacSugarBuilder
 
-  @@ResidueClass = NamespacedMonosaccharide
-
-
-  @@LinkageClass = IupacLinkage
-
-
+  # This is a bit tricky!
+  # Append features is called when you call an include
+  # on this module. We could almost hard code the classes created 
+  # by the factory into the instance methods of monosaccharide_factory
+  # and linkage_factory, but we can save on some code by having them call
+  # these two other instance methods: residueClass and linkageClass.
+  # These methods return the classes which need to be instantiated
+  # Also - we can't just directly call the class methods ResidueClass and 
+  # LinkageClass because objects that have their building functionality 
+  # added in by an extend() will not have the class methods.
+  
+  # However - for any other module which is further modifying the 
+  # base linkage and residue classes, we want a method to basically 
+  # subclass the classes on the classes we specify here. So, in
+  # the append_features method, we add some class methods.
+  
+  def self.append_features(base)
+    super(base)
+    class << base
+      def ResidueClass
+        NamespacedMonosaccharide
+      end
+      def LinkageClass
+        IupacLinkage
+      end      
+    end
+  end
+  
+  def residueClass
+    NamespacedMonosaccharide
+  end
+  
+  def linkageClass
+    IupacLinkage    
+  end
+  
   def monosaccharide_factory(prototype)
-    return Monosaccharide.Factory(@@ResidueClass,prototype)
+    return Monosaccharide.Factory(residueClass,prototype)
   end
   
   def linkage_factory(prototype)
-    return Linkage.Factory(@@LinkageClass, prototype)
+    return Linkage.Factory(linkageClass, prototype)
   end
   
 	def parse_sequence(input_string)

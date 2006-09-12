@@ -11,16 +11,20 @@ class SvgSugar < Sugar
   include CondensedIupacSugarWriter
   include Renderable::Sugar
 
-  def monosaccharide_factory(proto)
-    mono = super(proto)
-    mono.extend(Renderable::Residue)
-    return mono
+  class ResidueClass < self.ResidueClass
+    include Renderable::Residue
+  end
+
+  class LinkageClass < self.LinkageClass
+    include Renderable::Link
+  end
+
+  def residueClass
+    ResidueClass
   end
   
-  def linkage_factory(proto)
-    linkage = super(proto)
-    linkage.extend(Renderable::Link)
-    return linkage    
+  def linkageClass
+    LinkageClass
   end
   
 end
