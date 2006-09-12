@@ -10,9 +10,8 @@ class Linkage
 	attr_reader :first_position, :second_position
 	attr_reader :first_residue, :second_residue
 
-  def Linkage.Factory( class_module, linkage_string )
-    linkage  = Linkage.new()
-    linkage.extend(class_module)
+  def Linkage.Factory( proto_class , linkage_string )
+    linkage  = proto_class.new()
     linkage.read_linkage(linkage_string)
     linkage
   end

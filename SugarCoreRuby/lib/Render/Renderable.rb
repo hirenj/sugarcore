@@ -11,17 +11,17 @@ end
 
 module Renderable
   
-  attr_accessor :position, :prototype, :size
+  attr_accessor :position, :prototype, :dimensions
 
   def centre
     { :x => ( position[:x1] + position[:x2] ) / 2 , :y => ( position[:y1] + position[:y2] ) / 2 }
   end
 
-  def size
-    if ( @size == nil )
+  def dimensions
+    if ( @dimensions == nil )
       return { :width => 0, :height => 0}
     end
-    return @size
+    return @dimensions
   end
 
   def width
@@ -40,7 +40,7 @@ module Renderable
 
   def position 
     if (@position == nil)
-      @position = { :x1 => 0, :x2 => size[:width], :y1 => 0, :y2 => size[:height] }.extend(Rectangle)
+      @position = { :x1 => 0, :x2 => dimensions[:width], :y1 => 0, :y2 => dimensions[:height] }.extend(Rectangle)
     end
     return @position
   end

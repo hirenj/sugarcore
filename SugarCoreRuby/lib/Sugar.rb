@@ -3,7 +3,7 @@ require "Monosaccharide"
 
 # Default implementation of a reader and writer for sugar sequences
 module DefaultReaderWriter
-    
+        
     # Any mixins for reading sequences must overwrite this method
     def parse_sequence(sequence)
       raise SugarException.new("Could not parse sequence. Perhaps you haven't added parsing capability to this sugar")

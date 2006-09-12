@@ -56,11 +56,13 @@ class Monosaccharide
     cloned
   end
     
-  def shallow_clone
-    result = Monosaccharide.Factory(self.class, @name)
-    result.anomer = anomer
-    return result
+  def copy_residue_info(original)
+    @children = {}
+    @ring_positions = {}
+    @anomer = original.anomer
+    return self
   end
+  
   private
   
   # New method which is hidden to avoid direct instantiation of the 

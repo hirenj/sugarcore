@@ -23,7 +23,7 @@ class SvgRenderer
                                                               :y => 100 - anchor.attribute("y").value().to_i }
       }
       res.offsets = anchors
-      res.size = { :width => 100, :height => 100 }
+      res.dimensions = { :width => 100, :height => 100 }
     }
   end
   
@@ -34,6 +34,8 @@ class SvgRenderer
   	max_y = nil
   	max_x = nil
   	doc.root.add_attribute('version', '1.1')
+  	doc.root.add_attribute('width', '100%')
+  	doc.root.add_attribute('height', '100%')
   	doc.root.add_namespace('svg', SVG_ELEMENT_NS)
   	doc.root.add_namespace('xlink', XLINK_NS)
     definitions = doc.root.add_element('svg:defs')  		
@@ -90,7 +92,7 @@ class SvgRenderer
   	doc.root.add_attribute('viewBox', "0 0 #{max_x+200} #{max_y+200}")
   	doc.root.add_attribute('preserveAspectRatio', 'xMinYMin')
   	drawing.add_attribute('transform',"scale(-1,-1) translate(#{-1*(max_x+100)},#{-1*(max_y+100)})")
-  	doc << XMLDecl.new()
+  	#doc << XMLDecl.new()
     return doc.to_s
   end
   

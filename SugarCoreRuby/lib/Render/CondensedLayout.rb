@@ -1,13 +1,13 @@
 class CondensedLayout
 
-  DEFAULT_NODE_SIZE = { :width => 100, :height => 100 }
+  DEFAULT_NODE_DIMENSIONS = { :width => 100, :height => 100 }
   DEFAULT_NODE_SPACING = { :x => 300, :y => 100 }
 
-  attr_accessor :node_size
+  attr_accessor :node_dimensions
   attr_accessor :node_spacing
 
   def initialize()
-    @node_size = DEFAULT_NODE_SIZE
+    @node_dimensions = DEFAULT_NODE_DIMENSIONS
     @node_spacing = DEFAULT_NODE_SPACING
   end
 
@@ -18,13 +18,13 @@ class CondensedLayout
 
   def do_initial_layout(sugar)
     sugar.depth_first_traversal { |res| 
-      if ( res.size[:width] == 0 && res.size[:height] == 0 )
-        res.size = DEFAULT_NODE_SIZE
+      if ( res.dimensions[:width] == 0 && res.dimensions[:height] == 0 )
+        res.dimensions = DEFAULT_NODE_DIMENSIONS
       end
       y_offset = ( 1 - res.children.length ) * node_spacing[:y]
       res.children.each { |link, residue|
         residue.move(res.position[:x2] + node_spacing[:x] ,y_offset + res.position[:y1])
-        y_offset = y_offset + node_size[:height] + node_spacing[:y]
+        y_offset = y_offset + node_dimensions[:height] + node_spacing[:y]
       }
     }
   end

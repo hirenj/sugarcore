@@ -1,12 +1,55 @@
+require 'Monosaccharide'
+require 'Linkage'
+
+module CondensedIupacLinkageBuilder
+
+  attr :anomer
+
+  def initialize(*args)
+    super
+    class << self 
+      alias_method :base_set_first_residue, :set_first_residue unless method_defined?(:base_set_first_residue)
+      alias_method :set_first_residue, :set_anomer_on_first_residue      
+    end
+  end
+  
+  def set_anomer_on_first_residue(residue, position=@first_position)
+    base_set_first_residue(residue,position)
+    residue.anomer = @anomer
+  end
+
+  def read_linkage(linkage_string)
+  	if linkage_string =~ /([abu])([\d\?u])-([\d\?u])/
+		result = {}
+		@anomer = $1
+		@first_position = $2.to_i
+		@second_position = $3.to_i
+		return result
+  	else
+  		raise MonosaccharideException.new("Linkage #{linkage_string} is not a valid linkage")
+  	end    
+  end
+end
+
+class IupacLinkage < Linkage
+  include CondensedIupacLinkageBuilder
+end
+
 # Condensed IUPAC-based builder
 module CondensedIupacSugarBuilder
 
+  @@ResidueClass = NamespacedMonosaccharide
+
+
+  @@LinkageClass = IupacLinkage
+
+
   def monosaccharide_factory(prototype)
-    return Monosaccharide.Factory(NamespacedMonosaccharide,prototype)
+    return Monosaccharide.Factory(@@ResidueClass,prototype)
   end
   
   def linkage_factory(prototype)
-    return Linkage.Factory(CondensedIupacLinkageBuilder, prototype)
+    return Linkage.Factory(@@LinkageClass, prototype)
   end
   
 	def parse_sequence(input_string)
@@ -45,33 +88,3 @@ module CondensedIupacSugarBuilder
 	
 end
 
-module CondensedIupacLinkageBuilder
-
-  attr :anomer
-
-  def CondensedIupacLinkageBuilder.extend_object(object)
-    super
-    class << object 
-      alias_method :base_set_first_residue, :set_first_residue unless method_defined?(:base_set_first_residue)
-      alias_method :set_first_residue, :set_anomer_on_first_residue      
-    end
-  end
-
-  
-  def set_anomer_on_first_residue(residue, position=@first_position)
-    base_set_first_residue(residue,position)
-    residue.anomer = @anomer
-  end
-
-  def read_linkage(linkage_string)
-  	if linkage_string =~ /([abu])([\d\?u])-([\d\?u])/
-		result = {}
-		@anomer = $1
-		@first_position = $2.to_i
-		@second_position = $3.to_i
-		return result
-  	else
-  		raise MonosaccharideException.new("Linkage #{linkage_string} is not a valid linkage")
-  	end    
-  end
-end
