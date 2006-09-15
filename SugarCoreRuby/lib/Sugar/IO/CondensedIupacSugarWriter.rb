@@ -3,29 +3,29 @@ module CondensedIupacSugarWriter
 	def CondensedIupacSugarWriter.append_features(includingClass)
 		
 		super
-		
-		@@target_namespace = nil
+				
+		@target_namespace = nil
 		
 		def includingClass.Target_Namespace=(ns)
-			@@target_namespace = ns
+			@target_namespace = ns
 		end
 
 		def includingClass.Target_Namespace
-			@target_namespace ? @target_namespace : @@target_namespace
+			@target_namespace
 		end
 
 	end
 
-	def target_namespace=(ns)
-		@target_namespace = ns
-	end
+  def target_namespace=(ns)
+    @target_namespace = ns
+  end
 
 	def target_namespace
-	  if (self.class.respond_to?(:Target_Namespace))
-		  self.class.Target_Namespace() ? self.class.Target_Namespace() : @root.class.Default_Namespace
-		else
-      @target_namespace ? @target_namespace : @root.class.Default_Namespace
-	  end
+	  return @target_namespace if (@target_namespace != nil)
+
+	  return self.class.Target_Namespace() if (self.class.respond_to?(:Target_Namespace) && self.class.Target_Namespace != nil )
+		  
+	  return @root.class.Default_Namespace
 	end
 
 	def write_sequence(root_element)

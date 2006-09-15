@@ -39,14 +39,19 @@ class TC_Monosaccharide < Test::Unit::TestCase
 		assert_nothing_raised {
 		  NamespacedMonosaccharide.Default_Namespace=NamespacedMonosaccharide::GS_NAMESPACE
 		  NamespacedMonosaccharide.Load_Definitions('data/dkfz-dictionary.xml')
-			mono = Monosaccharide.Factory( NamespacedMonosaccharide, 'D-Araf')
+			mono = Monosaccharide.Factory( DKFZNamespacedMonosaccharide, 'D-Araf')
 		}
 		
 		# We shouldn't be able to use IUPAC here
 		
 		assert_raise( MonosaccharideException ) {
-		  Monosaccharide.Factory( NamespacedMonosaccharide, 'Gal')
+		  Monosaccharide.Factory( DKFZNamespacedMonosaccharide, 'Gal')
 		}
+
+		assert_raise( MonosaccharideException ) {
+		  Monosaccharide.Factory( ICNamespacedMonosaccharide, 'D-Galp')
+		}
+
 		
 		# We should reset the namespace here
 	  NamespacedMonosaccharide.Default_Namespace=NamespacedMonosaccharide::IUPAC_NAMESPACE

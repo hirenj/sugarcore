@@ -110,6 +110,17 @@ class Glycotransferase
     results
   end
   
+  def finish
+    @substrate_pattern.finish
+    @substrate_pattern = nil
+    @donor.first_residue.finish
+    if (donor.second_residue != nil)
+      @donor.second_residue.finish
+    end
+    @donor.finish
+    @donor = nil
+  end
+  
   def initialize()
     @seen = Hash.new()
   end

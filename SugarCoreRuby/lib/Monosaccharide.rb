@@ -13,9 +13,19 @@ class Monosaccharide
   # Load the definitions for a particular Monosaccharide dataset
   # This method must be called before any monosaccharides can be
   # instantiated
+    
   def Monosaccharide.Load_Definitions(datafile="data/dictionary.xml")
+    path = File.dirname(datafile)
+    ICNamespacedMonosaccharide.Do_Load_Definitions("#{path}/ic-dictionary.xml")
+    DKFZNamespacedMonosaccharide.Do_Load_Definitions("#{path}/dkfz-dictionary.xml")
+    Monosaccharide.Do_Load_Definitions(datafile)
+  end
+  
+  def self.Do_Load_Definitions(datafile="data/dictionary.xml")
     @@MONO_DATA_FILENAME = datafile
   	@@MONO_DATA = XPath.match(Document.new( File.new(datafile) ), "/glycanDict")
+  	@mono_data_filename = @@MONO_DATA_FILENAME
+  	@mono_data = @@MONO_DATA
   end
 
   # Instantiate a new Monosaccharide using a particular subclass, and having
@@ -41,7 +51,7 @@ class Monosaccharide
   # The namespace that the name of this identifier is found within
   attr		:namespace
     
-  def initialize(name)
+  def initialize(name)    
     debug "Doing the initialisation for #{name}."
     @name = name.strip
     @children = {}
@@ -75,6 +85,14 @@ class Monosaccharide
   # directly instantiate a monosaccharide.
   def Monosaccharide.new_mono(*args)
     new(*args)
+  end
+
+  def self.mono_data
+    @mono_data
+  end
+
+  def self.mono_data_filename
+    @mono_data
   end
     
   public
@@ -263,15 +281,16 @@ class NamespacedMonosaccharide < Monosaccharide
 	def initialize_from_data
     
     debug "Initialising #{name} in namespace #{self.class.Default_Namespace}."
-	
-  	mono_data_node = XPath.first(	@@MONO_DATA, 
+	  data_source = self.class.mono_data ? self.class.mono_data : @@MONO_DATA
+	  
+  	mono_data_node = XPath.first(	data_source, 
   									"./unit[@xyz:name='#{@name}']",
   									{ 'xyz' => self.class.Default_Namespace }
   									 )
   #		string(namespace::*[name() =substring-before(@type, ':')]) 
 			
   	if ( mono_data_node == nil )
-  		raise MonosaccharideException.new("Residue #{self.name} not found in default namespace #{self.class.Default_Namespace} from #{@@MONO_DATA_FILENAME}")
+  		raise MonosaccharideException.new("Residue #{self.name} not found in default namespace #{self.class.Default_Namespace} from #{self.class.mono_data_filename ? self.class.mono_data_filename : @@MONO_DATA_FILENAME}")
   	end
 
   	@alternate_name[self.class.Default_Namespace] = self.name()
@@ -290,4 +309,16 @@ class NamespacedMonosaccharide < Monosaccharide
       # FIXME - ADD ATTACHMENT POSITION INFORMATION	
 	end
 		
+end
+
+class ICNamespacedMonosaccharide < NamespacedMonosaccharide
+    def self.Default_Namespace
+      IUPAC_NAMESPACE
+    end
+end
+
+class DKFZNamespacedMonosaccharide < NamespacedMonosaccharide
+  def self.Default_Namespace
+    GS_NAMESPACE
+  end
 end
