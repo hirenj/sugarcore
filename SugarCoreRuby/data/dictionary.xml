@@ -265,14 +265,14 @@
 		<name type="alternate" value="ic:Cer" />
 		<property name="class" value="ic:AA"/>
 		<disp:icon scheme="boston">
-			<disp:anchor linkage="1" x="50" y="50" />
-			<disp:anchor linkage="2" x="50" y="50" />
-			<disp:anchor linkage="3" x="50" y="50" />
-			<disp:anchor linkage="4" x="50" y="50" />
-			<disp:anchor linkage="5" x="50" y="50" />
-			<disp:anchor linkage="6" x="50" y="50" />
+			<disp:anchor linkage="1" x="0" y="50" />
+			<disp:anchor linkage="2" x="0" y="50" />
+			<disp:anchor linkage="3" x="0" y="50" />
+			<disp:anchor linkage="4" x="0" y="50" />
+			<disp:anchor linkage="5" x="0" y="50" />
+			<disp:anchor linkage="6" x="0" y="50" />
 			<svg:g>
-	    		<svg:text width="100" height="100" x="0" y="0">Cer</svg:text>
+	    		<svg:text width="100" height="100" x="50" y="70" style="fill: #0000ff; text-anchor: middle;" font-size="50">Cer</svg:text>
 			</svg:g>
 		</disp:icon>
 	</unit>
@@ -291,14 +291,14 @@
 		<name type="alternate" value="ic:Ser" />
 		<property name="class" value="ic:AA"/>
 		<disp:icon scheme="boston">
-			<disp:anchor linkage="1" x="50" y="50" />
-			<disp:anchor linkage="2" x="50" y="50" />
-			<disp:anchor linkage="3" x="50" y="50" />
-			<disp:anchor linkage="4" x="50" y="50" />
-			<disp:anchor linkage="5" x="50" y="50" />
-			<disp:anchor linkage="6" x="50" y="50" />
+			<disp:anchor linkage="1" x="0" y="50" />
+			<disp:anchor linkage="2" x="0" y="50" />
+			<disp:anchor linkage="3" x="0" y="50" />
+			<disp:anchor linkage="4" x="0" y="50" />
+			<disp:anchor linkage="5" x="0" y="50" />
+			<disp:anchor linkage="6" x="0" y="50" />
 			<svg:g>
-	    		<svg:text width="100" height="100" x="0" y="0">Ser</svg:text>
+	    		<svg:text width="100" height="100" x="50" y="70" style="fill: #0000ff; text-anchor: middle;" font-size="50">Ser</svg:text>
 			</svg:g>
 		</disp:icon>
 	</unit>
