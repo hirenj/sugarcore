@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xsl:transform version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:dict="http://penguins.mooh.org/research/glycan-dict-0.1" xmlns:dkfz="http://glycosciences.de" xmlns:ic="http://www.iupac.org/condensed" >
+<xsl:transform version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:dict="http://penguins.mooh.org/research/glycan-dict-0.1" xmlns:dkfz="http://glycosciences.de" xmlns:ic="http://www.iupac.org/condensed" xmlns:disp="http://penguins.mooh.org/research/glycan-display-0.1" xmlns:svg="http://www.w3.org/2000/svg" >
 <xsl:output method="xml" indent="yes" />
 <!--
 Set the outputtype to dkfz or ic to switch between the two different namespaces
