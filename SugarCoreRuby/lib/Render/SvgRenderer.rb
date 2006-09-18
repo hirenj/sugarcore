@@ -76,8 +76,14 @@ class SvgRenderer
       if res.labels.length > 0 
         icon.add_attribute('class', res.labels.join(" "))
       end
+
       
       residues.add_element icon
+
+      res.callbacks.each { |callback|
+        callback.call(icon)
+      }
+
       
       res.children.each { |linkage,child|
         line = linkages.add_element('svg:line')
@@ -90,6 +96,9 @@ class SvgRenderer
         if linkage.labels.length > 0
           line.add_attribute('class', linkage.labels.join(" "))
         end
+        linkage.callbacks.each { |callback|
+          callback.call(line)
+        }
       }
     }
     prototypes.each { |key,val|

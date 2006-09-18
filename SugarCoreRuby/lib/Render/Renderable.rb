@@ -11,7 +11,14 @@ end
 
 module Renderable
   
-  attr_accessor :position, :prototype, :dimensions, :labels
+  attr_accessor :position, :prototype, :dimensions, :labels, :callbacks
+
+  def callbacks
+    if ( ! @callbacks )
+      @callbacks = Array.new()
+    end
+    @callbacks
+  end
 
   def labels
     if ( ! @labels )
