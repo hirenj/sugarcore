@@ -47,8 +47,8 @@ end
 
 module CondensedIupacLinkageWriter
   def to_sequence
-    second_pos_string = second_position > 0 ? second_position : '?'
-    first_pos_string = first_position > 0 ? first_position : '?'
+    second_pos_string = second_position > 0 ? second_position : 'u'
+    first_pos_string = first_position > 0 ? first_position : 'u'
 		return "#{self.first_residue.anomer}#{first_pos_string}-#{second_pos_string}"
 	end
 end

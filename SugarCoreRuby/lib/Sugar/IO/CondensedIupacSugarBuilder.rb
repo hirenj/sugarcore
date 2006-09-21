@@ -22,6 +22,13 @@ module CondensedIupacLinkageBuilder
   	if linkage_string =~ /([abu])([\d\?u])-([\d\?u])/
 		result = {}
 		@anomer = $1
+		if @first_position =~ /[\?u]/
+		  @first_position = -1
+	  end
+		if @second_position =~ /[\?u]/
+		  @second_position = -1
+	  end
+
 		@first_position = $2.to_i
 		@second_position = $3.to_i
 		return result
