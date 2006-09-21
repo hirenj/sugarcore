@@ -88,12 +88,12 @@ module Renderable::Residue
     if ( an_offset = offsets[linkage.get_position_for(self)] ) != nil
       return  an_offset
     end
-    @offsets[0]
+    offsets[1]
   end
 
   def offsets
-    if ( @offsets == nil )
-      return [{ :x => 0, :y => 0 }]
+    if ( @offsets == nil || @offsets.length == 0 )
+      return [nil,{ :x => 50, :y => 50 }]
     end
     @offsets
   end

@@ -11,9 +11,14 @@ class SvgRenderer
   
   def initialise_prototypes
     throw Exception.new("Sugar is not renderable") unless sugar.kind_of? Renderable
-    sugar.residue_composition.each { |res|
+    nil_mono = Monosaccharide.Factory(sugar.root.class,'Nil')
+    [nil_mono, sugar.residue_composition].flatten.each { |res|
       res_id = res.alternate_name(NamespacedMonosaccharide::GS_NAMESPACE)
       prototypes[res_id] = XPath.first(res.raw_data_node, "disp:icon[@scheme='#{scheme}']/svg:g", { 'disp' => DISPLAY_ELEMENT_NS, 'svg' => SVG_ELEMENT_NS })
+      if prototypes[res_id] == nil
+        prototypes[res_id] = prototypes[nil_mono.alternate_name(NamespacedMonosaccharide::GS_NAMESPACE)]
+      end
+      
       prototypes[res_id].add_attribute('width', res.width)
       prototypes[res_id].add_attribute('height', res.height)
 
@@ -107,7 +112,8 @@ class SvgRenderer
       proto_copy.add_attribute('class', "#{key}")
       definitions.add_element(proto_copy)
     }
-  	doc.root.add_attribute('viewBox', "0 0 #{max_x+200} #{max_y+200}")
+        
+  	doc.root.add_attribute('viewBox', "0 0 #{max_x+100} #{max_y+100+(max_y - min_y)}")
   	doc.root.add_attribute('preserveAspectRatio', 'xMinYMin')
   	drawing.add_attribute('transform',"scale(-1,-1) translate(#{-1*(max_x+100)},#{-1*(max_y+100)})")
     return doc
