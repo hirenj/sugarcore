@@ -19,7 +19,7 @@ class TC_Sugar < Test::Unit::TestCase
 2b:b-D-Manp
 3b:a-D-Manp
 4b:a-D-Manp
-5b:a-D-Galp|6d
+5b:a-L-Galp|6d
 __FOO__
 
 	DebugLog.log_level(5)
