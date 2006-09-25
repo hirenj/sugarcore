@@ -10,46 +10,112 @@ include REXML
 class Monosaccharide
     include DebugLog
 
-  # Load the definitions for a particular Monosaccharide dataset
-  # This method must be called before any monosaccharides can be
-  # instantiated
-    
-  def Monosaccharide.Load_Definitions(datafile="data/dictionary.xml")
-    path = File.dirname(datafile)
-    ICNamespacedMonosaccharide.Do_Load_Definitions("#{path}/ic-dictionary.xml")
-    DKFZNamespacedMonosaccharide.Do_Load_Definitions("#{path}/dkfz-dictionary.xml")
-    Monosaccharide.Do_Load_Definitions(datafile)
-  end
+  @@MONO_DATA = nil
+  @@MONO_DATA_FILENAME = nil
   
-  def self.Do_Load_Definitions(datafile="data/dictionary.xml")
-    @@MONO_DATA_FILENAME = datafile
-  	@@MONO_DATA = XPath.match(Document.new( File.new(datafile) ), "/glycanDict")
-  	@mono_data_filename = @@MONO_DATA_FILENAME
-  	@mono_data = @@MONO_DATA
+  # Class methods
+  
+  class << self
+
+  public
+
+    # Load the definitions for a particular Monosaccharide dataset
+    # This method must be called before any monosaccharides can be
+    # instantiated
+
+    def Load_Definitions(datafile="data/dictionary.xml")
+      path = File.dirname(datafile)
+      Monosaccharide.Do_Load_Definitions(datafile)
+      ICNamespacedMonosaccharide.Do_Load_Definitions("#{path}/ic-dictionary.xml")
+      DKFZNamespacedMonosaccharide.Do_Load_Definitions("#{path}/dkfz-dictionary.xml")
+    end
+
+    # Instantiate a new Monosaccharide using a particular subclass, and having
+    # the identifier as specified
+    #
+    # For example:
+    #   Monosaccharide.Factory( NamespacedMonosaccharide, 'Gal' )
+    # or
+    #   Monosaccharide.Factory( NamespacedMonosaccharide, 'D-Fruf' )
+    def Monosaccharide.Factory( classname, identifier )
+    	classname.new_mono(identifier)
+    end
+
+    # Retrieve the monosaccharide data for this particular class
+    def mono_data
+      clazz = self
+      data = nil
+      while ( clazz != nil && data == nil )
+        data = @@MONO_DATA[clazz]
+        clazz = clazz.superclass
+      end
+      return data
+    end
+
+    def mono_data_filename
+      clazz = self
+      data = nil
+      while ( clazz != nil && data == nil ) 
+        data = @@MONO_DATA_FILENAME[clazz]
+        clazz = clazz.superclass
+      end
+      return data
+    end
+
+  protected
+
+    # A wrapper around the new method so that only subclasses can actually
+    # directly instantiate a monosaccharide.
+    def new_mono(*args)
+      new(*args)
+    end
+  
+    # Actually load up the definitions from the data files. The main Load_Definitions 
+    # class is just used to set the definitions for the implementing classes
+    def Do_Load_Definitions(datafile="data/dictionary.xml")
+      if @@MONO_DATA == nil
+        @@MONO_DATA = Hash.new()
+        @@MONO_DATA_FILENAME = Hash.new()
+      end
+      @@MONO_DATA_FILENAME[self] = datafile
+    	@@MONO_DATA[self] = XPath.match(Document.new( File.new(datafile) ), "/glycanDict")
+    end
+
   end
 
-  # Instantiate a new Monosaccharide using a particular subclass, and having
-  # the identifier as specified
-  #
-  # For example:<br/>
-  # <tt>Monosaccharide.Factory( NamespacedMonosaccharide, 'Gal' )</tt>
-  # or
-  # <tt>Monosaccharide.Factory( NamespacedMonosaccharide, 'D-Fruf' )</tt>
-  def Monosaccharide.Factory( classname, identifier )
-  	classname.new_mono(identifier)
-  end
-  
-  # The name/identifier for this monosaccharide
-  attr_reader :name
-  attr :children
-  attr :ring_positions
-  attr :alternate_name
-  attr_writer :parent_position
+  # Anomer configuration for this residue
   attr_accessor :anomer
-  attr_reader :raw_data_node
+  
+  # Alternate name for this residue
+  #--
+  # FIXME We should put this into the NamespacedMonosaccahride subclass, as it's not
+  # common to all residues
+  #++
+  attr_reader :alternate_name
+  
+  # An array of child nodes attached to this residue
+  attr :children
+
+  # The name/identifier for this residue
+  attr_reader :name
 
   # The namespace that the name of this identifier is found within
   attr		:namespace
+
+  # Set the integer position that is consumed by a linkage that is defined
+  # as a linkage to the parent residue of this residue
+  attr_writer :parent_position
+  
+  # Get access to the raw XML data node for this particular residue
+  attr_reader :raw_data_node
+  
+  # Ring positions that are consumed by linkages on children
+  #--
+  # FIXME We should be deriving this from the children array.
+  #++
+  attr :ring_positions
+
+  private :ring_positions
     
   def initialize(name)    
     debug "Doing the initialisation for #{name}."
@@ -60,40 +126,25 @@ class Monosaccharide
     initialize_from_data()
   end
     
+    
+  # Perform a deep clone on this residue, copying all the children and any 
+  # state for this object
   def deep_clone
-    cloned = self.dup
+    cloned = self.clone
     cloned.initialize_from_copy(self)
     cloned
   end
-    
-  def copy_residue_info(original)
-    @children = {}
-    @ring_positions = {}
-    @anomer = original.anomer
-    return self
-  end
   
-  private
+  # Perform a shallow clone of this residue
+  def shallow_clone
+    cloned = self.clone
+    cloned.remove_relations
+    return cloned
+  end
   
   # New method which is hidden to avoid direct instantiation of the 
   # monosaccharide class
   private_class_method :new
-    
-  protected
-  
-  # A wrapper around the new method so that only subclasses can actually
-  # directly instantiate a monosaccharide.
-  def Monosaccharide.new_mono(*args)
-    new(*args)
-  end
-
-  def self.mono_data
-    @mono_data
-  end
-
-  def self.mono_data_filename
-    @mono_data
-  end
     
   public
   
@@ -101,6 +152,16 @@ class Monosaccharide
   # linkage. The residue can be either specified as a  
   # Monosaccharide object, and the linkage can be 
   # specified as a Linkage object
+  #   linkage = Linkage.Factory( LinkageClass, '1-2' )
+  #   p mono.children.length
+  #   # 0
+  #   mono.add_child(linkage, Monosaccharide.Factory(MonosaccharideClass, 'Foo'))
+  #   p mono.children.length
+  #   # 1
+  #--
+  # FIXME We should not be assuming the first and second positions, and should
+  # be dynamically attaching this residue to the open position on the linkage.
+  #++
   def add_child(mono,linkage)
     if (! can_accept?(linkage))
       raise MonosaccharideException.new("Cannot attach linkage to this monosaccharide, attachment point already consumed")
@@ -112,6 +173,23 @@ class Monosaccharide
     return mono
   end
 
+  # Can this residue accept the given linkage. Will return true if the attachment
+  # position on this residue is not already consumed
+  #   linkage = Linkage.Factory( LinkageClass, '1-2' )
+  #   linkage.set_first_residue(somemono)
+  #   mono.add_child(somemono, linkage)
+  #
+  #   a_linkage = Linkage.Factory( LinkageClass, '1-2' )
+  #   a_linkage.set_first_residue(someothermono)
+  #   p mono.can_accept?(a_linkage) # false
+  #
+  #   b_linkage = Linkage.Factory( LinkageClass, '1-3' )
+  #   b_linkage.set_first_residue(someothermono)
+  #   p mono.can_accept?(b_linkage) # true
+  #--
+  # FIXME We should not be assuming the first and second positions, and should
+  # be dynamically attaching this residue to the open position on the linkage.
+  #++  
   def can_accept?(linkage)
     ! self.attachment_position_consumed?(linkage.second_position)
   end
@@ -132,7 +210,9 @@ class Monosaccharide
 
   # The residues which are attached to this residue
   # Returns an array of tuples of linkage and attached residue
-  #FIXME - We need to enshrine a sorting algorithm into the branches
+  #--
+  # FIXME - We need to enshrine a sorting algorithm into the branches
+  #++
   def children
     newarray = @children.sort { |a,b|
     	linkagea = a[0].get_position_for(self)
@@ -220,30 +300,36 @@ class Monosaccharide
 
   # Clean up circular references that this residue may have
   def finish
+    
     @children.each { |link,node| 
       link.finish()
       node.finish()
     }
 
-    @children = {}
     @ring_positions.each { |pos,node| 
       node.finish()
     }
-    @ring_positions = {}
+
+    remove_relations
+    
   end
+    
+  protected
 
 	def initialize_from_copy(original)
-	  @ring_positions = {}
-	  @children = {}
+    remove_relations
 	  original.children.each { |link, child|
 	    add_child(child.deep_clone, link.deep_clone)
 	  }
   end
 
-    
+  def remove_relations
+    @ring_positions = {}
+    @children = {}
+  end
+
   private
 
-    
   def initialize_from_data
   	raise MonosaccharideException.new("Trying to initialize base Monosaccharide")
   end
@@ -279,9 +365,8 @@ class NamespacedMonosaccharide < Monosaccharide
   protected
   
 	def initialize_from_data
-    
     debug "Initialising #{name} in namespace #{self.class.Default_Namespace}."
-	  data_source = self.class.mono_data ? self.class.mono_data : @@MONO_DATA
+	  data_source = self.class.mono_data
 	  
   	mono_data_node = XPath.first(	data_source, 
   									"./unit[@xyz:name='#{@name}']",

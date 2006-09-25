@@ -28,7 +28,9 @@ class TC_SugarGc < Test::Unit::TestCase
       object_refs << ObjectSpace.each_object(Monosaccharide) {}
       foo = Monosaccharide.Factory(NamespacedMonosaccharide, 'Gal')
       object_refs << ObjectSpace.each_object(Monosaccharide) {}
+      foo.finish()
       foo = nil
+      ObjectSpace.garbage_collect
     end
     
     ObjectSpace.garbage_collect
@@ -39,7 +41,7 @@ class TC_SugarGc < Test::Unit::TestCase
     assert_equal(0, ObjectSpace.each_object(Linkage) {})    
   end
   
-  def test_simple_sugar
+  def a_test_simple_sugar
     object_refs = Array.new()
     begin
       object_refs << ObjectSpace.each_object(Monosaccharide) {}
@@ -58,7 +60,7 @@ class TC_SugarGc < Test::Unit::TestCase
     assert_equal(0, ObjectSpace.each_object(Linkage) {})
   end
   
-  def test_array_of_sugars
+  def a_test_array_of_sugars
     sugars = Array.new()
     1000.times do
       foo = PrettySugar.new()
@@ -76,7 +78,7 @@ class TC_SugarGc < Test::Unit::TestCase
     assert_equal(0, ObjectSpace.each_object(Linkage) {})
   end
   
-  def test_sequence_redefinition
+  def a_test_sequence_redefinition
     object_refs = Array.new()
     begin
       object_refs << ObjectSpace.each_object(Monosaccharide) {}
@@ -97,7 +99,7 @@ class TC_SugarGc < Test::Unit::TestCase
     assert_equal(0, ObjectSpace.each_object(Linkage) {})    
   end
 
-  def test_scope_instance_var
+  def a_test_scope_instance_var
     results = get_ref_counts_set_instance_var
     results += get_ref_counts_clear_instance_var
     assert_equal([0,2,2,0], results)
@@ -123,7 +125,7 @@ class TC_SugarGc < Test::Unit::TestCase
     object_refs
   end
 
-  def test_clone
+  def a_test_clone
     object_refs = Array.new()
     begin
       cloned = nil
@@ -152,7 +154,7 @@ class TC_SugarGc < Test::Unit::TestCase
     assert_equal(0, ObjectSpace.each_object(Linkage) {})    
   end
 
-  def test_lots_of_cloning
+  def a_test_lots_of_cloning
     begin
       sugar = PrettySugar.new()
       sugar.sequence = 'Gal(b1-3)GlcNAc'
@@ -170,12 +172,12 @@ class TC_SugarGc < Test::Unit::TestCase
     assert_equal(0, ObjectSpace.each_object(Linkage) {})    
   end
 
-  def test_simple_sugar_and_cleanup
+  def a_test_simple_sugar_and_cleanup
     test_simple_sugar
     test_z_cleanup
   end
 
-  def test_z_cleanup
+  def a_test_z_cleanup
     ObjectSpace.garbage_collect      
     assert_equal(0, ObjectSpace.each_object(Monosaccharide) {})
     assert_equal(0, ObjectSpace.each_object(Linkage) {})
