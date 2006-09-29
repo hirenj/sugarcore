@@ -90,7 +90,8 @@ class SvgRenderer
       }
 
       
-      res.children.each { |linkage,child|
+      res.children.each { |child|
+        linkage = child[:link]
         line = linkages.add_element('svg:line')
         line.add_attribute('x1',linkage.position[:x1])
         line.add_attribute('y1',linkage.position[:y1])

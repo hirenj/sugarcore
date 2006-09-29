@@ -48,9 +48,9 @@ class Glycotransferase
   def Glycotransferase.CreateFromSugar(sugar)
     enzyme = Glycotransferase.new()
     first_child = sugar.get_path_to_root()[0]
-    second_child = first_child.children[0][1]
+    second_child = first_child.children[0][:residue]
     enzyme.substrate_pattern = first_child.shallow_clone
-    enzyme.donor = sugar.get_path_to_root()[0].children[0][0].deep_clone
+    enzyme.donor = sugar.get_path_to_root()[0].children[0][:link].deep_clone
     enzyme.donor.set_first_residue(second_child.shallow_clone)
     return enzyme
   end

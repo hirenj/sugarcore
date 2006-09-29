@@ -52,6 +52,7 @@ class Monosaccharide
       return data
     end
 
+    # The file that contains the monosaccharide data for this class
     def mono_data_filename
       clazz = self
       data = nil
@@ -120,7 +121,7 @@ class Monosaccharide
   def initialize(name)    
     debug "Doing the initialisation for #{name}."
     @name = name.strip
-    @children = {}
+    @children = []
     @ring_positions = {}
     @alternate_name = {}
     initialize_from_data()
@@ -166,7 +167,7 @@ class Monosaccharide
     if (! can_accept?(linkage))
       raise MonosaccharideException.new("Cannot attach linkage to this monosaccharide, attachment point already consumed")
     end
-    @children[linkage] = mono
+    @children.push( :link => linkage, :residue => mono )
     linkage.set_first_residue(mono)
     linkage.set_second_residue(self)
     mono.parent_position = linkage.get_position_for(mono)
@@ -196,6 +197,8 @@ class Monosaccharide
   
   # Retrieve an alternate name for this residue, as found in another 
   # namespace
+  #   p mono.name # Gal
+  #   p mono.alternate_name(mono.alternate_namespaces[1]) # Gal-alternate-1
 	def alternate_name(namespace)
 		if ( ! @alternate_name[namespace] )
 			raise MonosaccharideException.new("No name defined in namespace #{namespace} for #{name}")
@@ -204,25 +207,28 @@ class Monosaccharide
 	end
 
   # Get the set of alternate namespaces defined for this residue
+  #   p mono.alternate_namespaces # [ 'http://glycosciences.de', 'http://iupac' ]
   def alternate_namespaces
       return @alternate_name.keys()
   end
 
   # The residues which are attached to this residue
-  # Returns an array of tuples of linkage and attached residue
+  # Returns an array of hash slices with linkage and child
+  #   mono.children   # [ {:link => Linkage , :residue => Residue }, {:link => Linkage, :residue => Residue }] 
   #--
   # FIXME - We need to enshrine a sorting algorithm into the branches
   #++
   def children
-    newarray = @children.sort { |a,b|
-    	linkagea = a[0].get_position_for(self)
-    	linkageb = b[0].get_position_for(self)
-      linkagea<=>linkageb
+    newarray = @children.sort_by { |a|
+    	a[:link].get_position_for(self)
     }
     return newarray
   end
 
   # Test for seeing if a residue is a parent of this residue
+  #   mono.children[0][:residue].child_of?(mono)             # true
+  #   mono.children[0][:residue].children[0][:residue].child_of?(mono) # true
+  #   mono.children[0][:residue].child_of?(mono.children[1][:residue]) # false
   def child_of?(residue)
     residue.residue_composition.include?(self)
   end
@@ -278,7 +284,7 @@ class Monosaccharide
   # residues
   def residue_composition
   	descendants = [self]
-  	kids = children.collect { |child| child[1] }
+  	kids = children.collect { |child| child[:residue] }
   	kids.each { |child|
   		descendants += child.residue_composition
   	}
@@ -294,16 +300,17 @@ class Monosaccharide
   # String representation of this residue
   def to_s
       stringified = "#{@name}["
-      @children.each {|k,v| stringified +="#{k} -> #{v}"}
+      @children.each {|kid| stringified +="#{kid[:link]} -> #{kid[:residue]}"}
       stringified += "]\n" 
   end
 
   # Clean up circular references that this residue may have
   def finish
-    
-    @children.each { |link,node| 
-      link.finish()
-      node.finish()
+    @children.each { |kid| 
+      kid[:link].finish()
+      kid[:link] = nil
+      kid[:residue].finish()
+      kid[:residue] = nil
     }
 
     @ring_positions.each { |pos,node| 
@@ -318,14 +325,14 @@ class Monosaccharide
 
 	def initialize_from_copy(original)
     remove_relations
-	  original.children.each { |link, child|
-	    add_child(child.deep_clone, link.deep_clone)
+	  original.children.each { |child|
+	    add_child(child[:residue].deep_clone, child[:link].deep_clone)
 	  }
   end
 
   def remove_relations
     @ring_positions = {}
-    @children = {}
+    @children = []
   end
 
   private

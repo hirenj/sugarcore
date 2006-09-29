@@ -22,8 +22,8 @@ class CondensedLayout
         res.dimensions = DEFAULT_NODE_DIMENSIONS
       end
       y_offset = ( 1 - res.children.length ) * node_spacing[:y]
-      res.children.each { |link, residue|
-        residue.move(res.position[:x2] + node_spacing[:x] ,y_offset + res.position[:y1])
+      res.children.each { |child|
+        child[:residue].move(res.position[:x2] + node_spacing[:x] ,y_offset + res.position[:y1])
         y_offset = y_offset + node_dimensions[:height] + node_spacing[:y]
       }
     }
@@ -34,12 +34,12 @@ class CondensedLayout
       sugar.node_to_root_traversal(residue) { |res|
         if res.parent != nil
           res_box = res.box
-          res.parent.children.each { |link, sibling|
-            if sibling != res
-              sib_box = sibling.box
+          res.parent.children.each { |child|
+            if child[:residue] != res
+              sib_box = child[:residue].box
               if (inter_box = calculate_intersection(sib_box, res_box)) != nil
                 spread_siblings(res.parent, inter_box.height)
-                sib_box = sibling.box
+                sib_box = child[:residue].box
                 res_box = res.box
               end
             end 
@@ -51,9 +51,9 @@ class CondensedLayout
 
   def spread_siblings(node, delta)
     return if (delta == 0)
-    kids = node.children.collect { |link, sibling| sibling }
+    kids = node.children.collect { |child| child[:residue] }
     above_kids = 1
-    below_kids = node.children.collect { |link, sibling| sibling }.delete_if { |res|
+    below_kids = node.children.collect { |child| child[:residue] }.delete_if { |res|
       res.position[:y1] < 0
     }.length
     kids.each { |kid|

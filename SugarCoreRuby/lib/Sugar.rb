@@ -202,8 +202,8 @@ class Sugar
             else
               results.push(start)
             end
-            children.each { |link, residue|
-              results += dfs.call( residue, residue.children )
+            children.each { |child|
+              results += dfs.call( child[:residue], child[:residue].children )
             }
             results
           rescue SugarTraversalBreakSignal
@@ -228,7 +228,7 @@ class Sugar
           else
             results.push(start)
           end
-          queue += children.collect { |link, residue| residue }
+          queue += children.collect { |child| child[:residue] }
           current = queue.shift
           if (current != nil)
             bfs.call( current, current.children )

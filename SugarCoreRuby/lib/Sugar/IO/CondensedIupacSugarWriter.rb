@@ -33,12 +33,12 @@ module CondensedIupacSugarWriter
     children = root_element.children
     first_child = children.shift
     if ( first_child )
-      first_child[0].extend(CondensedIupacLinkageWriter)
-      string_rep += sequence_from_residue(first_child[1]) + '(' + first_child[0].to_sequence + ')'
+      first_child[:link].extend(CondensedIupacLinkageWriter)
+      string_rep += sequence_from_residue(first_child[:residue]) + '(' + first_child[:link].to_sequence + ')'
     end
     children.reverse.each { |branch|
-      branch[0].extend(CondensedIupacLinkageWriter)
-      string_rep += '[' + sequence_from_residue(branch[1]) + '(' + branch[0].to_sequence + ')]' 
+      branch[:link].extend(CondensedIupacLinkageWriter)
+      string_rep += '[' + sequence_from_residue(branch[:residue]) + '(' + branch[:link].to_sequence + ')]' 
     }
     string_rep += self.target_namespace ? root_element.alternate_name(self.target_namespace) : root_element.name()
     return string_rep	

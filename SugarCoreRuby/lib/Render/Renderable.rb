@@ -79,8 +79,8 @@ module Renderable::Residue
   
   def translate(deltax=0,deltay=0)
     move(deltax,deltay)
-    children.each { |link, residue|
-      residue.translate(deltax,deltay)
+    children.each { |child|
+      child[:residue].translate(deltax,deltay)
     }
   end
   
@@ -106,8 +106,8 @@ module Renderable::Residue
     max_y = -100000
     
     
-    children.each { |link,child|
-      link_box = link.get_paired_residue(self).box
+    children.each { |child|
+      link_box = child[:link].get_paired_residue(self).box
 
       if link_box[:x1] < min_x
         min_x = link_box[:x1]
