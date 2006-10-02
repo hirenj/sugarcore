@@ -2,8 +2,10 @@ require "DebugLog"
 require "Monosaccharide"
 
 # Default implementation of a reader and writer for sugar sequences
+# This is automatically added to all Sugar objects
 module DefaultReaderWriter
 
+  protected
     # Any mixins for reading sequences must overwrite this method
     def parse_sequence(sequence)
       raise SugarException.new("Could not parse sequence. Perhaps you haven't added parsing capability to this sugar")
@@ -17,6 +19,16 @@ module DefaultReaderWriter
 end
 
 # Sugar class for representing sugars for various bioinformatic manipulations
+# Since there are circular references within objects, it is very important to 
+# finish off all sugars once you are finished with them by calling the finish()
+# method.
+#   sug = Sugar.new
+#   sug.sequence = 'Gal(b1-3)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc'
+#   sug.residue_composition                           # [Gal,GlcNAc,GlcNAc]
+#   sug.size                                          # 3
+#   sug.breadth_first_traversal { |res| p res.name }  # GlcNAc, GlcNAc, Fuc, Gal
+#   sug.depth_first_traversal { |res| p res.name }    # GlcNAc, GlcNAc, Gal, Fuc
+#   sug.finish
 class Sugar
 	  #mixin Debugging tools
     include DebugLog
@@ -25,6 +37,7 @@ class Sugar
     attr :root
     attr_accessor :name
 
+    # Finish this sugar by breaking any cyclical references
 		def finish
 		  if (@root != nil)
 		    @root.finish
@@ -32,6 +45,8 @@ class Sugar
 	    end
 	  end
 		
+		# Perform a deep cloning of this sugar - equivalent to creating another 
+		# sugar with the same sequence
     def deep_clone
       cloned = self.dup
       cloned.initialize_from_copy(self)
@@ -42,9 +57,16 @@ class Sugar
 		  @root = original.get_path_to_root[0].deep_clone
 	  end
 	  
+	  protected :initialize_from_copy
+	  
     # Set the sequence for this sugar. The Sugar must be able to 
     # parse this sequence (done by extending the Sugar), otherwise
     # it will raise a SugarException
+    #   sug = Sugar.new()
+    #   sug.sequence = 'Gal(b1-3)GlcNAc'    # SugarException => "Could not parse sequence"
+    #   sug.extend(CondensedIupacSugarBuilder)
+    #   sug.sequence = 'Gal(b1-3)GlcNAc'
+    #   sug.size                            # 2
     def sequence=(seq)
     	if (@root != nil)
     		finish
