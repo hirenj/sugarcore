@@ -234,6 +234,10 @@ class Monosaccharide
   end
 
   # Consume an attachment position on the ring
+  #--
+  # FIXME - We shouldn't be keeping track of this. Maybe maintain the attachment
+  # positions from the children arrays?
+  #++
 	def consume_attachment_position(attachment_position, linkage)
 		@ring_positions[attachment_position] = linkage
 		# FIXME - NEED TO HAVE LIST OF POSITIONS TO CONSUME
@@ -248,11 +252,20 @@ class Monosaccharide
 
   # Test to see if the attachment position specified has been consumed by
   # another residue
+  #   sugar = Sugar.new()
+  #   sugar.sequence = Gal(b1-3)GlcNAc
+  #   root.attachment_position_consumed?(3)    # true
+  #   root.attachment_position_consumed?(2)    # false
   def attachment_position_consumed?(attachment_position)
     return linkage_at_position(attachment_position) != nil
   end
   
   # The residue at the specified attachment position
+  #   sugar = Sugar.new()
+  #   sugar.sequence = Gal(b1-3)GlcNAc
+  #   root.residue_at_position(3)       # Gal
+  #   glcnac.residue_at_position(1)     # GlcNAc
+  #   glcnac.residue_at_position(3)     # nil  
 	def residue_at_position(attachment_position)
 		if ( attachment_position_consumed?(attachment_position) )
 			return linkage_at_position(attachment_position).get_paired_residue(self)
@@ -268,11 +281,15 @@ class Monosaccharide
 	end
 
   # Consumed positions on the ring
+  #   sugar.sequence                # Gal(b1-3)[Gal(b1-4)]GalNAc
+  #   root.consumed_positions       # [3,4]
   def consumed_positions
     return @ring_positions.keys
   end
 
-  # The position this residue is linked to on to at a given position ( uses the parent position by default)
+  # The position this residue is linked to on to at a given position ( uses the parent position by default )
+  #   residue.paired_residue_position()   # parent residue if there is a parent residue
+  #   residue.paired_residue_position(3)  # 3-linked residue from this residue
   def paired_residue_position(attachment_position=@parent_position)
     if (linkage_at_position(attachment_position) == nil)
       return nil
@@ -282,6 +299,8 @@ class Monosaccharide
 
   # The residue composition of this monosaccharide and all of its attached
   # residues
+  #   sugar.sequence                  # Gal(b1-3)[Gal(b1-4)]GlcNAc(b1-4)GlcNAc
+  #   root.residue_copmosition        # [Gal, Gal, GlcNAc, GlcNAc]
   def residue_composition
   	descendants = [self]
   	kids = children.collect { |child| child[:residue] }
