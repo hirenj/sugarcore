@@ -76,7 +76,9 @@ class Sugar
     end
     
     # Compute the sequence for this sugar. This method is an alias for computing 
-    # sequence_from_child() with a start_residue of root.
+    # sequence_from_residue() with a start_residue of root.
+    #     sug = Sugar.new()
+    #     sug.sequence            # nil
     def sequence
     	sequence_from_residue(@root)
     end

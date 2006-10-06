@@ -1,4 +1,7 @@
+require 'DebugLog'
+
 class SvgRenderer
+  include DebugLog
   
   DISPLAY_ELEMENT_NS = "http://penguins.mooh.org/research/glycan-display-0.1"
   SVG_ELEMENT_NS = "http://www.w3.org/2000/svg"
@@ -27,6 +30,9 @@ class SvgRenderer
         anchors[anchor.attribute("linkage").value().to_i] = { :x => 100 - anchor.attribute("x").value().to_i,
                                                               :y => 100 - anchor.attribute("y").value().to_i }
       }
+      if anchors.empty?
+        anchors = nil_mono.offsets
+      end
       res.offsets = anchors
       res.dimensions = { :width => 100, :height => 100 }
     }
