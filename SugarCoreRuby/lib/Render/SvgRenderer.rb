@@ -131,3 +131,91 @@ class SvgRenderer
     @prototypes = Hash.new()
   end
 end
+
+
+class SimplifiedSvgRenderer < SvgRenderer
+  def render(sugar)
+  	doc = Document.new
+  	doc.add_element(Element.new('svg'))
+  	min_y = nil
+  	max_y = nil
+  	max_x = nil
+  	doc.root.add_attribute('version', '1.1')
+  	doc.root.add_attribute('width', '100%')
+  	doc.root.add_attribute('height', '100%')
+  	doc.root.add_attribute('id', sugar.name)
+  	doc.root.add_attribute('xmlns', SVG_ELEMENT_NS)
+  	doc.root.add_namespace('svg', SVG_ELEMENT_NS)
+  	drawing = doc.root.add_element('g')
+  	linkages = drawing.add_element('g')
+  	residues = drawing.add_element('g')
+  	
+  	icons = Array.new()
+  	
+    sugar.residue_composition.each { |res|
+      res_id = res.alternate_name(NamespacedMonosaccharide::GS_NAMESPACE)
+
+      icon = nil
+
+      if ( prototypes[res_id] != nil )
+        icon = Document.new(prototypes[res_id].to_s).root
+      end
+      icon.add_attribute('transform',"translate(#{res.position[:x1]+100},#{res.position[:y1]+100}) rotate(180) ")
+
+      min_y = (min_y == nil)? res.position[:y1] : min_y
+      if ( res.position[:y1] < min_y )
+        min_y = res.position[:y1]
+      end
+
+      max_x = (max_x == nil)? res.position[:x2] : max_x
+      if ( res.position[:x2] > max_x )
+        max_x = res.position[:x2]
+      end
+
+      max_y = (max_y == nil)? res.position[:y2] : max_y
+      if ( res.position[:y2] > max_y )
+        max_y = res.position[:y2]
+      end
+      
+      if res.labels.length > 0 
+        icon.add_attribute('class', res.labels.join(" "))
+      end
+
+      
+      icons << icon
+
+      res.callbacks.each { |callback|
+        callback.call(icon)
+      }
+
+      
+      res.children.each { |child|
+        linkage = child[:link]
+        line = linkages.add_element('line')
+        line.add_attribute('x1',linkage.position[:x1])
+        line.add_attribute('y1',linkage.position[:y1])
+        line.add_attribute('x2',linkage.position[:x2])
+        line.add_attribute('y2',linkage.position[:y2])
+        line.add_attribute('stroke-width',3)
+        line.add_attribute('stroke','black')
+        if linkage.labels.length > 0
+          line.add_attribute('class', linkage.labels.join(" "))
+        end
+        linkage.callbacks.each { |callback|
+          callback.call(line)
+        }
+      }
+    }
+    
+    icons.sort_by { |icon|
+      icon.get_elements('svg:text').length > 0 ? 1 : 0
+    }.each { |ic|
+      residues.add_element ic
+    }
+    
+  	doc.root.add_attribute('viewBox', "0 0 #{max_x+100} #{max_y+100+(max_y - min_y)}")
+  	doc.root.add_attribute('preserveAspectRatio', 'xMinYMin')
+  	drawing.add_attribute('transform',"scale(-1,-1) translate(#{-1*(max_x+100)},#{-1*(max_y+100)})")
+    return doc
+  end
+end

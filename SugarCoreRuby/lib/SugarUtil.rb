@@ -13,12 +13,12 @@ class SugarUtil
     residues = sugar.residue_composition
     all_links = Hash.new()
     residues.each { |res|
-      res.children.each { |link,res|
-        link.extend(LinkageWriter)
-        if ! all_links.include?(link.to_sequence)
-          all_links[link.to_sequence] = Array.new()
+      res.children.each { |kid|
+        kid[:link].extend(LinkageWriter)
+        if ! all_links.include?(kid[:link].to_sequence)
+          all_links[kid[:link].to_sequence] = Array.new()
         end
-        all_links[link.to_sequence].push( link )
+        all_links[kid[:link].to_sequence].push( kid[:link] )
       }
     }
     return all_links
