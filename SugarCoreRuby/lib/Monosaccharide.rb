@@ -288,8 +288,9 @@ class Monosaccharide
   end
 
   # The position this residue is linked to on to at a given position ( uses the parent position by default )
-  #   residue.paired_residue_position()   # parent residue if there is a parent residue
-  #   residue.paired_residue_position(3)  # 3-linked residue from this residue
+  #   sugar.sequence                      # Gal(b1-3)GlcNAc
+  #   glcnac.paired_residue_position()    # 3
+  #   root.paired_residue_position(3)     # 1
   def paired_residue_position(attachment_position=@parent_position)
     if (linkage_at_position(attachment_position) == nil)
       return nil

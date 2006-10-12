@@ -66,11 +66,24 @@ class Linkage
 		end
 	end
 	
+	def is_unknown?
+	  return ( (@first_position == 0) || (@second_position == 0) )
+  end
+	
+	def reducing_end_substituted_residue
+	  if (@first_residue.linkage_at_position() == self)
+	    return @first_residue
+    end
+	  if (@second_residue.linkage_at_position() == self)
+	    return @second_residue
+    end
+  end
+	
 	def finish
 		@first_residue = nil
 		@second_residue = nil
 	end
-	
+
 	def initialize_from_copy(original)
 	  @first_position = original.first_position
 	  @second_position = original.second_position

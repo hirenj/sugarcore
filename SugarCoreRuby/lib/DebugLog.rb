@@ -42,6 +42,14 @@ module DebugLog
         
     public
 
+    def self.global_logger=(new_logger)
+        @@logger = new_logger
+    end
+    
+    def self.global_logger
+        @@logger
+    end
+
 	def DebugLog.log_level(log_level)
 		@@logger.level = log_level
 	end
