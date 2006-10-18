@@ -15,11 +15,24 @@ class TC_Sugar < Test::Unit::TestCase
   SMALL_STRUCTURE_2 = "GlcNAc(b1-3)GlcNAc"
   SMALL_STRUCTURE_3 = "GalNAc(b1-3)GalNAc"
   LARGE_STRUCTURE_AS_CT = <<__FOO__
-1b:b-D-Glcp|2nac
-2b:b-D-Manp
-3b:a-D-Manp
-4b:a-D-Manp
-5b:a-L-Galp|6d
+RES
+1b:u-dglcp;
+2b:a-dmanp;
+3b:a-dmanp;
+4b:a-lgalp;
+5b:b-dglcp;
+6b:b-dmanp;
+7s:d;
+8s:nac;
+LIN
+1:1(4-1)5;
+2:1(6-1)4;
+3:5(4-1)6;
+4:6(3-1)2;
+5:6(6-1)3;
+6:1o(2-1)8;
+7:4o(6-1)7;
+8:5o(2-1)8;
 __FOO__
 
 	DebugLog.log_level(5)
@@ -56,7 +69,7 @@ __FOO__
 	def test_01_initialisation
 
 		assert_nothing_raised {
-			Monosaccharide.Load_Definitions('data/ic-dictionary.xml')
+			Monosaccharide.Load_Definitions('data/dictionary.xml')
 		}
 	
 		assert_nothing_raised {
@@ -105,9 +118,8 @@ __FOO__
     sugar.extend( CondensedIupacSugarBuilder )
     sugar.extend( GlycoCTWriter )
     sugar.sequence = LARGE_STRUCTURE
-    sugar.target_namespace = NamespacedMonosaccharide::GS_NAMESPACE
-
     assert_equal( LARGE_STRUCTURE_AS_CT, sugar.sequence)
+
   end 
 
 

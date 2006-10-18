@@ -26,8 +26,8 @@ class Monosaccharide
     def Load_Definitions(datafile="data/dictionary.xml")
       path = File.dirname(datafile)
       Monosaccharide.Do_Load_Definitions(datafile)
-      ICNamespacedMonosaccharide.Do_Load_Definitions("#{path}/ic-dictionary.xml")
-      DKFZNamespacedMonosaccharide.Do_Load_Definitions("#{path}/dkfz-dictionary.xml")
+#      ICNamespacedMonosaccharide.Do_Load_Definitions("#{path}/ic-dictionary.xml")
+#      DKFZNamespacedMonosaccharide.Do_Load_Definitions("#{path}/dkfz-dictionary.xml")
     end
 
     # Instantiate a new Monosaccharide using a particular subclass, and having
@@ -79,7 +79,7 @@ class Monosaccharide
         @@MONO_DATA_FILENAME = Hash.new()
       end
       @@MONO_DATA_FILENAME[self] = datafile
-    	@@MONO_DATA[self] = XPath.match(Document.new( File.new(datafile) ), "/glycanDict")
+    	@@MONO_DATA[self] = XPath.match(Document.new( File.new(datafile) ), "/dict:glycanDict", { 'dict' => 'http://penguins.mooh.org/research/glycan-dict-0.2' })
     end
 
   end
@@ -368,7 +368,7 @@ class NamespacedMonosaccharide < Monosaccharide
 
 	IUPAC_NAMESPACE =  "http://www.iupac.org/condensed"
 	GS_NAMESPACE = "http://glycosciences.de"
-	
+	ECDB_NAMESPACE = "http://ns.eurocarbdb.org/glycoct"
 	
 	@@DEFAULT_NAMESPACE = IUPAC_NAMESPACE
 
@@ -395,9 +395,13 @@ class NamespacedMonosaccharide < Monosaccharide
     debug "Initialising #{name} in namespace #{self.class.Default_Namespace}."
 	  data_source = self.class.mono_data
 	  
+	  namespaces = Hash.new()
+	  
+	  XPath.match(data_source, '@*').select {|att| att.prefix = 'xmlns' }.each { |ns_dec|
+	    namespaces[ns_dec.value] = ns_dec.name
+	  }
   	mono_data_node = XPath.first(	data_source, 
-  									"./unit[@xyz:name='#{@name}']",
-  									{ 'xyz' => self.class.Default_Namespace }
+  									"./unit[name[@ns='#{namespaces[self.class.Default_Namespace]}' and @value='#{@name}']]"
   									 )
   #		string(namespace::*[name() =substring-before(@type, ':')]) 
 			
@@ -408,12 +412,13 @@ class NamespacedMonosaccharide < Monosaccharide
   	@alternate_name[self.class.Default_Namespace] = self.name()
 
 
-  	XPath.each(mono_data_node, "./name[@type='alternate']/@value") { |altname|
-  		namevals = altname.value().split(':',2)
-  		namespace = namevals[0]
-  		alternate_name = namevals[1]
-  		@alternate_name[altname.namespace(namespace)] = alternate_name
-  		debug "Adding #{alternate_name} in namespace #{namespace} for #{name}."
+  	XPath.each(mono_data_node, "./name") { |altname|
+  		namespace = altname.attribute('ns').value()
+  		alternate_name = altname.attribute('value').value()
+  		if ( @alternate_name[altname.namespace(namespace)] == nil )
+  		  @alternate_name[altname.namespace(namespace)] = alternate_name
+    		debug "Adding #{alternate_name} in namespace #{namespace} for #{name}."
+		  end
   	}
 
     @raw_data_node = mono_data_node
@@ -434,3 +439,10 @@ class DKFZNamespacedMonosaccharide < NamespacedMonosaccharide
     GS_NAMESPACE
   end
 end
+
+class ECDBNamespacedMonosaccharide < NamespacedMonosaccharide
+  def self.Default_Namespace
+    ECDB_NAMESPACE
+  end
+end
+

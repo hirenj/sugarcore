@@ -1,18 +1,29 @@
 require 'DebugLog'
 require 'SugarException'
 
+module DefaultLinkageReader
+  def read_linkage(linkage_string)
+    @second_position = linkage_string[:from].to_i
+    @first_position = linkage_string[:to].to_i
+  end
+end
+
 =begin rdoc
   Models a linkage between residues
 =end
 class Linkage
 	include DebugLog
+	include DefaultLinkageReader
+	
 	
 	attr_reader :first_position, :second_position
 	attr_reader :first_residue, :second_residue
 
   def Linkage.Factory( proto_class , linkage_string )
     linkage  = proto_class.new()
-    linkage.read_linkage(linkage_string)
+    if (linkage_string != nil)
+      linkage.read_linkage(linkage_string)
+    end
     linkage
   end
   

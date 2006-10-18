@@ -1,9 +1,13 @@
-<glycanDict xmlns="http://penguins.mooh.org/research/glycan-dict-0.1"
+<glycanDict xmlns="http://penguins.mooh.org/research/glycan-dict-0.2"
 			xmlns:dkfz="http://glycosciences.de" 
-			xmlns:ic="http://www.iupac.org/condensed" xmlns:disp="http://penguins.mooh.org/research/glycan-display-0.1" xmlns:svg="http://www.w3.org/2000/svg">
-	<unit ic:name="Nil" dkfz:name="Nil">
-		<name type="alternate" value="dkfz:Nil" />
-		<name type="alternate" value="ic:Nil" />
+			xmlns:ic="http://www.iupac.org/condensed"
+			xmlns:ecdb="http://ns.eurocarbdb.org/glycoct"
+			xmlns:disp="http://penguins.mooh.org/research/glycan-display-0.1"
+			xmlns:svg="http://www.w3.org/2000/svg">
+	<unit id="nil">
+		<name ns="dkfz" value="Nil" />
+		<name ns="ic" value="Nil" />
+		<name ns="ecdb" value="nil" />
 		<disp:icon scheme="boston">
 		  <disp:anchor linkage="1" x="0" y="50" />
 		  <disp:anchor linkage="2" x="100" y="50" />
@@ -33,27 +37,40 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  </svg:g>
 		</disp:icon>
 	</unit>
-	<unit ic:name="Ara" dkfz:name="D-Araf" >
-		<name type="alternate" value="dkfz:D-Araf" />
-		<name type="alternate" value="ic:Ara" />
+	<unit id="daraf">
+		<name ns="dkfz" value="D-Araf" />
+		<name ns="ic" value="Ara" />
+		<name ns="ecdb" value="daraf" />
 		<property name="ringsize" value="5"/>
 		<property name="class" value="ic:Pent"/>
 	</unit>
-	<unit ic:name="Fruf" dkfz:name="D-Fruf" >
-		<name type="alternate" value="dkfz:D-Fruf" />
-		<name type="alternate" value="ic:Fruf" />
+	<unit id="dfruf">
+		<name ns="dkfz" value="D-Fruf" />
+		<name ns="ic" value="Fruf" />
+		<name ns="ecdb" value="dfruf" />		
 		<property name="ringsize" value="5"/>
 		<property name="class" value="ic:Hex"/>
 	</unit>
-	<unit ic:name="DFuc" dkfz:name="D-Galp|6d" >
-		<name type="alternate" value="dkfz:D-Galp|6d" />
-		<name type="alternate" value="ic:DFuc" />
+	<unit id="dgalp|6d">
+		<name ns="dkfz" value="D-Galp|6d" />
+		<name ns="ic" value="DFuc" />
+		<name ns="ecdb" value="dgalp|6d" />
+		<ecdb:substituents>
+			<ecdb:substituent position="6">d</ecdb:substituent>
+		</ecdb:substituents>
+		
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:DeoxyHex"/>
 	</unit>
-	<unit ic:name="Fuc" dkfz:name="L-Galp|6d" >
-		<name type="alternate" value="dkfz:L-Galp|6d" />
-		<name type="alternate" value="ic:Fuc" />
+	<unit id="lgalp|6d">
+		<name ns="dkfz" value="L-Galp|6d" />
+		<name ns="ic" value="Fuc" />
+		<name ns="ic" value="LFuc"/>
+		<name ns="ecdb" value="lgalp|6d"/>
+		<ecdb:substituents>
+			<ecdb:substituent position="6">d</ecdb:substituent>
+		</ecdb:substituents>
+		
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:DeoxyHex"/>
 		<disp:icon scheme="boston">
@@ -91,32 +108,14 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  </svg:g>
 		</disp:icon>
 	</unit>
-	<unit ic:name="LFuc" dkfz:name="L-Galp|6d" >
-		<name type="alternate" value="dkfz:L-Galp|6d" />
-		<name type="alternate" value="ic:LFuc" />
-		<property name="ringsize" value="6"/>
-		<property name="class" value="ic:DeoxyHex"/>
-		<disp:icon scheme="boston">
-		  <disp:anchor linkage="1" x="50" y="50" />
-		  <disp:anchor linkage="2" x="50" y="50" />
-		  <disp:anchor linkage="3" x="50" y="50" />
-		  <disp:anchor linkage="4" x="50" y="50" />
-		  <disp:anchor linkage="5" x="50" y="50" />
-		  <disp:anchor linkage="6" x="50" y="50" />
-		  <svg:g>
-		    <svg:path
-		       d="M -37.742300,46.706896 L -130.25770,46.706896 L -84.000000,-33.413792 L -37.742300,46.706896 z "
-		       transform="translate(135.2577,40.91379)"
-		       style="fill:#ff0000;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
-		       />
-		  </svg:g>
-		</disp:icon>
-	</unit>
-	<unit ic:name="Gal" dkfz:name="D-Galp" >
-		<name type="alternate" value="dkfz:D-Galp" />
-		<name type="alternate" value="ic:Gal" />
+	<unit id="dgalp">
+		<name ns="dkfz" value="D-Galp" />
+		<name ns="ic" value="Gal" />
+		<name ns="ecdb" value="dgalp" />
+		
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
+
 		<disp:icon scheme="boston">
 		  <disp:anchor linkage="1" x="50" y="50" />
 		  <disp:anchor linkage="2" x="50" y="50" />
@@ -147,9 +146,13 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  </svg:g>
 		</disp:icon>
 	</unit>
-	<unit ic:name="GalNAc" dkfz:name="D-Galp|2NAc" >
-		<name type="alternate" value="dkfz:D-Galp|2NAc" />
-		<name type="alternate" value="ic:GalNAc" />
+	<unit id="dgalp|2nac">
+		<name ns="dkfz" value="D-Galp|2NAc" />
+		<name ns="ic" value="GalNAc" />
+		<name ns="ecdb" value="dgalp|2nac" />
+		<ecdb:substituents>
+			<ecdb:substituent position="2">nac</ecdb:substituent>
+		</ecdb:substituents>
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
 		<disp:icon scheme="boston">
@@ -184,15 +187,20 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 			</svg:g>
 		</disp:icon>
 	</unit>
-	<unit ic:name="GalN" dkfz:name="D-Galp|2n" >
-		<name type="alternate" value="dkfz:D-Galp|2n" />		
-		<name type="alternate" value="ic:GalN" />
+	<unit id="dgalp|2n">
+		<name ns="dkfz" value="D-Galp|2n" />		
+		<name ns="ic" value="GalN" />
+		<name ns="ecdb" value="dgalp"/>
+		<ecdb:substituents>
+			<ecdb:substituent position="2">n</ecdb:substituent>
+		</ecdb:substituents>
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
 	</unit>
-	<unit ic:name="Glc" dkfz:name="D-Glcp" >
-		<name type="alternate" value="dkfz:D-Glcp" />	
-		<name type="alternate" value="ic:Glc" />
+	<unit id="dglcp" >
+		<name ns="dkfz" value="D-Glcp" />	
+		<name ns="ic" value="Glc" />
+		<name ns="ecdb" value="dglcp"/>
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
 		<disp:icon scheme="boston">
@@ -227,15 +235,24 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  </svg:g>
 		</disp:icon>
 	</unit>
-	<unit ic:name="GlcA" dkfz:name="D-Glcp|6a" >
-		<name type="alternate" value="dkfz:D-Glcp|6a" />
-		<name type="alternate" value="ic:GlcA" />
+	<unit id="dglcp|6a" >
+		<name ns="dkfz" value="D-Glcp|6a" />
+		<name ns="ic" value="GlcA" />
+		<name ns="ecdb" value="dglcp|6a"/>
+		<ecdb:substituents>
+			<ecdb:substituent position="6">a</ecdb:substituent>
+		</ecdb:substituents>
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
 	</unit>
-	<unit ic:name="GlcNAc" dkfz:name="D-Glcp|2nac" >
-		<name type="alternate" value="dkfz:D-Glcp|2nac" />
-		<name type="alternate" value="ic:GlcNAc" />
+	<unit id="dglcp|2nac" >
+		<name ns="dkfz" value="D-Glcp|2nac" />
+		<name ns="ic" value="GlcNAc" />
+		<name ns="ecdb" value="dglcp|2nac"/>
+		<ecdb:substituents>
+			<ecdb:substituent position="2">nac</ecdb:substituent>
+		</ecdb:substituents>
+		
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
 		<disp:icon scheme="boston">
@@ -273,30 +290,43 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 			</svg:g>
 		</disp:icon>
 	</unit>
-	<unit ic:name="GlcN" dkfz:name="D-Glcp|2n" >
-		<name type="alternate" value="dkfz:D-Glcp|2n" />		
-		<name type="alternate" value="ic:GlcM" />
+	<unit id="dglcp|2n" >
+		<name ns="dkfz" value="D-Glcp|2n" />		
+		<name ns="ic" value="GlcN" />
+		<name ns="ecdb" value="dglcp|2n"/>
+		<ecdb:substituents>
+			<ecdb:substituent position="2">n</ecdb:substituent>
+		</ecdb:substituents>		
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
 	</unit>
-	<unit ic:name="Ido" dkfz:name="D-Idop" >
-		<name type="alternate" value="dkfz:D-Idop" />	
-		<name type="alternate" value="ic:Idop" />
+	<unit id="didop" >
+		<name ns="dkfz" value="D-Idop" />	
+		<name ns="ic" value="Idop" />
+		<name ns="ic" value="Ido" />
+		<name ns="ecdb" value="didop"/>
 		<property name="class" value="ic:Hex"/>
 	</unit>
-	<unit ic:name="IdoA" dkfz:name="D-Idop|6a" >
-		<name type="alternate" value="dkfz:D-Idop|6a" />	
-		<name type="alternate" value="ic:IdoA" />
+	<unit id="didop|6a" >
+		<name ns="dkfz" value="D-Idop|6a" />	
+		<name ns="ic" value="IdoA" />
+		<name ns="ecdb" value="didop|6a"/>
+		<ecdb:substituents>
+			<ecdb:substituent position="6">a</ecdb:substituent>
+		</ecdb:substituents>
+		
 		<property name="class" value="ic:Hex"/>
 	</unit>
-	<unit ic:name="Kdo" dkfz:name="D-Kdo" >
-		<name type="alternate" value="dkfz:D-Kdo"/>
-		<name type="alternate" value="ic:Kdo" />
+	<unit id="dkdo" >
+		<name ns="dkfz" value="D-Kdo"/>
+		<name ns="ic" value="Kdo" />
+		<name ns="ecdb" value="dkdo" />
 		<property name="class" value="ic:Oct"/>
 	</unit>
-	<unit ic:name="Man" dkfz:name="D-Manp" >
-		<name type="alternate" value="dkfz:D-Manp" />
-		<name type="alternate" value="ic:Man" />
+	<unit id="dmanp" >
+		<name ns="dkfz" value="D-Manp" />
+		<name ns="ic" value="Man" />
+		<name ns="ecdb" value="dmanp" />
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
 		<disp:icon scheme="boston">
@@ -329,10 +359,18 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  </svg:g>
 		</disp:icon>
 	</unit>
-	<unit ic:name="NeuGc" dkfz:name="D-Neu|1a|2keto|3d|5ngc" >
-		<name type="alternate" value="dkfz:D-Neu|1a|2keto|3d|5ngc" />
-		<name type="alternate" value="ic:NeuGc" />
+	<unit id="dneu|1a|2keto|3d|5ngc" >
+		<name ns="dkfz" value="D-Neu|1a|2keto|3d|5ngc" />
+		<name ns="ic" value="NeuGc" />
+		<name ns="ic" value="Neu5Gc" />
+		<name ns="ecdb" value="dneu|1a|2keto|3d|5ngc"/>
 		<property name="class" value="ic:Neu"/>
+		<ecdb:substituents>
+			<ecdb:substituent position="1">a</ecdb:substituent>
+			<ecdb:substituent position="2">keto</ecdb:substituent>
+			<ecdb:substituent position="3">d</ecdb:substituent>
+			<ecdb:substituent position="5">ngc</ecdb:substituent>
+		</ecdb:substituents>		
 		<disp:icon scheme="boston">
 		  <disp:anchor linkage="1" x="50" y="50" />
 		  <disp:anchor linkage="2" x="50" y="50" />
@@ -369,15 +407,18 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  </svg:g>
 		</disp:icon>
 	</unit>
-	<unit ic:name="Neu5Gc" dkfz:name="D-Neu|1a|2keto|3d|5ngc" >
-		<name type="alternate" value="dkfz:D-Neu|1a|2keto|3d|5ngc" />
-		<name type="alternate" value="ic:Neu5Gc" />
+	<unit id="dneu|1a|2keto|3d|5nac" >
+		<name ns="dkfz" value="D-Neu|1a|2keto|3d|5nac" />
+		<name ns="ic" value="NeuAc" />
+		<name ns="ic" value="Neu5Ac" />
+		<name ns="ecdb" value="dneu|1a|2keto|3d|5nac"/>
 		<property name="class" value="ic:Neu"/>
-	</unit>
-	<unit ic:name="NeuAc" dkfz:name="D-Neu|1a|2keto|3d|5nac" >
-		<name type="alternate" value="dkfz:D-Neu|1a|2keto|3d|5nac" />
-		<name type="alternate" value="ic:NeuAc" />
-		<property name="class" value="ic:Neu"/>
+		<ecdb:substituents>
+			<ecdb:substituent position="1">a</ecdb:substituent>
+			<ecdb:substituent position="2">keto</ecdb:substituent>
+			<ecdb:substituent position="3">d</ecdb:substituent>
+			<ecdb:substituent position="5">nac</ecdb:substituent>
+		</ecdb:substituents>		
 		<disp:icon scheme="boston">
 			<disp:anchor linkage="1" x="50" y="50" />
 			<disp:anchor linkage="2" x="100" y="50" />
@@ -409,25 +450,26 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 			</svg:g>
 		</disp:icon>
 	</unit>
-	<unit ic:name="Neu5Ac" dkfz:name="D-Neu|1a|2keto|3d|5nac" >
-		<name type="alternate" value="dkfz:D-Neu|1a|2keto|3d|5nac" />
-		<name type="alternate" value="ic:Neu5Ac" />
-		<property name="class" value="ic:Neu"/>
-	</unit>
-	<unit ic:name="Rha" dkfz:name="D-Manp|6d" >
-		<name type="alternate" value="dkfz:D-Manp|6d" />
-		<name type="alternate" value="ic:Rha" />
+	<unit id="dmanp|6d" >
+		<name ns="dkfz" value="D-Manp|6d" />
+		<name ns="ic" value="Rha" />
+		<name ns="ecdb" value="dmanp|6d"/>
+		<ecdb:substituents>
+			<ecdb:substituent position="6">d</ecdb:substituent>
+		</ecdb:substituents>
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
 	</unit>	
-	<unit ic:name="Xyl" dkfz:name="D-Xylf" >
-		<name type="alternate" value="dkfz:D-Xylf" />
-		<name type="alternate" value="ic:Xyl" />
+	<unit id="dxylf" >
+		<name ns="dkfz" value="D-Xylf" />
+		<name ns="ic" value="Xyl" />
+		<name ns="ecdb" value="dxylf"/>
 		<property name="class" value="ic:Pent"/>
 	</unit>
-	<unit ic:name="Cer" dkfz:name="Cer" >
-		<name type="alternate" value="dkfz:Cer"/>
-		<name type="alternate" value="ic:Cer" />
+	<unit id="cer" >
+		<name ns="dkfz" value="Cer"/>
+		<name ns="ic" value="Cer" />
+		<name ns="ecdb" value="cer"/>
 		<property name="class" value="ic:AA"/>
 		<disp:icon scheme="boston">
 			<disp:anchor linkage="1" x="0" y="50" />
@@ -441,19 +483,22 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 			</svg:g>
 		</disp:icon>
 	</unit>
-	<unit ic:name="Asn" dkfz:name="Asn" >
-		<name type="alternate" value="dkfz:Asn"/>
-		<name type="alternate" value="ic:Asn" />
+	<unit id="asn" >
+		<name ns="dkfz" value="Asn"/>
+		<name ns="ic" value="Asn" />
+		<name ns="ecdb" value="asn"/>
 		<property name="class" value="ic:AA"/>
 	</unit>
-	<unit ic:name="Thr" dkfz:name="Thr" >
-		<name type="alternate" value="dkfz:Thr"/>
-		<name type="alternate" value="ic:Thr" />
+	<unit id="thr" >
+		<name ns="dkfz" value="Thr"/>
+		<name ns="ic" value="Thr" />
+		<name ns="ecdb" value="thr"/>
 		<property name="class" value="ic:AA"/>
 	</unit>
-	<unit ic:name="Ser" dkfz:name="Ser" >
-		<name type="alternate" value="dkfz:Ser"/>
-		<name type="alternate" value="ic:Ser" />
+	<unit id="Ser" >
+		<name ns="dkfz" value="Ser"/>
+		<name ns="ic" value="Ser" />
+		<name ns="ecdb" value="ser"/>
 		<property name="class" value="ic:AA"/>
 		<disp:icon scheme="boston">
 			<disp:anchor linkage="1" x="0" y="50" />
@@ -467,19 +512,22 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 			</svg:g>
 		</disp:icon>
 	</unit>
-	<unit ic:name="PP" dkfz:name="PP" >
-		<name type="alternate" value="dkfz:PP"/>
-		<name type="alternate" value="ic:PP" />
+	<unit id="pp" >
+		<name ns="dkfz" value="PP"/>
+		<name ns="ic" value="PP" />
+		<name ns="ecdb" value="pp"/>
 		<property name="class" value="ic:Other"/>		
 	</unit>
-	<unit ic:name="Ino" dkfz:name="Ino" >
-		<name type="alternate" value="dkfz:Ino"/>
-		<name type="alternate" value="ic:Ino" />
+	<unit id="ino" >
+		<name ns="dkfz" value="Ino"/>
+		<name ns="ic" value="Ino" />
+		<name ns="ecdb" value="ino"/>
 		<property name="class" value="ic:Other"/>		
 	</unit>
-	<unit ic:name="S" dkfz:name="HSO3" >
-		<name type="alternate" value="dkfz:HSO3"/>
-		<name type="alternate" value="ic:HSO3" />
+	<unit id="hso3" >
+		<name ns="dkfz" value="HSO3"/>
+		<name ns="ic" value="HSO3" />
+		<name ns="ecdb" value="hso3"/>
 		<property name="class" value="ic:HSO3"/>
 	</unit>
 </glycanDict>

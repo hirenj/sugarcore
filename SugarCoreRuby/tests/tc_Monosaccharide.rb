@@ -10,7 +10,7 @@ class TC_Monosaccharide < Test::Unit::TestCase
 	def test_01_initialisation
 
 		assert_nothing_raised {
-			Monosaccharide.Load_Definitions('data/ic-dictionary.xml')
+			Monosaccharide.Load_Definitions('data/dictionary.xml')
 		}
 
     assert_raise(NoMethodError) {  
@@ -38,7 +38,7 @@ class TC_Monosaccharide < Test::Unit::TestCase
 		
 		assert_nothing_raised {
 		  NamespacedMonosaccharide.Default_Namespace=NamespacedMonosaccharide::GS_NAMESPACE
-		  NamespacedMonosaccharide.Load_Definitions('data/dkfz-dictionary.xml')
+		  NamespacedMonosaccharide.Load_Definitions('data/dictionary.xml')
 			mono = Monosaccharide.Factory( DKFZNamespacedMonosaccharide, 'D-Araf')
 		}
 		
@@ -60,9 +60,9 @@ class TC_Monosaccharide < Test::Unit::TestCase
 
   def test_alternate_namespaces
     mono = Monosaccharide.Factory( NamespacedMonosaccharide, 'Gal')
-    assert_equal(2, mono.alternate_namespaces.length)
+    assert_equal(3, mono.alternate_namespaces.length)
     assert_equal(mono.alternate_namespaces.sort,
-          ['http://glycosciences.de','http://www.iupac.org/condensed'])
+          ['http://glycosciences.de','http://ns.eurocarbdb.org/glycoct','http://www.iupac.org/condensed'])
   end
 
   def test_attachment_position_consumption

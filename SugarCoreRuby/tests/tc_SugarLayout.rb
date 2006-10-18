@@ -36,10 +36,10 @@ class TC_SugarLayout < Test::Unit::TestCase
   # Test for making sure that we can load the dictionary
   # file for the Monosaccharide definitions and also 
   # instantiate a Simple sugar
-	def test_01_initialisation
+	def setup
 
 		assert_nothing_raised {
-			Monosaccharide.Load_Definitions('data/ic-dictionary.xml')
+			Monosaccharide.Load_Definitions('data/dictionary.xml')
 		}
 	
 		assert_nothing_raised {

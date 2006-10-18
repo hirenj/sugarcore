@@ -16,7 +16,7 @@ class TC_SugarGc < Test::Unit::TestCase
   attr :instance_var
 
   def test_01_init
-    Monosaccharide.Load_Definitions('data/ic-dictionary.xml')
+    Monosaccharide.Load_Definitions('data/dictionary.xml')
     assert_equal(0, ObjectSpace.each_object(Monosaccharide) {})
     assert_equal(0, ObjectSpace.each_object(Linkage) {})    
     assert_equal(0, ObjectSpace.each_object(Sugar) {})

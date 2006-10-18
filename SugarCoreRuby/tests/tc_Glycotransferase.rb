@@ -29,7 +29,7 @@ class TC_Glycotransferase < Test::Unit::TestCase
 	def test_01_initialisation
 
 		assert_nothing_raised {
-			Monosaccharide.Load_Definitions('data/ic-dictionary.xml')
+			Monosaccharide.Load_Definitions('data/dictionary.xml')
 		}
 	
 	end

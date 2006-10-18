@@ -9,7 +9,7 @@ class Sugar
   include CondensedIupacSugarWriter
 end
 
-Monosaccharide.Load_Definitions('data/ic-dictionary.xml')
+Monosaccharide.Load_Definitions('data/dictionary.xml')
 
 class TC_SugarClassInclude < Test::Unit::TestCase
 
