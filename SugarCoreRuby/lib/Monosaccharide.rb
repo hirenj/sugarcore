@@ -13,6 +13,8 @@ class Monosaccharide
   @@MONO_DATA = nil
   @@MONO_DATA_FILENAME = nil
   
+  MONO_DICTIONARY_NAMESPACE = 'http://penguins.mooh.org/research/glycan-dict-0.2'
+  
   # Class methods
   
   class << self
@@ -79,7 +81,10 @@ class Monosaccharide
         @@MONO_DATA_FILENAME = Hash.new()
       end
       @@MONO_DATA_FILENAME[self] = datafile
-    	@@MONO_DATA[self] = XPath.match(Document.new( File.new(datafile) ), "/dict:glycanDict", { 'dict' => 'http://penguins.mooh.org/research/glycan-dict-0.2' })
+    	@@MONO_DATA[self] = XPath.first(Document.new( File.new(datafile) ), "/dict:glycanDict", { 'dict' => MONO_DICTIONARY_NAMESPACE })
+    	unless @@MONO_DATA[self] != nil
+    	  raise MonosaccharideException.new('Could not load up dictionary file - expecting version '+MONO_DICTIONARY_NAMESPACE)
+  	  end
     end
 
   end
