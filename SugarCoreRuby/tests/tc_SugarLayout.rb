@@ -1,14 +1,14 @@
 require 'test/unit'
 require 'Sugar'
-require 'Sugar/IO/CondensedIupacSugarBuilder'
-require 'Sugar/IO/CondensedIupacSugarWriter'
+require 'Sugar/IO/CondensedIupac'
+
 require 'Render/Renderable'
 require 'Render/CondensedLayout'
 require 'Render/SvgRenderer'
 
 class SvgSugar < Sugar
-  include CondensedIupacSugarBuilder
-  include CondensedIupacSugarWriter
+  include Sugar::IO::CondensedIupac::Builder
+  include  Sugar::IO::CondensedIupac::Writer
   include Renderable::Sugar
 
   class ResidueClass < self.ResidueClass

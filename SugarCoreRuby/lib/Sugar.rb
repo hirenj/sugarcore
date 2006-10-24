@@ -64,7 +64,7 @@ class Sugar
     # it will raise a SugarException
     #   sug = Sugar.new()
     #   sug.sequence = 'Gal(b1-3)GlcNAc'    # SugarException => "Could not parse sequence"
-    #   sug.extend(CondensedIupacSugarBuilder)
+    #   sug.extend(Sugar::IO::CondensedIupac::Builder)
     #   sug.sequence = 'Gal(b1-3)GlcNAc'
     #   sug.size                            # 2
     def sequence=(seq)

@@ -1,12 +1,12 @@
 require 'test/unit'
-require 'Sugar/IO/CondensedIupacSugarBuilder'
-require 'Sugar/IO/CondensedIupacSugarWriter'
+require 'Sugar/IO/CondensedIupac'
+
 require 'Sugar'
 include ObjectSpace
 
 class PrettySugar < Sugar
-  include CondensedIupacSugarBuilder
-  include CondensedIupacSugarWriter
+  include Sugar::IO::CondensedIupac::Builder
+  include  Sugar::IO::CondensedIupac::Writer
 end
 
 DebugLog.log_level(5)

@@ -2,9 +2,8 @@ require 'test/unit'
 require 'Sugar'
 
 class TC_Sugar < Test::Unit::TestCase
-	require 'Sugar/IO/CondensedIupacSugarBuilder'
-	require 'Sugar/IO/CondensedIupacSugarWriter'
-	require 'Sugar/IO/GlycoCTWriter'
+	require 'Sugar/IO/CondensedIupac'
+	require 'Sugar/IO/GlycoCT'
 
   IUPAC_CORE_N_LINKED_FUC = "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc"
   IUPAC_DISACCHARIDE = "Man(a1-3)GalNAc"
@@ -39,8 +38,8 @@ __FOO__
 
   def build_sugar_from_components
     sugar = Sugar.new()
-		sugar.extend(  CondensedIupacSugarBuilder )
-		sugar.extend(  CondensedIupacSugarWriter )
+		sugar.extend(  Sugar::IO::CondensedIupac::Builder )
+		sugar.extend(  Sugar::IO::CondensedIupac::Writer )
     monos = [ sugar.monosaccharide_factory( 'GlcNAc' ),
               sugar.monosaccharide_factory( 'Man' ),
               sugar.monosaccharide_factory( 'Man' ),
@@ -57,8 +56,8 @@ __FOO__
 
   def build_sugar_from_string(sequence)
     sugar = Sugar.new()
-		sugar.extend(  CondensedIupacSugarBuilder )
-		sugar.extend(  CondensedIupacSugarWriter )
+		sugar.extend(  Sugar::IO::CondensedIupac::Builder )
+		sugar.extend(  Sugar::IO::CondensedIupac::Writer )
     sugar.sequence = sequence
     return sugar
   end
@@ -79,7 +78,7 @@ __FOO__
     }
     assert_nothing_raised {
       sugar = Sugar.new()
-			sugar.extend(  CondensedIupacSugarBuilder )
+			sugar.extend(  Sugar::IO::CondensedIupac::Builder )
       sugar.sequence = IUPAC_DISACCHARIDE
     }
   end 
@@ -93,22 +92,22 @@ __FOO__
     }
     
     sugar = Sugar.new()
-		sugar.extend(  CondensedIupacSugarBuilder )
-		sugar.extend(  CondensedIupacSugarWriter )
+		sugar.extend(  Sugar::IO::CondensedIupac::Builder )
+		sugar.extend(  Sugar::IO::CondensedIupac::Writer )
     sugar.sequence = LARGE_STRUCTURE
     
     assert_equal( LARGE_STRUCTURE, sugar.sequence)
     
     assert_nothing_raised {
       sugar = Sugar.new()
-			sugar.extend(  CondensedIupacSugarBuilder )
-			sugar.extend(  CondensedIupacSugarWriter )
+			sugar.extend(  Sugar::IO::CondensedIupac::Builder )
+			sugar.extend(  Sugar::IO::CondensedIupac::Writer )
       sugar.sequence = IUPAC_DISACCHARIDE
       sugar.target_namespace = NamespacedMonosaccharide::GS_NAMESPACE
     }
     sugar = Sugar.new()
-    sugar.extend( CondensedIupacSugarBuilder )
-    sugar.extend( GlycoCTWriter )
+    sugar.extend( Sugar::IO::CondensedIupac::Builder )
+    sugar.extend( Sugar::IO::GlycoCT::Writer )
     sugar.sequence = LARGE_STRUCTURE
     assert_equal( LARGE_STRUCTURE_AS_CT, sugar.sequence)
 
@@ -119,12 +118,12 @@ __FOO__
 	def test_iupac_sequences
 		assert_nothing_raised {
 			sugar = Sugar.new()
-			sugar.extend(  CondensedIupacSugarBuilder )
+			sugar.extend(  Sugar::IO::CondensedIupac::Builder )
 			sugar.sequence = IUPAC_DISACCHARIDE
 		}
 		assert_raises( MonosaccharideException ) {
 			sugar = Sugar.new()
-			sugar.extend(  CondensedIupacSugarBuilder )			
+			sugar.extend(  Sugar::IO::CondensedIupac::Builder )			
 			sugar.sequence = INVALID_SEQUENCE		
 		}
 	end
@@ -132,7 +131,7 @@ __FOO__
 	def test_composition
 		assert_nothing_raised {
 			sugar = Sugar.new()
-			sugar.extend(  CondensedIupacSugarBuilder )
+			sugar.extend(  Sugar::IO::CondensedIupac::Builder )
 			sugar.sequence = IUPAC_DISACCHARIDE
 			sugar.residue_composition()
 			sugar.composition_of_residue(IUPAC_SINGLE_RESIDUE)
@@ -250,7 +249,7 @@ __FOO__
   def test_sugar_clone
     sugar = build_sugar_from_string( LARGE_STRUCTURE )
     sugar2 = sugar.dup
-		sugar2.extend(  CondensedIupacSugarWriter )    
+		sugar2.extend(  Sugar::IO::CondensedIupac::Writer )    
     assert_equal(LARGE_STRUCTURE, sugar2.sequence)
   end
 end

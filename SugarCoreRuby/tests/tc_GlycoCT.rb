@@ -1,14 +1,13 @@
 require 'test/unit'
 require "Sugar"
-require 'Sugar/IO/GlycoCTWriter'
-require 'Sugar/IO/CondensedIupacSugarBuilder'
-require 'Sugar/IO/GlycoCTBuilder'
-require 'Sugar/IO/CondensedIupacSugarWriter'
+require 'Sugar/IO/GlycoCT'
+require 'Sugar/IO/CondensedIupac'
+
 
 class WritableSugar < Sugar
-  include CondensedIupacSugarBuilder
-#  include CondensedIupacSugarWriter
-  include GlycoCTWriter  
+  include Sugar::IO::CondensedIupac::Builder
+#  include  Sugar::IO::CondensedIupac::Writer
+  include Sugar::IO::GlycoCT::Writer  
 
   def residueClass
     ICNamespacedMonosaccharide
@@ -18,8 +17,8 @@ end
 
 
 class ReadingSugar < Sugar
-  include GlycoCTBuilder
-  include CondensedIupacSugarWriter
+  include Sugar::IO::GlycoCT::Builder
+  include  Sugar::IO::CondensedIupac::Writer
 
   def residueClass
     ECDBNamespacedMonosaccharide

@@ -1,4 +1,4 @@
-module GlycoCTBuilder
+module Sugar::IO::GlycoCT::Builder
 
   def self.append_features(base)
     super(base)
@@ -57,8 +57,8 @@ module GlycoCTBuilder
     glycoct_linkages = Hash.new()
 
     residues, linkages = [sequence.scan(/RES\n(.*)LIN\n(.*)/m)].flatten.collect { |block| block.split(";\n") }
-    residues.collect { |res_string| GlycoCTBuilder::Residue.factory(res_string) }.each { |res| glycoct_residues[res.res_id] = res }
-    linkages.collect { |link_string| GlycoCTBuilder::ParseLinkage.factory(link_string) }.each { |link| glycoct_linkages[link.link_id] = link }
+    residues.collect { |res_string| Sugar::IO::GlycoCT::Builder::Residue.factory(res_string) }.each { |res| glycoct_residues[res.res_id] = res }
+    linkages.collect { |link_string| Sugar::IO::GlycoCT::Builder::ParseLinkage.factory(link_string) }.each { |link| glycoct_linkages[link.link_id] = link }
 
     residues = glycoct_residues
     linkages = glycoct_linkages

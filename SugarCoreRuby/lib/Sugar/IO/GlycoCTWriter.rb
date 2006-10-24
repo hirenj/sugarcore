@@ -1,13 +1,11 @@
-require 'Sugar/IO/CondensedIupacSugarWriter'
-
-module GlycoCTWriter
+module Sugar::IO::GlycoCT::Writer
   
   def write_sequence(root_element)
     string_rep = "RES\n"
     residues = Hash.new()
     links = Hash.new()
     self.residue_composition(root_element).each { |residue|
-      names = residue.alternate_name(NamespacedMonosaccharide::ECDB_NAMESPACE).scan(/(\w+)(?:\|(\d+)(\w+))*/).shift
+      names = residue.name(NamespacedMonosaccharide::ECDB_NAMESPACE).scan(/(\w+)(?:\|(\d+)(\w+))*/).shift
       residues[residue] = "b:#{residue.anomer || 'u'}-#{names.shift};\n"
       while names.length > 1 && names[0] != nil
         pos = names.shift

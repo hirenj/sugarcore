@@ -211,6 +211,13 @@ class Monosaccharide
 		return @alternate_name[namespace]
 	end
 
+  def name(namespace=nil)
+    if (namespace != nil)
+      return alternate_name(namespace)
+    end
+    return @name
+  end
+
   # Get the set of alternate namespaces defined for this residue
   #   p mono.alternate_namespaces # [ 'http://glycosciences.de', 'http://iupac' ]
   def alternate_namespaces

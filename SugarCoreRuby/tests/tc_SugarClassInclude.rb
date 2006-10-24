@@ -1,12 +1,12 @@
 require 'test/unit'
 require 'Sugar'
 
-require 'Sugar/IO/CondensedIupacSugarBuilder'
-require 'Sugar/IO/CondensedIupacSugarWriter'
+require 'Sugar/IO/CondensedIupac'
+
 
 class Sugar
-  include CondensedIupacSugarBuilder
-  include CondensedIupacSugarWriter
+  include Sugar::IO::CondensedIupac::Builder
+  include  Sugar::IO::CondensedIupac::Writer
 end
 
 Monosaccharide.Load_Definitions('data/dictionary.xml')

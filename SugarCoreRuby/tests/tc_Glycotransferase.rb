@@ -1,14 +1,14 @@
 require 'test/unit'
 require 'Sugar'
 require 'Glycotransferase'
-require 'Sugar/IO/CondensedIupacSugarBuilder'
-require 'Sugar/IO/CondensedIupacSugarWriter'
+require 'Sugar/IO/CondensedIupac'
+
 
 Sugar.log_level(5)
 
 class Sugar
-  include CondensedIupacSugarBuilder
-  include CondensedIupacSugarWriter
+  include Sugar::IO::CondensedIupac::Builder
+  include  Sugar::IO::CondensedIupac::Writer
 end
 
 class TC_Glycotransferase < Test::Unit::TestCase
@@ -39,7 +39,8 @@ class TC_Glycotransferase < Test::Unit::TestCase
 	  enzyme = Glycotransferase.new()
 	  enzyme.substrate_pattern = Monosaccharide.Factory(NamespacedMonosaccharide, 'Man')
 	  donor_residue = Monosaccharide.Factory(NamespacedMonosaccharide, 'Gal')
-	  donor_linkage = Linkage.Factory(IupacLinkage, 'a1-3')
+    donor_residue.anomer = 'a'
+	  donor_linkage = Linkage.Factory(Linkage, { :from => 3, :to => 1 })
 	  donor_linkage.set_first_residue(donor_residue)
 	  enzyme.donor = donor_linkage
 	  assert_equal( ['Man','Man'],
@@ -54,7 +55,8 @@ class TC_Glycotransferase < Test::Unit::TestCase
 	  enzyme = Glycotransferase.new()
 	  enzyme.substrate_pattern = Monosaccharide.Factory(NamespacedMonosaccharide, 'Man')
 	  donor_residue = Monosaccharide.Factory(NamespacedMonosaccharide, 'Gal')
-	  donor_linkage = Linkage.Factory(IupacLinkage, 'a1-3')
+    donor_residue.anomer = 'a'
+	  donor_linkage = Linkage.Factory(Linkage, { :from => 3, :to => 1 })
 	  donor_linkage.set_first_residue(donor_residue)
 	  enzyme.donor = donor_linkage
 	  modified = enzyme.apply(sugar)
@@ -67,7 +69,8 @@ class TC_Glycotransferase < Test::Unit::TestCase
 	  enzyme = Glycotransferase.new()
 	  enzyme.substrate_pattern = Monosaccharide.Factory(NamespacedMonosaccharide, 'Man')
 	  donor_residue = Monosaccharide.Factory(NamespacedMonosaccharide, 'Gal')
-	  donor_linkage = Linkage.Factory(IupacLinkage, 'a1-3')
+    donor_residue.anomer = 'a'
+	  donor_linkage = Linkage.Factory(Linkage, { :from => 3, :to => 1 })
 	  donor_linkage.set_first_residue(donor_residue)
 	  enzyme.donor = donor_linkage
     assert_equal( LARGE_STRUCTURE_ALL_RESULT, enzyme.apply_to_each_substrate(sugar).collect { |sug| sug.sequence } )
@@ -79,7 +82,8 @@ class TC_Glycotransferase < Test::Unit::TestCase
 	  enzyme = Glycotransferase.new()
 	  enzyme.substrate_pattern = Monosaccharide.Factory(NamespacedMonosaccharide, 'Man')
 	  donor_residue = Monosaccharide.Factory(NamespacedMonosaccharide, 'Gal')
-	  donor_linkage = Linkage.Factory(IupacLinkage, 'a1-3')
+    donor_residue.anomer = 'a'
+	  donor_linkage = Linkage.Factory(Linkage, { :from => 3, :to => 1 })
 	  donor_linkage.set_first_residue(donor_residue)
 	  enzyme.donor = donor_linkage
 	  enzymelist << enzyme
@@ -87,7 +91,8 @@ class TC_Glycotransferase < Test::Unit::TestCase
 	  enzyme = Glycotransferase.new()
 	  enzyme.substrate_pattern = Monosaccharide.Factory(NamespacedMonosaccharide, 'Gal')
 	  donor_residue = Monosaccharide.Factory(NamespacedMonosaccharide, 'Fuc')
-	  donor_linkage = Linkage.Factory(IupacLinkage, 'a1-2')
+    donor_residue.anomer = 'a'
+	  donor_linkage = Linkage.Factory(Linkage, { :from => 2, :to => 1 })
 	  donor_linkage.set_first_residue(donor_residue)
 	  enzyme.donor = donor_linkage
 	  enzymelist << enzyme
@@ -95,7 +100,8 @@ class TC_Glycotransferase < Test::Unit::TestCase
 	  enzyme = Glycotransferase.new()
 	  enzyme.substrate_pattern = Monosaccharide.Factory(NamespacedMonosaccharide, 'Man')
 	  donor_residue = Monosaccharide.Factory(NamespacedMonosaccharide, 'Man')
-	  donor_linkage = Linkage.Factory(IupacLinkage, 'a1-3')
+    donor_residue.anomer = 'a'
+	  donor_linkage = Linkage.Factory(Linkage, { :from => 3, :to => 1 })
 	  donor_linkage.set_first_residue(donor_residue)
 	  enzyme.donor = donor_linkage
 	  enzymelist << enzyme

@@ -1,7 +1,7 @@
 require 'Monosaccharide'
 require 'Linkage'
 
-module CondensedIupacLinkageBuilder
+module Sugar::IO::CondensedIupac::LinkageBuilder
 
   attr :anomer
 
@@ -38,12 +38,12 @@ module CondensedIupacLinkageBuilder
   end
 end
 
-class IupacLinkage < Linkage
-  include CondensedIupacLinkageBuilder
-end
-
 # Condensed IUPAC-based builder
-module CondensedIupacSugarBuilder
+module Sugar::IO::CondensedIupac::Builder
+
+  class IupacLinkage < Linkage
+    include Sugar::IO::CondensedIupac::LinkageBuilder
+  end
 
   # This is a bit tricky!
   # Append features is called when you call an include
@@ -68,7 +68,7 @@ module CondensedIupacSugarBuilder
         NamespacedMonosaccharide
       end
       def LinkageClass
-        IupacLinkage
+        Sugar::IO::CondensedIupac::Builder::IupacLinkage
       end      
     end
   end
@@ -78,7 +78,7 @@ module CondensedIupacSugarBuilder
   end
   
   def linkageClass
-    IupacLinkage    
+    Sugar::IO::CondensedIupac::Builder::IupacLinkage
   end
   
   def monosaccharide_factory(prototype)

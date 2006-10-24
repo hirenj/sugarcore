@@ -2,8 +2,8 @@ require 'test/unit'
 require 'Monosaccharide'
 
 class TC_Monosaccharide < Test::Unit::TestCase
-	require 'Sugar/IO/CondensedIupacSugarBuilder'
-	require 'Sugar/IO/CondensedIupacSugarWriter'
+	require 'Sugar/IO/CondensedIupac'
+	
 
 	DebugLog.log_level(5)
 
@@ -69,8 +69,10 @@ class TC_Monosaccharide < Test::Unit::TestCase
     mono1 = Monosaccharide.Factory( NamespacedMonosaccharide, 'Gal')
     mono2 = Monosaccharide.Factory( NamespacedMonosaccharide, 'Glc')
     mono3 = Monosaccharide.Factory( NamespacedMonosaccharide, 'Man')
-    mono1.add_child(mono2, Linkage.Factory( IupacLinkage, "a1-3"))
-    mono1.add_child(mono3, Linkage.Factory( IupacLinkage, "a1-4"))
+    mono1.add_child(mono2, Linkage.Factory( Linkage, {:from => 3, :to => 1}))
+    mono2.anomer = 'a'
+    mono1.add_child(mono3, Linkage.Factory( Linkage, {:from => 4, :to => 1}))
+    mono3.anomer = 'a'
     assert_equal(2,mono1.children.length)
     assert(mono1.attachment_position_consumed?(3) &&
            mono1.attachment_position_consumed?(4) ,
@@ -85,7 +87,8 @@ class TC_Monosaccharide < Test::Unit::TestCase
     mono4 = Monosaccharide.Factory( NamespacedMonosaccharide, 'Man')
     
     assert_raise( MonosaccharideException ) {
-      mono1.add_child(mono4, Linkage.Factory( IupacLinkage, "b1-4"))
+      mono1.add_child(mono4, Linkage.Factory( Linkage, {:from => 4, :to => 1} ))
+      mono4.anomer = 'a'
     }
     
     mono2.finish()

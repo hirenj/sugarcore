@@ -1,6 +1,6 @@
-module CondensedIupacSugarWriter
+module Sugar::IO::CondensedIupac::Writer
 
-	def CondensedIupacSugarWriter.append_features(includingClass)
+	def self.append_features(includingClass)
 		
 		super
 				
@@ -33,11 +33,11 @@ module CondensedIupacSugarWriter
     children = root_element.children
     first_child = children.shift
     if ( first_child )
-      first_child[:link].extend(CondensedIupacLinkageWriter)
+      first_child[:link].extend(Sugar::IO::CondensedIupac::LinkageWriter)
       string_rep += sequence_from_residue(first_child[:residue]) + '(' + first_child[:link].to_sequence + ')'
     end
     children.reverse.each { |branch|
-      branch[:link].extend(CondensedIupacLinkageWriter)
+      branch[:link].extend(Sugar::IO::CondensedIupac::LinkageWriter)
       string_rep += '[' + sequence_from_residue(branch[:residue]) + '(' + branch[:link].to_sequence + ')]' 
     }
     string_rep += self.target_namespace ? root_element.alternate_name(self.target_namespace) : root_element.name()
@@ -45,7 +45,7 @@ module CondensedIupacSugarWriter
 	end
 end
 
-module CondensedIupacLinkageWriter
+module Sugar::IO::CondensedIupac::LinkageWriter
   def to_sequence
     red_residue = self.reducing_end_substituted_residue
     opp_residue = self.get_paired_residue(red_residue)
