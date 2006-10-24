@@ -42,6 +42,8 @@ class GridLayout
             delta = { :x => 200, :y => 200 }
           when 8
             delta = { :x => 0, :y => 200}
+          else
+            delta = { :x => 200, :y => 0 }
         end
         res.translate(delta[:x],delta[:y])
       end

@@ -64,8 +64,8 @@ class SvgRenderer
       prototypes[res_id].add_attribute('width', res.width)
       prototypes[res_id].add_attribute('height', res.height)
 
-      anchors = Array.new()
-      XPath.each(res.raw_data_node, ".//disp:anchor", { 'disp' => DISPLAY_ELEMENT_NS }) { |anchor|
+      anchors = Hash.new()
+      XPath.each(res.raw_data_node, "./disp:icon[@scheme='#{scheme}']/disp:anchor", { 'disp' => DISPLAY_ELEMENT_NS }) { |anchor|
         anchors[anchor.attribute("linkage").value().to_i] = { :x => 100 - anchor.attribute("x").value().to_i,
                                                               :y => 100 - anchor.attribute("y").value().to_i }
       }

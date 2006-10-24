@@ -93,7 +93,7 @@ module Renderable::Residue
 
   def offsets
     if ( @offsets == nil || @offsets.length == 0 )
-      return [nil,{ :x => 50, :y => 50 }]
+      return { 0 => nil, 1 => { :x => 50, :y => 50 } }
     end
     @offsets
   end
