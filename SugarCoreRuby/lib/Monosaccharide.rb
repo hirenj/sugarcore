@@ -12,6 +12,7 @@ class Monosaccharide
 
   @@MONO_DATA = nil
   @@MONO_DATA_FILENAME = nil
+  @@FACTORY_CACHES = Hash.new()
   
   MONO_DICTIONARY_NAMESPACE = 'http://penguins.mooh.org/research/glycan-dict-0.2'
   
@@ -32,6 +33,15 @@ class Monosaccharide
 #      DKFZNamespacedMonosaccharide.Do_Load_Definitions("#{path}/dkfz-dictionary.xml")
     end
 
+    def Monosaccharide.Flush_Factory
+      @@FACTORY_CACHES.each { |key,class_cache|
+        class_cache.values.each { |res|
+          res.finish
+        }
+        class_cache.clear
+      }
+    end
+
     # Instantiate a new Monosaccharide using a particular subclass, and having
     # the identifier as specified
     #
@@ -40,7 +50,14 @@ class Monosaccharide
     # or
     #   Monosaccharide.Factory( NamespacedMonosaccharide, 'D-Fruf' )
     def Monosaccharide.Factory( classname, identifier )
-    	classname.new_mono(identifier)
+      if @@FACTORY_CACHES[classname] == nil
+        @@FACTORY_CACHES[classname] = Hash.new()
+      end
+      if @@FACTORY_CACHES[classname][identifier.to_sym] == nil
+    	  @@FACTORY_CACHES[classname][identifier.to_sym] = classname.new_mono(identifier)
+    	end
+    	new_mono = @@FACTORY_CACHES[classname][identifier.to_sym].shallow_clone
+    	new_mono
     end
 
     # Retrieve the monosaccharide data for this particular class
@@ -147,7 +164,7 @@ class Monosaccharide
     cloned.remove_relations
     return cloned
   end
-  
+    
   # New method which is hidden to avoid direct instantiation of the 
   # monosaccharide class
   private_class_method :new

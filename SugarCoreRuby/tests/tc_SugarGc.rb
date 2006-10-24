@@ -15,10 +15,14 @@ class TC_SugarGc < Test::Unit::TestCase
 
   attr :instance_var
 
-  def test_01_init
+  def setup
     Monosaccharide.Load_Definitions('data/dictionary.xml')
+    Monosaccharide.Flush_Factory
     assert_equal(0, ObjectSpace.each_object(Monosaccharide) {})
     assert_equal(0, ObjectSpace.each_object(Linkage) {})    
+  end
+
+  def test_a_init
     assert_equal(0, ObjectSpace.each_object(Sugar) {})
   end
 
@@ -30,13 +34,14 @@ class TC_SugarGc < Test::Unit::TestCase
       object_refs << ObjectSpace.each_object(Monosaccharide) {}
       foo.finish()
       foo = nil
+      Monosaccharide.Flush_Factory
       ObjectSpace.garbage_collect
     end
     
     ObjectSpace.garbage_collect
     object_refs << ObjectSpace.each_object(Monosaccharide) {}
     
-    assert_equal([0,1,0], object_refs)
+    assert_equal([0,2,0], object_refs)
     assert_equal(0, ObjectSpace.each_object(Monosaccharide) {})
     assert_equal(0, ObjectSpace.each_object(Linkage) {})    
   end
@@ -50,30 +55,35 @@ class TC_SugarGc < Test::Unit::TestCase
       object_refs << ObjectSpace.each_object(Monosaccharide) {}
       foo.finish
       foo = nil
+      Monosaccharide.Flush_Factory
       ObjectSpace.garbage_collect
     end
     ObjectSpace.garbage_collect
     object_refs << ObjectSpace.each_object(Monosaccharide) {}
     
-    assert_equal([0,2,0], object_refs)    
+    assert_equal([0,4,0], object_refs)    
     assert_equal(0, ObjectSpace.each_object(Monosaccharide) {})
     assert_equal(0, ObjectSpace.each_object(Linkage) {})
   end
   
   def test_array_of_sugars
-    sugars = Array.new()
-    1000.times do
-      foo = PrettySugar.new()
-      foo.sequence = 'Gal(b1-3)GlcNAc(b1-4)GlcNAc'
-      sugars << foo
+    begin
+      sugars = Array.new()
+      1000.times do
+        foo = PrettySugar.new()
+        foo.sequence = 'Gal(b1-3)GlcNAc(b1-4)GlcNAc'
+        sugars << foo
+      end
+      assert_equal(3002, ObjectSpace.each_object(Monosaccharide) {})
+      assert_equal(2000, ObjectSpace.each_object(Linkage) {})
+      sugars.each { |sugar|
+        sugar.finish
+      }
+      sugars = nil
+      Monosaccharide.Flush_Factory
+      ObjectSpace.garbage_collect
     end
-    assert_equal(3000, ObjectSpace.each_object(Monosaccharide) {})
-    assert_equal(2000, ObjectSpace.each_object(Linkage) {})
-    sugars.each { |sugar|
-      sugar.finish
-    }
-    sugars = nil
-    ObjectSpace.garbage_collect
+    ObjectSpace.garbage_collect    
     assert_equal(0, ObjectSpace.each_object(Monosaccharide) {})
     assert_equal(0, ObjectSpace.each_object(Linkage) {})
   end
@@ -92,25 +102,30 @@ class TC_SugarGc < Test::Unit::TestCase
       end
       foo.finish
       foo = nil
+      Monosaccharide.Flush_Factory
       ObjectSpace.garbage_collect
     end
     ObjectSpace.garbage_collect    
     object_refs << ObjectSpace.each_object(Monosaccharide) {}
     
-    assert_equal([0,2,4,0], object_refs)    
+    assert_equal([0,4,9,0], object_refs)    
     assert_equal(0, ObjectSpace.each_object(Monosaccharide) {})
     assert_equal(0, ObjectSpace.each_object(Linkage) {})    
   end
 
   def test_scope_instance_var
-    results = get_ref_counts_set_instance_var
-    results += get_ref_counts_clear_instance_var
-    ObjectSpace.garbage_collect
+    begin
+      results = get_ref_counts_set_instance_var
+      results += get_ref_counts_clear_instance_var
+      Monosaccharide.Flush_Factory
+      ObjectSpace.garbage_collect
+    end
     results << ObjectSpace.each_object(Monosaccharide) {}
-    assert_equal([0,2,2,0], results)
+    assert_equal([0,4,4,0], results)
     assert_equal(0, ObjectSpace.each_object(Monosaccharide) {})
     assert_equal(0, ObjectSpace.each_object(Linkage) {})    
   end
+  
   def get_ref_counts_set_instance_var    
     object_refs = Array.new()
     object_refs << ObjectSpace.each_object(Monosaccharide) {}
@@ -150,11 +165,12 @@ class TC_SugarGc < Test::Unit::TestCase
       assert_equal('Gal(b1-3)GlcNAc', cloned.sequence)
       cloned.finish
       cloned = nil
+      Monosaccharide.Flush_Factory
       ObjectSpace.garbage_collect            
     end
     ObjectSpace.garbage_collect    
     object_refs << ObjectSpace.each_object(Monosaccharide) {}
-    assert_equal([0,2,4,2,0], object_refs)
+    assert_equal([0,4,6,4,0], object_refs)
 
     assert_equal(0, ObjectSpace.each_object(Monosaccharide) {})
     assert_equal(0, ObjectSpace.each_object(Linkage) {})    
@@ -173,6 +189,7 @@ class TC_SugarGc < Test::Unit::TestCase
       sugar.finish
       sugar = nil
     end
+    Monosaccharide.Flush_Factory
     ObjectSpace.garbage_collect
     assert_equal(0, ObjectSpace.each_object(Monosaccharide) {})
     assert_equal(0, ObjectSpace.each_object(Linkage) {})    
@@ -184,6 +201,7 @@ class TC_SugarGc < Test::Unit::TestCase
   end
 
   def test_z_cleanup
+    Monosaccharide.Flush_Factory
     ObjectSpace.garbage_collect      
     assert_equal(0, ObjectSpace.each_object(Monosaccharide) {})
     assert_equal(0, ObjectSpace.each_object(Linkage) {})
