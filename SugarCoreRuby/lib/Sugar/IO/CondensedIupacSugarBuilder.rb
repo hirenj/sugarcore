@@ -69,9 +69,11 @@ module Sugar::IO::CondensedIupac::Builder
       end
       def LinkageClass
         Sugar::IO::CondensedIupac::Builder::IupacLinkage
-      end      
+      end
     end
   end
+  
+  attr_accessor :input_namespace
   
   def residueClass
     NamespacedMonosaccharide
@@ -82,7 +84,8 @@ module Sugar::IO::CondensedIupac::Builder
   end
   
   def monosaccharide_factory(prototype)
-    return Monosaccharide.Factory(residueClass,prototype)
+    prototype = (input_namespace == nil) ? prototype : input_namespace.to_s + ':' + prototype
+    return Monosaccharide.Factory(residueClass, prototype)
   end
   
   def linkage_factory(prototype)

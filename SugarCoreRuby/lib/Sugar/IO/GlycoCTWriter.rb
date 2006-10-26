@@ -5,17 +5,15 @@ module Sugar::IO::GlycoCT::Writer
     residues = Hash.new()
     links = Hash.new()
     self.residue_composition(root_element).each { |residue|
-      names = residue.name(NamespacedMonosaccharide::ECDB_NAMESPACE).scan(/(\w+)(?:\|(\d+)(\w+))*/).shift
-      residues[residue] = "b:#{residue.anomer || 'u'}-#{names.shift};\n"
-      while names.length > 1 && names[0] != nil
-        pos = names.shift
-        substituent = names.shift
+      names = residue.name(NamespacedMonosaccharide::NAMESPACES[:ecdb]).scan(/(\d)?(\w+)/)
+      residues[residue] = "b:#{residue.anomer || 'u'}-#{names.shift[1]};\n"
+      names.each { |pos,substituent|
         residues[substituent] = "s:#{substituent};\n"
         if ( ! links[residue] )
           links[residue] = Hash.new()            
         end
         links[residue][pos] = substituent
-      end
+      }
     }
     counter = 1
     residues.keys.sort_by { |el| el.is_a?(String) ? '2'+el : el.parent == nil ? '00' : '1'+residues[el]+get_attachment_point_path_to_root(el).join(',') }.each { |res|

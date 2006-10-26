@@ -395,11 +395,13 @@ end
 # Residue entity that implements a namespaced monosaccharide
 class NamespacedMonosaccharide < Monosaccharide
 
-	IUPAC_NAMESPACE =  "http://www.iupac.org/condensed"
-	GS_NAMESPACE = "http://glycosciences.de"
-	ECDB_NAMESPACE = "http://ns.eurocarbdb.org/glycoct"
+  NAMESPACES = Hash.new()
+
+	NAMESPACES[:ic] =  "http://www.iupac.org/condensed"
+	NAMESPACES[:dkfz] = "http://glycosciences.de"
+	NAMESPACES[:ecdb] = "http://ns.eurocarbdb.org/glycoct"
 	
-	@@DEFAULT_NAMESPACE = IUPAC_NAMESPACE
+	@@DEFAULT_NAMESPACE = NAMESPACES[:ic]
 
   # The Default Namespace that new residues will be created in, and in which
   # their names will be validated
@@ -415,13 +417,15 @@ class NamespacedMonosaccharide < Monosaccharide
 
   # List of supported namespaces
   def NamespacedMonosaccharide.Supported_Namespaces
-    return [ GS_NAMESPACE, IUPAC_NAMESPACE ]
+    return NAMESPACES.values
   end
 
   protected
   
 	def initialize_from_data
-    debug "Initialising #{name} in namespace #{self.class.Default_Namespace}."
+	  ns = self.class.Default_Namespace
+	  @name = self.name.sub(/(\w+):/) { |_match| ns = NAMESPACES[$1.to_sym]; '' }
+    debug "Initialising #{name} in namespace #{ns}."
 	  data_source = self.class.mono_data
 	  
 	  namespaces = Hash.new()
@@ -430,15 +434,15 @@ class NamespacedMonosaccharide < Monosaccharide
 	    namespaces[ns_dec.value] = ns_dec.name
 	  }
   	mono_data_node = XPath.first(	data_source, 
-  									"./unit[name[@ns='#{namespaces[self.class.Default_Namespace]}' and @value='#{@name}']]"
+  									"./unit[name[@ns='#{namespaces[ns]}' and @value='#{@name}']]"
   									 )
   #		string(namespace::*[name() =substring-before(@type, ':')]) 
 			
   	if ( mono_data_node == nil )
-  		raise MonosaccharideException.new("Residue #{self.name} not found in default namespace #{self.class.Default_Namespace} from #{self.class.mono_data_filename ? self.class.mono_data_filename : @@MONO_DATA_FILENAME}")
+  		raise MonosaccharideException.new("Residue #{self.name} not found in default namespace #{ns} from #{self.class.mono_data_filename ? self.class.mono_data_filename : @@MONO_DATA_FILENAME}")
   	end
 
-  	@alternate_name[self.class.Default_Namespace] = self.name()
+  	@alternate_name[ns] = self.name()
 
 
   	XPath.each(mono_data_node, "./name") { |altname|
@@ -458,20 +462,20 @@ class NamespacedMonosaccharide < Monosaccharide
 end
 
 class ICNamespacedMonosaccharide < NamespacedMonosaccharide
-    def self.Default_Namespace
-      IUPAC_NAMESPACE
-    end
+  def self.Default_Namespace
+    NAMESPACES[:ic]
+  end
 end
 
 class DKFZNamespacedMonosaccharide < NamespacedMonosaccharide
   def self.Default_Namespace
-    GS_NAMESPACE
+    NAMESPACES[:dkfz]
   end
 end
 
 class ECDBNamespacedMonosaccharide < NamespacedMonosaccharide
   def self.Default_Namespace
-    ECDB_NAMESPACE
+    NAMESPACES[:ecdb]
   end
 end
 

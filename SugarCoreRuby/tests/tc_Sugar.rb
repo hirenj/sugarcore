@@ -103,7 +103,7 @@ __FOO__
 			sugar.extend(  Sugar::IO::CondensedIupac::Builder )
 			sugar.extend(  Sugar::IO::CondensedIupac::Writer )
       sugar.sequence = IUPAC_DISACCHARIDE
-      sugar.target_namespace = NamespacedMonosaccharide::GS_NAMESPACE
+      sugar.target_namespace = NamespacedMonosaccharide::NAMESPACES[:dkfz]
     }
     sugar = Sugar.new()
     sugar.extend( Sugar::IO::CondensedIupac::Builder )

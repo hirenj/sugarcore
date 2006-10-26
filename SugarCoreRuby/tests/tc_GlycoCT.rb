@@ -56,7 +56,7 @@ __FOO__
   def test_read_simple_sequence
     sug = ReadingSugar.new()
     sug.sequence = SMALL_STRUCTURE_AS_CT
-    sug.target_namespace = NamespacedMonosaccharide::IUPAC_NAMESPACE
+    sug.target_namespace = NamespacedMonosaccharide::NAMESPACES[:ic]
     assert_equal( SMALL_STRUCTURE_AS_IUPAC, sug.sequence )
     sug.finish
   end

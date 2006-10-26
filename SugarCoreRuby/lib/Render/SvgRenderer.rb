@@ -53,12 +53,13 @@ class SvgRenderer
     
   def initialise_prototypes
     throw Exception.new("Sugar is not renderable") unless sugar.kind_of? Renderable
-    nil_mono = Monosaccharide.Factory(sugar.root.class,'Nil')
+    nil_mono = Monosaccharide.Factory(sugar.root.class,'ecdb:nil')
+    nil_mono.extend(Renderable::Residue)
     [nil_mono, sugar.residue_composition].flatten.each { |res|
-      res_id = res.alternate_name(NamespacedMonosaccharide::GS_NAMESPACE)
+      res_id = res.name(NamespacedMonosaccharide::NAMESPACES[:ecdb])
       prototypes[res_id] = XPath.first(res.raw_data_node, "disp:icon[@scheme='#{scheme}']/svg:g", { 'disp' => DISPLAY_ELEMENT_NS, 'svg' => SVG_ELEMENT_NS })
       if prototypes[res_id] == nil
-        prototypes[res_id] = prototypes[nil_mono.alternate_name(NamespacedMonosaccharide::GS_NAMESPACE)]
+        prototypes[res_id] = prototypes[nil_mono.name(NamespacedMonosaccharide::NAMESPACES[:ecdb])]
       end
       
       prototypes[res_id].add_attribute('width', res.width)
@@ -183,7 +184,7 @@ class SvgRenderer
   
   def render_residue(res)
 
-    res_id = res.alternate_name(NamespacedMonosaccharide::GS_NAMESPACE)
+    res_id = res.name(NamespacedMonosaccharide::NAMESPACES[:ecdb])
 
     icon = nil
 

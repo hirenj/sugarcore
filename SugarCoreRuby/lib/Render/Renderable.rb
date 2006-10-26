@@ -225,6 +225,16 @@ end
 module Renderable::Sugar
   include Renderable
   
+  def self.extend_object(sug)
+    sug.residue_composition.each { |res|
+      res.extend(Renderable::Residue)
+      if res.parent != nil
+        res.linkage_at_position.extend(Renderable::Link)
+      end
+    }
+    super
+  end
+  
   def box
     @root.box
   end

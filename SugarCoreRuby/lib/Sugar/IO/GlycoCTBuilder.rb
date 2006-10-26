@@ -30,7 +30,7 @@ module Sugar::IO::GlycoCT::Builder
 
 
   class Residue
-    attr_accessor :res_id, :name, :res_type, :anomer
+    attr_accessor :res_id, :name, :res_type, :anomer, :substituents
     def self.factory(string)
       res = new()
       res.res_id, res.res_type, res.anomer, res.name = [string.scan(/(\d+)([bs]):(?:([abu])-)?(.*)/)].flatten
@@ -38,6 +38,7 @@ module Sugar::IO::GlycoCT::Builder
         res.name = res.anomer
       end
       res.res_type = res.res_type.to_sym
+      res.substituents = Hash.new()
       res
     end
   end
@@ -46,7 +47,7 @@ module Sugar::IO::GlycoCT::Builder
     attr_accessor :link_id, :from, :to, :from_position, :to_position
     def self.factory(string)
       link = new()
-      link.link_id, link.from, link.from_position, link.to_position, link.to = [ string.scan(/(\d+):(\d+)\w?\(([\du]+)-([\du]+)\)(\d)+/)].flatten
+      link.link_id, link.from, link.from_position, link.to_position, link.to = [ string.scan(/(\d+):(\d+)\w?\(([\du]+)-([\du]+)\)(\d+)/)].flatten
       link
     end
   end
@@ -64,8 +65,13 @@ module Sugar::IO::GlycoCT::Builder
     linkages = glycoct_linkages
 
     collapse_substituents(linkages,residues)
-    
+
     root = nil
+    
+    if linkages.values.select { |lin| lin.from != nil }.length == 0
+      root = monosaccharide_factory(residues.values.first.name)
+    end
+    
     linkages.keys.select { |id| linkages[id].from != nil }.sort_by { |id| residues[linkages[id].from].res_id }.each { |id|
       link = linkages[id]
       residue = residues[link.from]
@@ -94,10 +100,16 @@ module Sugar::IO::GlycoCT::Builder
   def collapse_substituents(linkages,residues)
     linkages.each { |link_id,link|
       if (residues[link.to].res_type == :s)
-        residues[link.from].name = "#{residues[link.from].name}|#{link.from_position}#{residues[link.to].name}"
+        residues[link.from].substituents[link.from_position] = residues[link.to].name
+#        residues[link.from].name = "#{residues[link.from].name}|#{link.from_position}#{residues[link.to].name}"
         link.from = nil
         link.to = nil
       end    
+    }
+    residues.each { |key,res|
+      res.substituents.keys.sort.each { |pos|
+        res.name = "#{res.name}|#{pos}#{res.substituents[pos]}"
+      }
     }
   end
 end

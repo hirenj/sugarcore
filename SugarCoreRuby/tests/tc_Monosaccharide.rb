@@ -7,7 +7,7 @@ class TC_Monosaccharide < Test::Unit::TestCase
 
 	DebugLog.log_level(5)
 
-	def test_01_initialisation
+	def setup
 
 		assert_nothing_raised {
 			Monosaccharide.Load_Definitions('data/dictionary.xml')
@@ -32,12 +32,20 @@ class TC_Monosaccharide < Test::Unit::TestCase
 		}
 	end
 
+  def test_explicit_namespace
+		assert_nothing_raised {
+			mono = Monosaccharide.Factory( NamespacedMonosaccharide, 'dkfz:D-Galp')
+			mono = Monosaccharide.Factory( NamespacedMonosaccharide, 'ic:Gal')
+			mono = Monosaccharide.Factory( NamespacedMonosaccharide, 'ecdb:dgalp')
+		}    
+  end
+
   def test_namespace_switching
 		
 		# We should be able to use the DKFZ namespace here
 		
 		assert_nothing_raised {
-		  NamespacedMonosaccharide.Default_Namespace=NamespacedMonosaccharide::GS_NAMESPACE
+		  NamespacedMonosaccharide.Default_Namespace=NamespacedMonosaccharide::NAMESPACES[:dkfz]
 		  NamespacedMonosaccharide.Load_Definitions('data/dictionary.xml')
 			mono = Monosaccharide.Factory( DKFZNamespacedMonosaccharide, 'D-Araf')
 		}
@@ -54,8 +62,8 @@ class TC_Monosaccharide < Test::Unit::TestCase
 
 		
 		# We should reset the namespace here
-	  NamespacedMonosaccharide.Default_Namespace=NamespacedMonosaccharide::IUPAC_NAMESPACE
-	  test_01_initialisation()
+	  NamespacedMonosaccharide.Default_Namespace=NamespacedMonosaccharide::NAMESPACES[:ic]
+	  setup()
   end
 
   def test_alternate_namespaces
