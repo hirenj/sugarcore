@@ -1,6 +1,7 @@
 require 'DebugLog'
 require 'RMagick'
 require 'Render/AbstractRenderer'
+require 'tempfile'
 
 class PngRenderer
   include AbstractRenderer
