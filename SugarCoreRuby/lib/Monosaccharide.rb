@@ -400,6 +400,7 @@ class NamespacedMonosaccharide < Monosaccharide
 	NAMESPACES[:ic] =  "http://www.iupac.org/condensed"
 	NAMESPACES[:dkfz] = "http://glycosciences.de"
 	NAMESPACES[:ecdb] = "http://ns.eurocarbdb.org/glycoct"
+	NAMESPACES[:glyde] = "http://ns.eurocarbdb.org/glyde"
 	
 	@@DEFAULT_NAMESPACE = NAMESPACES[:ic]
 
@@ -424,7 +425,7 @@ class NamespacedMonosaccharide < Monosaccharide
   
 	def initialize_from_data
 	  ns = self.class.Default_Namespace
-	  @name = self.name.sub(/(\w+):/) { |_match| ns = NAMESPACES[$1.to_sym]; '' }
+	  @name = self.name.sub(/^(\w+):/) { |_match| ns = NAMESPACES[$1.to_sym]; '' }
     debug "Initialising #{name} in namespace #{ns}."
 	  data_source = self.class.mono_data
 	  
@@ -479,3 +480,8 @@ class ECDBNamespacedMonosaccharide < NamespacedMonosaccharide
   end
 end
 
+class GlydeNamespacedMonosaccharide < NamespacedMonosaccharide
+  def self.Default_Namespace
+    NAMESPACES[:glyde]
+  end
+end

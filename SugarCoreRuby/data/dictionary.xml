@@ -2,6 +2,7 @@
 			xmlns:dkfz="http://glycosciences.de" 
 			xmlns:ic="http://www.iupac.org/condensed"
 			xmlns:ecdb="http://ns.eurocarbdb.org/glycoct"
+			xmlns:glyde="http://ns.eurocarbdb.org/glyde"
 			xmlns:disp="http://penguins.mooh.org/research/glycan-display-0.1"
 			xmlns:svg="http://www.w3.org/2000/svg">
 	<unit id="nil">
@@ -68,6 +69,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="ic" value="Fuc" />
 		<name ns="ic" value="LFuc"/>
 		<name ns="ecdb" value="lgalp|6d"/>
+		<name ns="glyde" value="lgal-hex-1:5"/>
 		<ecdb:substituents>
 			<ecdb:substituent position="6">d</ecdb:substituent>
 		</ecdb:substituents>
@@ -113,6 +115,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="dkfz" value="D-Galp" />
 		<name ns="ic" value="Gal" />
 		<name ns="ecdb" value="dgalp" />
+		<name ns="glyde" value="dgal-hex-1:5"/>
 		
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
@@ -151,6 +154,8 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="dkfz" value="D-Galp|2NAc" />
 		<name ns="ic" value="GalNAc" />
 		<name ns="ecdb" value="dgalp|2nac" />
+		<name ns="glyde" value="dgal-hex-1:5|2nac"/>
+		
 		<ecdb:substituents>
 			<ecdb:substituent position="2">nac</ecdb:substituent>
 		</ecdb:substituents>
@@ -192,6 +197,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="dkfz" value="D-Galp|2n" />		
 		<name ns="ic" value="GalN" />
 		<name ns="ecdb" value="dgalp"/>
+		<name ns="glyde" value="dgal-hex-1:5|2n"/>
 		<ecdb:substituents>
 			<ecdb:substituent position="2">n</ecdb:substituent>
 		</ecdb:substituents>
@@ -240,6 +246,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="dkfz" value="D-Glcp|6a" />
 		<name ns="ic" value="GlcA" />
 		<name ns="ecdb" value="dglcp|6a"/>
+		<name ns="glyde" value="dglc-hex-1:5|6a"/>
 		<ecdb:substituents>
 			<ecdb:substituent position="6">a</ecdb:substituent>
 		</ecdb:substituents>
@@ -250,6 +257,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="dkfz" value="D-Glcp|2nac" />
 		<name ns="ic" value="GlcNAc" />
 		<name ns="ecdb" value="dglcp|2nac"/>
+		<name ns="glyde" value="dglc-hex-1:5|2nac"/>
 		<ecdb:substituents>
 			<ecdb:substituent position="2">nac</ecdb:substituent>
 		</ecdb:substituents>
@@ -295,6 +303,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="dkfz" value="D-Glcp|2n" />		
 		<name ns="ic" value="GlcN" />
 		<name ns="ecdb" value="dglcp|2n"/>
+		<name ns="glyde" value="dglc-hex-1:5|2n"/>
 		<ecdb:substituents>
 			<ecdb:substituent position="2">n</ecdb:substituent>
 		</ecdb:substituents>		
@@ -306,12 +315,15 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="ic" value="Idop" />
 		<name ns="ic" value="Ido" />
 		<name ns="ecdb" value="didop"/>
+		<name ns="glyde" value="dido-hex-1:5"/>
 		<property name="class" value="ic:Hex"/>
 	</unit>
 	<unit id="didop|6a" >
 		<name ns="dkfz" value="D-Idop|6a" />	
 		<name ns="ic" value="IdoA" />
 		<name ns="ecdb" value="didop|6a"/>
+		<name ns="glyde" value="dido-hex-1:5|6a"/>
+
 		<ecdb:substituents>
 			<ecdb:substituent position="6">a</ecdb:substituent>
 		</ecdb:substituents>
@@ -322,12 +334,15 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="dkfz" value="D-Kdo"/>
 		<name ns="ic" value="Kdo" />
 		<name ns="ecdb" value="dkdo" />
+		<!-- FIXME -->
+		<name ns="glyde" value="dkdo-oct-1:0"/>
 		<property name="class" value="ic:Oct"/>
 	</unit>
 	<unit id="dmanp" >
 		<name ns="dkfz" value="D-Manp" />
 		<name ns="ic" value="Man" />
 		<name ns="ecdb" value="dmanp" />
+		<name ns="glyde" value="dman-hex-1:5"/>
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
 		<disp:icon scheme="boston">
@@ -365,6 +380,8 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="ic" value="NeuGc" />
 		<name ns="ic" value="Neu5Gc" />
 		<name ns="ecdb" value="dneu|1a|2keto|3d|5ngc"/>
+		<!-- FIXME ?? -->
+		<name ns="glyde" value="dneu-neu-1:5|1a|2keto|3d|5ngc"/>
 		<property name="class" value="ic:Neu"/>
 		<ecdb:substituents>
 			<ecdb:substituent position="1">a</ecdb:substituent>
@@ -413,6 +430,8 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="ic" value="NeuAc" />
 		<name ns="ic" value="Neu5Ac" />
 		<name ns="ecdb" value="dneu|1a|2keto|3d|5nac"/>
+		<name ns="glyde" value="dneu-neu-1:5|1a|2keto|3d|5nac"/>
+
 		<property name="class" value="ic:Neu"/>
 		<ecdb:substituents>
 			<ecdb:substituent position="1">a</ecdb:substituent>
@@ -455,6 +474,8 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="dkfz" value="D-Manp|6d" />
 		<name ns="ic" value="Rha" />
 		<name ns="ecdb" value="dmanp|6d"/>
+		<name ns="glyde" value="dman-hex-1:5|6d"/>
+
 		<ecdb:substituents>
 			<ecdb:substituent position="6">d</ecdb:substituent>
 		</ecdb:substituents>
