@@ -435,12 +435,15 @@ class NamespacedMonosaccharide < Monosaccharide
 	    namespaces[ns_dec.value] = ns_dec.name
 	  }
   	mono_data_node = XPath.first(	data_source, 
-  									"./unit[name[@ns='#{namespaces[ns]}' and @value='#{@name}']]"
+									"./dict:unit[dict:name[@ns='#{namespaces[ns]}' and @value='#{@name}']]",
+									{ 'dict' => MONO_DICTIONARY_NAMESPACE }
   									 )
+
+  									 
   #		string(namespace::*[name() =substring-before(@type, ':')]) 
 			
   	if ( mono_data_node == nil )
-  		raise MonosaccharideException.new("Residue #{self.name} not found in default namespace #{ns} from #{self.class.mono_data_filename ? self.class.mono_data_filename : @@MONO_DATA_FILENAME}")
+  		raise MonosaccharideException.new("Residue #{self.name} not found in default namespace #{ns} #{namespaces[ns]} from #{self.class.mono_data_filename ? self.class.mono_data_filename : @@MONO_DATA_FILENAME}")
   	end
 
   	@alternate_name[ns] = self.name()
