@@ -57,7 +57,21 @@ class SvgRenderer
     nil_mono.extend(Renderable::Residue)
     [nil_mono, sugar.residue_composition].flatten.each { |res|
       res_id = res.name(NamespacedMonosaccharide::NAMESPACES[:ecdb])
-      prototypes[res_id] = XPath.first(res.raw_data_node, "disp:icon[@scheme='#{scheme}']/svg:g", { 'disp' => DISPLAY_ELEMENT_NS, 'svg' => SVG_ELEMENT_NS })
+      if /text:(\w+)/.match(scheme)
+        group = Element.new('svg:g')
+        group.add_element('svg:text', { #'x' => '50', 
+                                        #'y' => '45', 
+                                        'font-size'=>'28',
+                                        'text-anchor' => 'middle',
+                                        'transform' => 'translate(45,60)',
+                                        'style'=>'fill:#0000ff;stroke:#000000;stroke-width:1;'
+                                        }
+                          ).text=res.name(NamespacedMonosaccharide::NAMESPACES[$~[1].to_sym])
+        group.add_namespace('svg',SVG_ELEMENT_NS)
+        prototypes[res_id] = group
+      else
+        prototypes[res_id] = XPath.first(res.raw_data_node, "disp:icon[@scheme='#{scheme}']/svg:g", { 'disp' => DISPLAY_ELEMENT_NS, 'svg' => SVG_ELEMENT_NS })
+      end
       if prototypes[res_id] == nil
         prototypes[res_id] = prototypes[nil_mono.name(NamespacedMonosaccharide::NAMESPACES[:ecdb])]
       end
@@ -101,9 +115,9 @@ class SvgRenderer
   	drawing = doc.root.add_element('svg:g')
   	linkages = drawing.add_element('svg:g')
   	residues = drawing.add_element('svg:g')
-  	
+  	  	
   	icons = Array.new()
-  	
+
     sugar.residue_composition.each { |res|
 
       icons << render_residue(res)
@@ -129,10 +143,16 @@ class SvgRenderer
         definitions.add_element(proto_copy)
       }
     end
+    sugbox = sugar.box
+
+    sugbox[:x1] = -1*sugbox[:x1]
+    sugbox[:x2] = -1*sugbox[:x2] - 100
+    sugbox[:y1] = -1*sugbox[:y1]
+    sugbox[:y2] = -1*sugbox[:y2] - 100
     
-  	doc.root.add_attribute('viewBox', "0 0 #{self.max_x+100} #{self.max_y+100+(self.max_y - self.min_y)}")
+  	doc.root.add_attribute('viewBox', "#{sugbox[:x2]} #{sugbox[:y2]} #{sugbox.width} #{sugbox.height}")
+
   	doc.root.add_attribute('preserveAspectRatio', 'xMinYMin')
-  	drawing.add_attribute('transform',"scale(-1,-1) translate(#{-1*(self.max_x+100)},#{-1*(self.max_y+100)})")
     return doc
   end
 
@@ -165,20 +185,20 @@ class SvgRenderer
     quad = {}
     quad[:x] = linkage.position[:x1] + 50
     quad[:y] = linkage.position[:y1] + 50
-    p1 = "#{linkage.position[:x1]},#{linkage.position[:y1]}"
-    p2 = "#{quad[:x]},#{quad[:y]}"
-    p3 = "#{centre[:x]},#{centre[:y]}"
-    p4 = "#{linkage.position[:x2]},#{linkage.position[:y2]}"
+    p1 = "#{-1*linkage.position[:x1]},#{-1*linkage.position[:y1]}"
+    p2 = "#{-1*quad[:x]},#{-1*quad[:y]}"
+    p3 = "#{-1*centre[:x]},#{-1*centre[:y]}"
+    p4 = "#{-1*linkage.position[:x2]},#{-1*linkage.position[:y2]}"
     line.add_attribute('d', "M#{p1} Q#{p2} #{p3} T#{p4}")
     return line
   end
 
   def render_straight_link(linkage)
     line = Element.new('svg:line')
-    line.add_attribute('x1',linkage.position[:x1])
-    line.add_attribute('y1',linkage.position[:y1])
-    line.add_attribute('x2',linkage.position[:x2])
-    line.add_attribute('y2',linkage.position[:y2])
+    line.add_attribute('x1',-1*linkage.position[:x1])
+    line.add_attribute('y1',-1*linkage.position[:y1])
+    line.add_attribute('x2',-1*linkage.position[:x2])
+    line.add_attribute('y2',-1*linkage.position[:y2])
     return line
   end
   
@@ -201,11 +221,12 @@ class SvgRenderer
       icon = Document.new(res.prototype.to_s).root
     end
     
-    icon.add_attribute('transform',"translate(#{res.position[:x1]+100},#{res.position[:y1]+100}) rotate(180) ")
-
-    self.min_y = res.position[:y1]
-    self.max_x = res.position[:x2]
-    self.max_y = res.position[:y2]
+    #icon.add_attribute('transform',"translate(#{res.position[:x1]+100},#{res.position[:y1]+100}) rotate(180)")
+    icon.add_attribute('x',"#{-100-res.position[:x1]}")
+    icon.add_attribute('y',"#{-100-res.position[:y1]}")
+    self.min_y = -100-res.position[:y1]
+    self.max_x = -100-res.position[:x2]
+    self.max_y = -100-res.position[:y2]
         
     if res.labels.length > 0 
       icon.add_attribute('class', res.labels.join(" "))

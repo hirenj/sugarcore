@@ -1,10 +1,10 @@
 module Rectangle
   def height
-    self[:y2] - self[:y1]
+    (self[:y2] - self[:y1]).abs
   end
   
   def width
-    self[:x2] - self[:x1]
+    (self[:x2] - self[:x1]).abs
   end
   
 end
@@ -104,8 +104,7 @@ module Renderable::Residue
     min_y = 100000
     max_x = -100000
     max_y = -100000
-    
-    
+
     children.each { |child|
       link_box = child[:link].get_paired_residue(self).box
 
@@ -238,4 +237,5 @@ module Renderable::Sugar
   def box
     @root.box
   end
+    
 end
