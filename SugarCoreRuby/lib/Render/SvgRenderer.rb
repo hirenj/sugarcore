@@ -58,7 +58,8 @@ class SvgRenderer
     [nil_mono, sugar.residue_composition].flatten.each { |res|
       res_id = res.name(NamespacedMonosaccharide::NAMESPACES[:ecdb])
       if /text:(\w+)/.match(scheme)
-        group = Element.new('svg:g')
+        group = Element.new('svg:svg')
+        group.add_attributes({ 'viewBox' => '0 0 100 100' })
         group.add_element('svg:text', { #'x' => '50', 
                                         #'y' => '45', 
                                         'font-size'=>'28',
@@ -70,14 +71,15 @@ class SvgRenderer
         group.add_namespace('svg',SVG_ELEMENT_NS)
         prototypes[res_id] = group
       else
-        prototypes[res_id] = XPath.first(res.raw_data_node, "disp:icon[@scheme='#{scheme}']/svg:g", { 'disp' => DISPLAY_ELEMENT_NS, 'svg' => SVG_ELEMENT_NS })
+        prototypes[res_id] = XPath.first(res.raw_data_node, "disp:icon[@scheme='#{scheme}']/svg:svg", { 'disp' => DISPLAY_ELEMENT_NS, 'svg' => SVG_ELEMENT_NS })
       end
       if prototypes[res_id] == nil
         prototypes[res_id] = prototypes[nil_mono.name(NamespacedMonosaccharide::NAMESPACES[:ecdb])]
       end
       
-      prototypes[res_id].add_attribute('width', res.width)
-      prototypes[res_id].add_attribute('height', res.height)
+      prototypes[res_id].add_attribute('width', 100)
+      prototypes[res_id].add_attribute('height', 100)
+      prototypes[res_id].add_attribute('viewBox', '0 0 100 100')
 
       anchors = Hash.new()
       XPath.each(res.raw_data_node, "./disp:icon[@scheme='#{scheme}']/disp:anchor", { 'disp' => DISPLAY_ELEMENT_NS }) { |anchor|
@@ -222,8 +224,12 @@ class SvgRenderer
     end
     
     #icon.add_attribute('transform',"translate(#{res.position[:x1]+100},#{res.position[:y1]+100}) rotate(180)")
+    if ( self.use_prototypes? )
     icon.add_attribute('x',"#{-100-res.position[:x1]}")
     icon.add_attribute('y',"#{-100-res.position[:y1]}")
+    else
+      icon.add_attribute('transform',"translate(#{-100-res.position[:x1]},#{-100-res.position[:y1]})")      
+    end
     self.min_y = -100-res.position[:y1]
     self.max_x = -100-res.position[:x2]
     self.max_y = -100-res.position[:y2]

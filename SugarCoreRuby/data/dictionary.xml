@@ -17,11 +17,11 @@
 		  <disp:anchor linkage="5" x="100" y="50" />
 		  <disp:anchor linkage="6" x="100" y="50" />
 		  <disp:anchor linkage="-1" x="100" y="50" />
-		  <svg:g>
+		  <svg:svg>
 		    <svg:text x="15" y="85" width="100" height="100" font-size="100"
 style="fill:#000000;stroke:#000000;stroke-width:1;"
 		     >?</svg:text>
-		  </svg:g>
+		  </svg:svg>
 		</disp:icon>
 		<disp:icon scheme="oxford">
 		  <disp:anchor linkage="1" x="0" y="50" />
@@ -32,11 +32,11 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="6" x="0" y="0" />
 		  <disp:anchor linkage="8" x="50" y="0" />
 		  <disp:anchor linkage="-1" x="50" y="50" />
-		  <svg:g>
+		  <svg:svg>
 		    <svg:text x="15" y="85" width="100" height="100" font-size="100"
 style="fill:#000000;stroke:#000000;stroke-width:1;"
 		     >?</svg:text>
-		  </svg:g>
+		  </svg:svg>
 		</disp:icon>
 	</unit>
 	<unit id="daraf">
@@ -83,13 +83,13 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="4" x="50" y="50" />
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
-		  <svg:g>
+		  <svg:svg>
 		    <svg:path
 		       d="M -37.742300,46.706896 L -130.25770,46.706896 L -84.000000,-33.413792 L -37.742300,46.706896 z "
 		       transform="translate(135.2577,40.91379)"
 		       style="fill:#ff0000;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
 		       />
-		  </svg:g>
+		  </svg:svg>
 		</disp:icon>
 		<disp:icon scheme="oxford">
 		  <disp:anchor linkage="1" x="50" y="50" />
@@ -98,7 +98,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="4" x="50" y="50" />
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
-		  <svg:g>
+		  <svg:svg>
 		    <svg:path
 		       d="M -147.00000,41.500001 L -167.08011,21.487260 L -185.00000,4.4999994 L -164.98726,-15.580113 L -148.00000,-33.500001 L -127.91989,-13.487260 L -110.00000,3.5000006 L -130.01274,23.580113 L -147.00000,41.500001 z "
 		       transform="matrix(0.786405,0.000000,0.000000,1.319756,165.9945,44.72119)"
@@ -108,7 +108,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		       d="M 68.000000 50.000000 A 18.000000 18.000000 0 1 1  32.000000,50.000000 A 18.000000 18.000000 0 1 1  68.000000 50.000000 z"
 		       style="fill:#111d2c;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
 		       />
-		  </svg:g>
+		  </svg:svg>
 		</disp:icon>
 	</unit>
 	<unit id="dgalp">
@@ -127,12 +127,12 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="4" x="50" y="50" />
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
-		  <svg:g>
+		  <svg:svg>
 		    <svg:path
 		       d="M 100 50 A 50 50 0 1 1 0,50 A 50 50 0 1 1 100 50 z"
 		       style="fill:#fffc00;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
 		       />
-		  </svg:g>
+		  </svg:svg>
 		</disp:icon>
 		<disp:icon scheme="oxford">
 		  <disp:anchor linkage="1" x="78" y="50" />
@@ -141,13 +141,13 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="4" x="50" y="50" />
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
-		  <svg:g>
+		  <svg:svg>
 		    <svg:path
 		       d="M -147.00000,41.500001 L -167.08011,21.487260 L -185.00000,4.4999994 L -164.98726,-15.580113 L -148.00000,-33.500001 L -127.91989,-13.487260 L -110.00000,3.5000006 L -130.01274,23.580113 L -147.00000,41.500001 z "
 		       transform="matrix(0.786405,0.000000,0.000000,1.319756,165.9945,44.72119)"
 		       style="fill:#aec3e0;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
 		       />
-		  </svg:g>
+		  </svg:svg>
 		</disp:icon>
 	</unit>
 	<unit id="dgalp|2nac">
@@ -168,14 +168,14 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="4" x="50" y="50" />
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
-			<svg:g>
+			<svg:svg>
 				<svg:rect
 				   width="100"
 				   height="100"
 				   x="0"
 				   y="0" style="fill:#fffc00;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
 				   />
-			</svg:g>
+			</svg:svg>
 		</disp:icon>
 		<disp:icon scheme="oxford">
 		  <disp:anchor linkage="1" x="50" y="50" />
@@ -184,13 +184,13 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="4" x="50" y="50" />
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
-			<svg:g>
+			<svg:svg>
 				<svg:path
 			       d="M -147.00000,41.500001 L -167.08011,21.487260 L -185.00000,4.4999994 L -164.98726,-15.580113 L -148.00000,-33.500001 L -127.91989,-13.487260 L -110.00000,3.5000006 L -130.01274,23.580113 L -147.00000,41.500001 z "
 			       transform="matrix(0.786405,0.000000,0.000000,1.319756,165.9945,44.72119)"
 			       style="fill:#111d2c;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
 			       />
-			</svg:g>
+			</svg:svg>
 		</disp:icon>
 	</unit>
 	<unit id="dgalp|2n">
@@ -217,12 +217,12 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="4" x="50" y="50" />
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
-		  <svg:g>
+		  <svg:svg>
 		    <svg:path
 		       d="M 99.500027 50.000000 A 49.500027 49.500027 0 1 1  0.49997330,50.000000 A 49.500027 49.500027 0 1 1  99.500027 50.000000 z"
 		       transform="translate(-2.670288e-5,-2.670288e-5)"  style="fill:#0008ff;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
 		       />
-		  </svg:g>
+		  </svg:svg>
 		</disp:icon>
 		<disp:icon scheme="oxford">
 		  <disp:anchor linkage="1" x="100" y="50" />
@@ -231,7 +231,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="4" x="50" y="50" />
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
-		  <svg:g>
+		  <svg:svg>
 		    <svg:rect
 		       width="100"
 		       height="100"
@@ -239,7 +239,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		       y="0"
  style="fill:#93afd5;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
 		       />
-		  </svg:g>
+		  </svg:svg>
 		</disp:icon>
 	</unit>
 	<unit id="dglcp|6a" >
@@ -271,14 +271,14 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="4" x="50" y="50" />
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
-			<svg:g>
+			<svg:svg>
 			    <svg:rect
 			       width="100"
 			       height="100"
 			       x="0"
 			       y="0"       style="fill:#0008ff;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
 			       />
-			</svg:g>
+			</svg:svg>
 		</disp:icon>
 		<disp:icon scheme="oxford">
 		  <disp:anchor linkage="1" x="100" y="50" />
@@ -288,7 +288,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
 		  <disp:anchor linkage="0" x="0" y="50" />
-			<svg:g>
+			<svg:svg>
 			    <svg:rect
 			       width="100.00000"
 			       height="100.00000"
@@ -296,7 +296,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 			       y="0.49999994"
 			       style="fill:#111d2c;fill-opacity:1.0000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.0000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
 			       />
-			</svg:g>
+			</svg:svg>
 		</disp:icon>
 	</unit>
 	<unit id="dglcp|2n" >
@@ -352,13 +352,13 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="4" x="50" y="50" />
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
-		  <svg:g>
+		  <svg:svg>
 		    <svg:path
 		       d="M 95 47 A 47 47 0 1 1  0.5,47 A 47 47 0 1 1  95 47 z"
 		       transform="translate(-2.670288e-5,-2.670288e-5)"
 		       style="fill:#00ff14;fill-opacity:1.0000000;stroke:#000000;stroke-width:2.0;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
 		       />
-		  </svg:g>
+		  </svg:svg>
 		</disp:icon>
 		<disp:icon scheme="oxford">
 		  <disp:anchor linkage="1" x="50" y="50" />
@@ -367,12 +367,12 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="4" x="50" y="50" />
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
-		  <svg:g>
+		  <svg:svg>
 		    <svg:path
 		       d="M 100 50 A 50 50 0 1 1  0,50 A 50 50 0 1 1  100 50 z"
 		       style="fill:#bfcfe6;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
 		       />
-		  </svg:g>
+		  </svg:svg>
 		</disp:icon>
 	</unit>
 	<unit id="dneu|1a|2keto|3d|5ngc" >
@@ -396,13 +396,13 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="4" x="50" y="50" />
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
-		  <svg:g>
+		  <svg:svg>
 		    <svg:path
 		       d="M -79.999999,91.688122 L -125.68812,46.000001 L -80.000001,0.31187820 L -34.311878,45.999999 L -79.999999,91.688122 z "
 		       transform="translate(130.8119,5.188122)"
 		       style="fill:#e9ffff;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
 		       />
-		  </svg:g>
+		  </svg:svg>
 		</disp:icon>
 		<disp:icon scheme="oxford">
 		  <disp:anchor linkage="1" x="50" y="50" />
@@ -411,7 +411,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="4" x="50" y="50" />
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
-		  <svg:g>
+		  <svg:svg>
 		    <svg:path
 		       d="M 50.000001,-2.0000000 L 60.282416,34.465559 L 99.454939,33.931118 L 67.951573,54.978752 L 80.564832,92.068885 L 50.812266,68.611480 L 19.435166,92.068883 L 32.550435,56.523775 L 0.54506158,33.931115 L 38.403310,35.420435 L 50.000001,-2.0000000 z "
 		       transform="translate(0.545061,4.000000)"
@@ -422,7 +422,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		       transform="translate(0.500000,0.000000)"
 		       style="fill:#bfcfe6;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
 		       />
-		  </svg:g>
+		  </svg:svg>
 		</disp:icon>
 	</unit>
 	<unit id="dneu|1a|2keto|3d|5nac" >
@@ -446,13 +446,13 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 			<disp:anchor linkage="4" x="50" y="50" />
 			<disp:anchor linkage="5" x="50" y="50" />
 			<disp:anchor linkage="6" x="50" y="50" />
-			<svg:g>
+			<svg:svg>
 	    		<svg:path
 	       			d="M -79.999999,91.688122 L -125.68812,46.000001 L -80.000001,0.31187820 L -34.311878,45.999999 L -79.999999,91.688122 z "
 	       			transform="translate(130.8119,5.188122)"
 	       			style="fill:#c800c8;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
 	       		/>
-			</svg:g>
+			</svg:svg>
 		</disp:icon>
 		<disp:icon scheme="oxford">
 			<disp:anchor linkage="1" x="50" y="50" />
@@ -461,13 +461,13 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 			<disp:anchor linkage="4" x="50" y="50" />
 			<disp:anchor linkage="5" x="50" y="50" />
 			<disp:anchor linkage="6" x="50" y="50" />
-			<svg:g>
+			<svg:svg>
 			    <svg:path
 			       d="M 50.000001,-2.0000000 L 60.282416,34.465559 L 99.454939,33.931118 L 67.951573,54.978752 L 80.564832,92.068885 L 50.812266,68.611480 L 19.435166,92.068883 L 32.550435,56.523775 L 0.54506158,33.931115 L 38.403310,35.420435 L 50.000001,-2.0000000 z "
 			       transform="translate(0.545061,4.000000)"
 			       style="fill:#111d2c;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
 			       />
-			</svg:g>
+			</svg:svg>
 		</disp:icon>
 	</unit>
 	<unit id="dmanp|6d" >
@@ -500,9 +500,9 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 			<disp:anchor linkage="4" x="0" y="50" />
 			<disp:anchor linkage="5" x="0" y="50" />
 			<disp:anchor linkage="6" x="0" y="50" />
-			<svg:g>
+			<svg:svg>
 	    		<svg:text width="100" height="100" x="50" y="70" style="fill: #0000ff; text-anchor: middle; stroke: #0000ff;" font-size="50">Cer</svg:text>
-			</svg:g>
+			</svg:svg>
 		</disp:icon>
 	</unit>
 	<unit id="asn" >
@@ -529,9 +529,9 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 			<disp:anchor linkage="4" x="0" y="50" />
 			<disp:anchor linkage="5" x="0" y="50" />
 			<disp:anchor linkage="6" x="0" y="50" />
-			<svg:g>
+			<svg:svg>
 	    		<svg:text width="100" height="100" x="50" y="70" style="fill: #0000ff; text-anchor: middle; stroke: #0000ff;" font-size="50">Ser</svg:text>
-			</svg:g>
+			</svg:svg>
 		</disp:icon>
 	</unit>
 	<unit id="pp" >
