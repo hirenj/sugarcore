@@ -421,6 +421,13 @@ class NamespacedMonosaccharide < Monosaccharide
     return NAMESPACES.values
   end
 
+  def name(namespace=nil)
+    if namespace.is_a? Symbol
+      namespace = NAMESPACES[namespace]
+    end
+    super(namespace)
+  end
+
   protected
   
 	def initialize_from_data
