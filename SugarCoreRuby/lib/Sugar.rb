@@ -58,6 +58,14 @@ class Sugar
 	  end
 	  
 	  protected :initialize_from_copy
+
+    def eql?(o)
+      o.is_a?(Sugar) && sequence == o.sequence
+    end
+    
+    def hash
+      self.sequence
+    end
 	  
     # Set the sequence for this sugar. The Sugar must be able to 
     # parse this sequence (done by extending the Sugar), otherwise
@@ -81,6 +89,23 @@ class Sugar
     #     sug.sequence            # nil
     def sequence
     	sequence_from_residue(@root)
+    end
+    
+    # Create a Sugar object based upon an array of Linkages passed to it. The first
+    # linkage in the array will define the root of the Sugar. Will destroy all objects
+    # related to the current sugar
+    # Doesn't work for more than one linkage at the moment. How do you figure out
+    # if the linkages are not from disconnected graphs
+    def linkages=(linkages)
+      self.finish
+      linkages.each { |link|
+        parent = link[:link].get_paired_residue(link[:residue]).shallow_clone
+        child = link[:residue].shallow_clone
+        if @root == nil
+          @root = parent
+        end
+        parent.add_child(child,link[:link].deep_clone)
+      }
     end
     
     # Compute the sequence for this sugar from a particular start residue.

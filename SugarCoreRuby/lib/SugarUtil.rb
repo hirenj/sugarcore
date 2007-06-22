@@ -11,14 +11,12 @@ end
 class SugarUtil
   def self.FindDisaccharides(sugar)
     residues = sugar.residue_composition
-    all_links = Hash.new()
+    all_links = Hash.new() { |h,k| h[k] = Array.new() }
     residues.each { |res|
       res.children.each { |kid|
-        kid[:link].extend(LinkageWriter)
-        if ! all_links.include?(kid[:link].to_sequence)
-          all_links[kid[:link].to_sequence] = Array.new()
-        end
-        all_links[kid[:link].to_sequence].push( kid[:link] )
+        new_sug = sugar.class.new()
+        new_sug.linkages = [ kid ]
+        all_links[new_sug].push( kid[:link] )
       }
     }
     return all_links
