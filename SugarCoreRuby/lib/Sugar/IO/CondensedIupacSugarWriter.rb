@@ -17,6 +17,9 @@ module Sugar::IO::CondensedIupac::Writer
 	end
 
   def target_namespace=(ns)
+    if ns.is_a? Symbol
+      ns = NamespacedMonosaccharide::NAMESPACES[ns]
+    end
     @target_namespace = ns
   end
 

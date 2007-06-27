@@ -318,7 +318,7 @@ class Monosaccharide
 
   # The position this residue is linked to on to at a given position ( uses the parent position by default )
   #   sugar.sequence                      # Gal(b1-3)GlcNAc
-  #   glcnac.paired_residue_position()    # 3
+  #   gal.paired_residue_position()       # 3
   #   root.paired_residue_position(3)     # 1
   def paired_residue_position(attachment_position=@parent_position)
     if (linkage_at_position(attachment_position) == nil)
@@ -401,6 +401,7 @@ class NamespacedMonosaccharide < Monosaccharide
 	NAMESPACES[:dkfz] = "http://glycosciences.de"
 	NAMESPACES[:ecdb] = "http://ns.eurocarbdb.org/glycoct"
 	NAMESPACES[:glyde] = "http://ns.eurocarbdb.org/glyde"
+	NAMESPACES[:stephan] = "http://www.dkfz.de/stephan"
 	
 	@@DEFAULT_NAMESPACE = NAMESPACES[:ic]
 
