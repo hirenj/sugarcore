@@ -95,7 +95,7 @@ CHILD
 		<name ns="dkfz" value="Nil" />
 		<name ns="ic" value="Nil" />
 		<name ns="ecdb" value="nil" />
-		<name ns="stephan" value="nil"/>
+		<name ns="stephan" value="-nil"/>
 		<disp:icon scheme="boston">
 		  <disp:anchor linkage="1" x="0" y="50" />
 		  <disp:anchor linkage="2" x="100" y="50" />
