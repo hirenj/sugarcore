@@ -37,15 +37,28 @@ module Sugar::IO::CondensedIupac::Writer
     first_child = children.shift
     if ( first_child )
       first_child[:link].extend(Sugar::IO::CondensedIupac::LinkageWriter)
-      string_rep += sequence_from_residue(first_child[:residue]) + '(' + first_child[:link].to_sequence + ')'
+      string_rep += sequence_from_residue(first_child[:residue]) + write_linkage(first_child[:link])
     end
     children.reverse.each { |branch|
       branch[:link].extend(Sugar::IO::CondensedIupac::LinkageWriter)
-      string_rep += '[' + sequence_from_residue(branch[:residue]) + '(' + branch[:link].to_sequence + ')]' 
+      string_rep += wrap_branch(sequence_from_residue(branch[:residue]) + write_linkage(branch[:link])) 
     }
-    string_rep += self.target_namespace ? root_element.alternate_name(self.target_namespace) : root_element.name()
+    string_rep += write_residue(root_element)
     return string_rep	
 	end
+	
+	def write_linkage(linkage)
+	  return "(#{linkage.to_sequence})"
+  end
+	
+	def write_residue(root_element)
+	  return self.target_namespace ? root_element.alternate_name(self.target_namespace) : root_element.name()
+  end
+  
+  def wrap_branch(branch_sequence)
+    return "[#{branch_sequence}]"
+  end
+  
 end
 
 module Sugar::IO::CondensedIupac::LinkageWriter
