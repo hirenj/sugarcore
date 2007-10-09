@@ -81,7 +81,7 @@ class Linkage
 	  return ( (@first_position == 0) || (@second_position == 0) )
   end
 	
-	def reducing_end_substituted_residue
+	def reducing_end_substituted_residue # i.e. the child residue
 	  if (@first_residue.linkage_at_position() == self)
 	    return @first_residue
     end
@@ -89,6 +89,21 @@ class Linkage
 	    return @second_residue
     end
   end
+
+	def non_reducing_end_substituted_residue # i.e. the parent residue
+	  if (@first_residue.linkage_at_position() == self)
+	    return @second_residue
+    end
+	  if (@second_residue.linkage_at_position() == self)
+	    return @first_residue
+    end
+  end
+
+	
+	alias :child_residue :reducing_end_substituted_residue
+	alias :parent_residue :non_reducing_end_substituted_residue
+	
+	
 	
 	def finish
 		@first_residue = nil
