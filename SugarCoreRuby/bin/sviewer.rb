@@ -23,7 +23,7 @@ sugar = Sugar.new()
 sugar.extend(Sugar::IO::CondensedIupac::Builder)
 sugar.input_namespace = :ic
 sugar.extend(Sugar::IO::GlycoCT::Writer)
-sugar.sequence="Gal(b1-3)GlcNAc"
+sugar.sequence="Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc"
 sugar.extend(Renderable::Sugar)
 CondensedLayout.new().layout(sugar)
 
@@ -33,9 +33,9 @@ renderer.scheme = 'boston'
 renderer.initialise_prototypes()
 
 @result = renderer.render(sugar)
-#puts @result
-100.times do 
-sugar.sequence='Gal(b1-4)GlcNAc'
+puts @result
+0.times do 
+sugar.sequence='Gal(b1-4)GlcNAc(b1-4)GlcNAc'
 sugar.extend(Renderable::Sugar)
 
 CondensedLayout.new().layout(sugar)

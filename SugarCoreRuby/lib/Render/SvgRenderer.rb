@@ -128,6 +128,7 @@ class SvgRenderer
   	drawing = doc.root.add_element('svg:g')
   	linkages = drawing.add_element('svg:g')
   	residues = drawing.add_element('svg:g')
+  	labels = drawing.add_element('svg:g')
   	  	
   	icons = Array.new()
 
@@ -137,8 +138,10 @@ class SvgRenderer
 
       res.children.each { |child|
         linkages.add_element(render_link(child[:link]))
+        labels.add_element(render_substitution(res,child[:link]))
       }
-
+      
+      labels.add_element(render_anomer(res))
     }
     
     icons.sort_by { |icon|
@@ -167,6 +170,47 @@ class SvgRenderer
 
   	doc.root.add_attribute('preserveAspectRatio', 'xMinYMin')
     return doc
+  end
+
+  def render_anomer(residue)
+    linkage = residue.linkage_at_position
+    return Element.new('svg:text') unless linkage
+    gradient = linkage.position[:y1] - linkage.position[:y2]
+    if (gradient < 5 && gradient > -5 )
+      gradient = 20
+    end
+    
+    xpos = -1 * (residue.position[:x1] - 25)
+    ypos = -1 * (linkage.position[:y2] + (gradient / 2))
+    anomer = Element.new('svg:text')
+    anomer.add_attributes({ 'x' => xpos, 
+                                    'y' => ypos, 
+                                    'font-size'=>'25',
+                                    'text-anchor' => 'middle',
+                                    'style'=>'fill:#000000;stroke:#000000;stroke-width:1;'
+                                    }
+                      )
+    anomer.text= residue.anomer ? (residue.anomer+linkage.get_position_for(residue).to_s) : ''
+    return anomer
+  end
+
+  def render_substitution(parent,linkage)
+    xpos = -75 - 1 * (linkage.position[:x1])
+    #ypos = -25 - (linkage.position[:y1]-linkage.position[:y2])
+    gradient = linkage.position[:y2] - linkage.position[:y1]
+    if (gradient < 5 && gradient > -5 )
+      gradient = 20
+    end
+    ypos =  - 1 * ( linkage.position[:y1] + (gradient / 2) )
+    anomer = Element.new('svg:text')
+    anomer.add_attributes({ 'x' => xpos, 
+                                    'y' => ypos, 
+                                    'font-size'=>'25',
+                                    'style'=>'fill:#000000;stroke:#000000;stroke-width:1;'
+                                    }
+                      )
+    anomer.text= linkage.get_position_for(parent)
+    return anomer    
   end
 
   def render_link(linkage)
