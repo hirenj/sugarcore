@@ -54,7 +54,11 @@ class Monosaccharide
         @@FACTORY_CACHES[classname] = Hash.new()
       end
       if @@FACTORY_CACHES[classname][identifier.to_sym] == nil
-    	  @@FACTORY_CACHES[classname][identifier.to_sym] = classname.new_mono(identifier)
+        new_mono = classname.new_mono(identifier)        
+    	  @@FACTORY_CACHES[classname][identifier.to_sym] = new_mono
+    	  new_mono.alternate_namespaces_as_symbols.each { |ns|
+      	  @@FACTORY_CACHES[classname][(ns.to_s+':'+new_mono.name(ns)).to_sym] = new_mono    	    
+    	  }
     	end
     	new_mono = @@FACTORY_CACHES[classname][identifier.to_sym].shallow_clone
     	new_mono
@@ -241,6 +245,10 @@ class Monosaccharide
       return @alternate_name.keys()
   end
 
+  def alternate_namespaces_as_symbols
+    return @alternate_name.keys().collect { |ns| NamespacedMonosaccharide.Lookup_Namespace_Symbol(ns) }
+  end
+
   # The residues which are attached to this residue
   # Returns an array of hash slices with linkage and child
   #   mono.children   # [ {:link => Linkage , :residue => Residue }, {:link => Linkage, :residue => Residue }] 
@@ -420,6 +428,22 @@ class NamespacedMonosaccharide < Monosaccharide
   # List of supported namespaces
   def NamespacedMonosaccharide.Supported_Namespaces
     return NAMESPACES.values
+  end
+
+  def NamespacedMonosaccharide.Lookup_Namespace_Symbol(ns)
+    return NAMESPACES.index(ns)
+  end
+
+  def NamespacedMonosaccharide.Supported_Residues
+    ns = ns || self.Default_Namespace
+
+	  namespaces = Hash.new()
+
+	  XPath.match(self.mono_data, '@*').select {|att| att.prefix = 'xmlns' }.each { |ns_dec|
+	    namespaces[ns_dec.value] = ns_dec.name
+	  }
+
+    return XPath.match( self.mono_data, "./dict:unit/dict:name[@ns='#{namespaces[ns]}']/@value", {'dict' => MONO_DICTIONARY_NAMESPACE}).collect { |att| att.value }
   end
 
   def name(namespace=nil)

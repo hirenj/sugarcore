@@ -56,10 +56,15 @@ class SvgRenderer
     nil_mono = Monosaccharide.Factory(sugar.root.class,'ecdb:nil')
     nil_mono.extend(Renderable::Residue)
     [nil_mono, sugar.residue_composition].flatten.each { |res|
+
       res_id = res.name(NamespacedMonosaccharide::NAMESPACES[:ecdb])
+
+      anchors = Hash.new()
+
       if /text:(\w+)/.match(scheme)
         group = Element.new('svg:svg')
         group.add_attributes({ 'viewBox' => '0 0 100 100' })
+#        group.add_element('svg:rect', { 'x' => '0', 'y' => '0', 'width' => '100', 'height' => '100', 'style' => 'fill:#ffffff;' })
         group.add_element('svg:text', { #'x' => '50', 
                                         #'y' => '45', 
                                         'font-size'=>'28',
@@ -70,6 +75,13 @@ class SvgRenderer
                           ).text=res.name(NamespacedMonosaccharide::NAMESPACES[$~[1].to_sym])
         group.add_namespace('svg',SVG_ELEMENT_NS)
         prototypes[res_id] = group
+        anchors[0] = { :x => 100, :y => 50 }
+        anchors[1] = { :x => 0, :y => 50 }
+        anchors[2] = { :x => 100, :y => 50 }
+        anchors[3] = { :x => 100, :y => 50 }
+        anchors[4] = { :x => 100, :y => 50 }
+        anchors[5] = { :x => 100, :y => 50 }
+        anchors[6] = { :x => 100, :y => 50 }
       else
         prototypes[res_id] = XPath.first(res.raw_data_node, "disp:icon[@scheme='#{scheme}']/svg:svg", { 'disp' => DISPLAY_ELEMENT_NS, 'svg' => SVG_ELEMENT_NS })
       end
@@ -81,7 +93,6 @@ class SvgRenderer
       prototypes[res_id].add_attribute('height', 100)
       prototypes[res_id].add_attribute('viewBox', '0 0 100 100')
 
-      anchors = Hash.new()
       XPath.each(res.raw_data_node, "./disp:icon[@scheme='#{scheme}']/disp:anchor", { 'disp' => DISPLAY_ELEMENT_NS }) { |anchor|
         anchors[anchor.attribute("linkage").value().to_i] = { :x => 100 - anchor.attribute("x").value().to_i,
                                                               :y => 100 - anchor.attribute("y").value().to_i }
