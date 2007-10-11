@@ -166,12 +166,18 @@ class SvgRenderer
     sugbox = sugar.box
 
     sugbox[:x1] = -1*sugbox[:x1]
-    sugbox[:x2] = -1*sugbox[:x2] - 100
+    sugbox[:x2] = -1*sugbox[:x2]
     sugbox[:y1] = -1*sugbox[:y1]
-    sugbox[:y2] = -1*sugbox[:y2] - 100
+    sugbox[:y2] = -1*sugbox[:y2]
     
   	doc.root.add_attribute('viewBox', "#{sugbox[:x2]} #{sugbox[:y2]} #{sugbox.width} #{sugbox.height}")
-
+    if width == :auto
+      doc.root.add_attribute('width', sugbox.width)
+      doc.root.add_attribute('height', sugbox.height)
+    elsif width && width < 10
+      doc.root.add_attribute('width', (sugbox.width * width).floor)
+      doc.root.add_attribute('height', (sugbox.height * width).floor)
+    end
   	doc.root.add_attribute('preserveAspectRatio', 'xMinYMin')
     return doc
   end
