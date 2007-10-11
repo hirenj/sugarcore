@@ -20,6 +20,8 @@ class CondensedLayout
     sugar.depth_first_traversal { |res| 
       if ( res.dimensions[:width] == 0 && res.dimensions[:height] == 0 )
         res.dimensions = DEFAULT_NODE_DIMENSIONS
+        res.position[:x2] = res.position[:x1] + res.dimensions[:width]
+        res.position[:y2] = res.position[:y1] + res.dimensions[:height]
       end
       y_offset = ( 1 - res.children.length ) * node_spacing[:y]
       res.children.each { |child|

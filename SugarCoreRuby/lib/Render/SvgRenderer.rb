@@ -129,7 +129,11 @@ class SvgRenderer
   	linkages = drawing.add_element('svg:g')
   	residues = drawing.add_element('svg:g')
   	labels = drawing.add_element('svg:g')
-  	  	
+
+  	sugar.overlays.each { |el|
+  	  drawing.add_element(el)
+  	}
+
   	icons = Array.new()
 
     sugar.residue_composition.each { |res|

@@ -50,6 +50,7 @@ class Monosaccharide
     # or
     #   Monosaccharide.Factory( NamespacedMonosaccharide, 'D-Fruf' )
     def Monosaccharide.Factory( classname, identifier )
+      
       if @@FACTORY_CACHES[classname] == nil
         @@FACTORY_CACHES[classname] = Hash.new()
       end

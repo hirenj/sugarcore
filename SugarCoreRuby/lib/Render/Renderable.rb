@@ -234,6 +234,11 @@ module Renderable::Sugar
     super
   end
   
+  def overlays
+    @overlays = Array.new() unless @overlays
+    @overlays
+  end
+  
   def box
     @root.box
   end

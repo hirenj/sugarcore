@@ -108,6 +108,10 @@ class Sugar
       }
     end
     
+    def linkages(start_residue=@root)
+      return residue_composition(start_residue).collect { |r| r.linkage_at_position }
+    end
+    
     # Compute the sequence for this sugar from a particular start residue.
     # If no residue is specified, the sequence is calculated from the root 
     # of the sugar.
@@ -232,9 +236,10 @@ class Sugar
     # Search for a residue based upon a traversal using the linkage path.
     # FIXME - UNTESTED
     def find_residue_by_linkage_path(linkage_path)
+      
     	loop_residue = @root
-    	linkage_path.each{ |linkage_position|
-			  warn "#{linkage_position}"
+    	
+    	(linkage_path || []).each{ |linkage_position|
     		loop_residue = loop_residue.residue_at_position(linkage_position)
     	}
     	return loop_residue
