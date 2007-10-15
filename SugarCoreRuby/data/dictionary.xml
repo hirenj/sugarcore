@@ -154,6 +154,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="dkfz" value="D-Galp|6d" />
 		<name ns="ic" value="DFuc" />
 		<name ns="ecdb" value="dgalp|6d" />
+		<name ns="glyde" value="dgal-hex-1:5"/>
 		<ecdb:substituents>
 			<ecdb:substituent position="6">d</ecdb:substituent>
 		</ecdb:substituents>
@@ -253,7 +254,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="dkfz" value="D-Galp|2NAc" />
 		<name ns="ic" value="GalNAc" />
 		<name ns="ecdb" value="dgalp|2nac" />
-		<name ns="glyde" value="dgal-hex-1:5|2nac"/>
+		<name ns="glyde" value="dgal-hex-1:5|2n-acetyl"/>
 		<name ns="stephan" value="-dgal-hex(2)n-acetyl"/>
 		
 		<ecdb:substituents>
@@ -308,6 +309,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="dkfz" value="D-Glcp" />	
 		<name ns="ic" value="Glc" />
 		<name ns="ecdb" value="dglcp"/>
+		<name ns="glyde" value="dglc-hex-1:5"/>
 		<name ns="stephan" value="-dglc-hex"/>
 
 		<property name="ringsize" value="6"/>
@@ -360,7 +362,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="dkfz" value="D-Glcp|2nac" />
 		<name ns="ic" value="GlcNAc" />
 		<name ns="ecdb" value="dglcp|2nac"/>
-		<name ns="glyde" value="dglc-hex-1:5|2nac"/>
+		<name ns="glyde" value="dglc-hex-1:5|2n-acetyl"/>
 		<name ns="stephan" value="-dglc-hex(2)n-acetyl"/>
 
 		<ecdb:substituents>
@@ -492,8 +494,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="ecdb" value="dneu|1a|2keto|3d|5ngc"/>
 		<name ns="stephan" value="-dgro-dgal-non|1:a|2:keto|3:d(5)n-glycolyl"/>
 
-		<!-- FIXME ?? -->
-		<name ns="glyde" value="dneu-neu-1:5|1a|2keto|3d|5ngc"/>
+		<name ns="glyde" value="dgro-dgal-non-2:6|1a|2keto|3d|5n-glycolyl"/>
 
 		<property name="class" value="ic:Neu"/>
 		<ecdb:substituents>
@@ -543,7 +544,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="ic" value="NeuAc" />
 		<name ns="ic" value="Neu5Ac" />
 		<name ns="ecdb" value="dneu|1a|2keto|3d|5nac"/>
-		<name ns="glyde" value="dneu-neu-1:5|1a|2keto|3d|5nac"/>
+		<name ns="glyde" value="dgro-dgal-non-2:6|1a|2keto|3d|5n-acetyl"/>
 		<name ns="stephan" value="-dgro-dgal-non|1:a|2:keto|3:d(5)n-acetyl"/>
 
 		<property name="class" value="ic:Neu"/>
@@ -601,6 +602,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="ic" value="Xyl" />
 		<name ns="ecdb" value="dxylf"/>
 		<name ns="stephan" value="-dxyl-pen"/>
+		<name ns="glyde" value="dxyl-pen-1:5"/>
 
 		<property name="class" value="ic:Pent"/>
 	</unit>
