@@ -137,6 +137,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="dkfz" value="L-Araf" />
 		<name ns="ic" value="Ara" />
 		<name ns="ecdb" value="laraf" />
+		<name ns="glyde" value="lara-pen-1:5"/>
 		<name ns="stephan" value="-lara-pen"/>
 		
 		<property name="ringsize" value="5"/>
@@ -154,7 +155,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="dkfz" value="D-Galp|6d" />
 		<name ns="ic" value="DFuc" />
 		<name ns="ecdb" value="dgalp|6d" />
-		<name ns="glyde" value="dgal-hex-1:5"/>
+		<name ns="glyde" value="dgal-hex-1:5|6:d"/>
 		<ecdb:substituents>
 			<ecdb:substituent position="6">d</ecdb:substituent>
 		</ecdb:substituents>
@@ -167,7 +168,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="ic" value="Fuc" />
 		<name ns="ic" value="LFuc"/>
 		<name ns="ecdb" value="lgalp|6d"/>
-		<name ns="glyde" value="lgal-hex-1:5"/>
+		<name ns="glyde" value="lgal-hex-1:5|6:d"/>
 		<name ns="stephan" value="-lgal-hex|6:d"/>
 		<ecdb:substituents>
 			<ecdb:substituent position="6">d</ecdb:substituent>
@@ -215,6 +216,9 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="ic" value="Gal" />
 		<name ns="ecdb" value="dgalp" />
 		<name ns="glyde" value="dgal-hex-1:5"/>
+
+		<name ns="glyde" value="dgal-hex-x:x"/>
+
 		<name ns="stephan" value="-dgal-hex"/>
 		
 		<property name="ringsize" value="6"/>
@@ -250,11 +254,16 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  </svg:svg>
 		</disp:icon>
 	</unit>
+	<unit id="dgalol">
+		<name ns="glyde" value="dgal-hex-0:0|1:aldi"/>
+		<name ns="ic" value="Gal-ol"/>
+	</unit>
 	<unit id="dgalp|2nac">
 		<name ns="dkfz" value="D-Galp|2NAc" />
 		<name ns="ic" value="GalNAc" />
 		<name ns="ecdb" value="dgalp|2nac" />
 		<name ns="glyde" value="dgal-hex-1:5|2n-acetyl"/>
+		<name ns="glyde" value="dgal-hex-x:x|2n-acetyl"/>
 		<name ns="stephan" value="-dgal-hex(2)n-acetyl"/>
 		
 		<ecdb:substituents>
@@ -294,6 +303,10 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 			</svg:svg>
 		</disp:icon>
 	</unit>
+	<unit id="dgalol|2nac">
+		<name ns="glyde" value="dgal-hex-0:0|1:aldi|2n-acetyl"/>
+		<name ns="ic" value="GalNAc-ol"/>
+	</unit>
 	<unit id="dgalp|2n">
 		<name ns="dkfz" value="D-Galp|2n" />		
 		<name ns="ic" value="GalN" />
@@ -310,6 +323,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="ic" value="Glc" />
 		<name ns="ecdb" value="dglcp"/>
 		<name ns="glyde" value="dglc-hex-1:5"/>
+		<name ns="glyde" value="dglc-hex-x:x"/>
 		<name ns="stephan" value="-dglc-hex"/>
 
 		<property name="ringsize" value="6"/>
@@ -346,11 +360,16 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  </svg:svg>
 		</disp:icon>
 	</unit>
+	<unit id="dglcol">
+		<name ns="glyde" value="dglc-hex-0:0|1:aldi"/>
+		<name ns="ic" value="Glc-ol"/>
+	</unit>
 	<unit id="dglcp|6a" >
 		<name ns="dkfz" value="D-Glcp|6a" />
 		<name ns="ic" value="GlcA" />
 		<name ns="ecdb" value="dglcp|6a"/>
-		<name ns="glyde" value="dglc-hex-1:5|6a"/>
+		<name ns="glyde" value="dglc-hex-1:5|6:a"/>
+		<name ns="glyde" value="dglc-hex-x:x|6:a"/>
 		<name ns="stephan" value="-dglc-hex|6:a"/>		
 		<ecdb:substituents>
 			<ecdb:substituent position="6">a</ecdb:substituent>
@@ -363,6 +382,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="ic" value="GlcNAc" />
 		<name ns="ecdb" value="dglcp|2nac"/>
 		<name ns="glyde" value="dglc-hex-1:5|2n-acetyl"/>
+		<name ns="glyde" value="dglc-hex-x:x|2n-acetyl"/>
 		<name ns="stephan" value="-dglc-hex(2)n-acetyl"/>
 
 		<ecdb:substituents>
@@ -405,6 +425,10 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 			       />
 			</svg:svg>
 		</disp:icon>
+	</unit>
+	<unit id="dglcol|2nac">
+		<name ns="glyde" value="dglc-hex-0:0|1:aldi|2n-acetyl"/>
+		<name ns="ic" value="GlcNAc-ol"/>
 	</unit>
 	<unit id="dglcp|2n" >
 		<name ns="dkfz" value="D-Glcp|2n" />		
@@ -453,6 +477,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="ic" value="Man" />
 		<name ns="ecdb" value="dmanp" />
 		<name ns="glyde" value="dman-hex-1:5"/>
+		<name ns="glyde" value="dman-hex-x:x"/>
 		<name ns="stephan" value="-dman-hex"/>
 
 		<property name="ringsize" value="6"/>
@@ -487,6 +512,10 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  </svg:svg>
 		</disp:icon>
 	</unit>
+	<unit id="dmanol">
+		<name ns="glyde" value="dman-hex-0:0|1:aldi"/>
+		<name ns="ic" value="Man-ol"/>
+	</unit>
 	<unit id="dneu|1a|2keto|3d|5ngc" >
 		<name ns="dkfz" value="D-Neu|1a|2keto|3d|5ngc" />
 		<name ns="ic" value="NeuGc" />
@@ -495,7 +524,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="stephan" value="-dgro-dgal-non|1:a|2:keto|3:d(5)n-glycolyl"/>
 
 		<name ns="glyde" value="dgro-dgal-non-2:6|1a|2keto|3d|5n-glycolyl"/>
-
+		<name ns="glyde" value="dgro-dgal-non-2:6|1:a|2:keto|3:d|5n-glycolyl"/>
 		<property name="class" value="ic:Neu"/>
 		<ecdb:substituents>
 			<ecdb:substituent position="1">a</ecdb:substituent>
@@ -545,6 +574,9 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="ic" value="Neu5Ac" />
 		<name ns="ecdb" value="dneu|1a|2keto|3d|5nac"/>
 		<name ns="glyde" value="dgro-dgal-non-2:6|1a|2keto|3d|5n-acetyl"/>
+		<name ns="glyde" value="dgro-dgal-non-2:6|1:a|2:keto|3:d|5n-acetyl"/>
+		<name ns="glyde" value="dgro-dgal-non-x:x|1:a|2:keto|3:d|5n-acetyl"/>
+		<name ns="glyde" value="dgro-dgal-non-2:6|1:a|2:keto|3:d|1amino|5n-acetyl"/>
 		<name ns="stephan" value="-dgro-dgal-non|1:a|2:keto|3:d(5)n-acetyl"/>
 
 		<property name="class" value="ic:Neu"/>
@@ -605,6 +637,10 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="glyde" value="dxyl-pen-1:5"/>
 
 		<property name="class" value="ic:Pent"/>
+	</unit>
+	<unit id="dxylol">
+		<name ns="glyde" value="dxyl-pen-0:0|1:aldi"/>
+		<name ns="ic" value="dXyl-ol"/>
 	</unit>
 	<unit id="cer" >
 		<name ns="dkfz" value="Cer"/>

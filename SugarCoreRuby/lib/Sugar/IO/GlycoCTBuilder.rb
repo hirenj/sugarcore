@@ -36,9 +36,12 @@ module Sugar::IO::GlycoCT::Builder
     attr_accessor :res_id, :name, :res_type, :anomer, :substituents
     def self.factory(string)
       res = new()
-      res.res_id, res.res_type, res.anomer, res.name = [string.scan(/(\d+)([bsn]):(?:([abu])-)?(.*)/)].flatten
+      res.res_id, res.res_type, res.anomer, res.name = [string.scan(/(\d+)([bsn]):(?:([abux])-)?(.*)/)].flatten
       if ( ! res.name )
         res.name = res.anomer
+      end
+      if ( res.anomer == 'x')
+        res.anomer = 'u'
       end
       res.res_type = res.res_type.to_sym
       res.substituents = Hash.new()
@@ -49,8 +52,9 @@ module Sugar::IO::GlycoCT::Builder
   class ParseLinkage
     attr_accessor :link_id, :from, :to, :from_position, :to_position
     def self.factory(string)
+      string.gsub!(/\d(\|\d)+/,'u')
       link = new()
-      link.link_id, link.from, link.from_position, link.to_position, link.to = [ string.scan(/(\d+):(\d+)\w?\(([\du]+)[\-\+]([\du]+)\)(\d+)\w?/)].flatten
+      link.link_id, link.from, link.from_position, link.to_position, link.to = [ string.scan(/(\d+):(\d+)[a-z]?\(([\du]+)[\-\+]([\du]+)\)(\d+)[a-z]?/)].flatten
       link
     end
   end
@@ -60,10 +64,10 @@ module Sugar::IO::GlycoCT::Builder
     glycoct_residues = Hash.new()
     glycoct_linkages = Hash.new()
     sequence.gsub!(/\r/,'')
-    sequence.gsub!(/\/*/,'')
-    residues, linkages = [sequence.scan(/RES\n(.*)LIN\n(.*)/m)].flatten.collect { |block| block.split(";\n") }
-    residues.reject { |r| r.match(/^\s+$/) }.collect { |res_string| Sugar::IO::GlycoCT::Builder::Residue.factory(res_string.downcase) }.each { |res| glycoct_residues[res.res_id] = res }
-    linkages.reject { |l| l.match(/^\s+$/) }.collect { |link_string| Sugar::IO::GlycoCT::Builder::ParseLinkage.factory(link_string.downcase) }.each { |link| glycoct_linkages[link.link_id] = link }
+    sequence.gsub!(/[\\\/]*/,'')
+    residues, linkages = sequence.split(/(?:LIN|RES)\n/).reject{|s| s.empty? }.collect { |block| block.split(";\n") }
+    (residues || []).reject { |r| r.match(/^\s+$/) }.collect { |res_string| Sugar::IO::GlycoCT::Builder::Residue.factory(res_string.downcase) }.each { |res| glycoct_residues[res.res_id] = res }
+    (linkages || []).reject { |l| l.match(/^\s+$/) }.collect { |link_string| Sugar::IO::GlycoCT::Builder::ParseLinkage.factory(link_string.downcase) }.each { |link| glycoct_linkages[link.link_id] = link }
 
     residues = glycoct_residues
     linkages = glycoct_linkages
@@ -75,6 +79,8 @@ module Sugar::IO::GlycoCT::Builder
     if linkages.values.select { |lin| lin.from != nil }.length == 0
       root = monosaccharide_factory(residues.values.first.name)
     end
+
+    min_id = nil
     
     linkages.keys.select { |id| linkages[id].from != nil }.sort_by { |id| residues[linkages[id].from].res_id }.each { |id|
       link = linkages[id]
@@ -92,8 +98,9 @@ module Sugar::IO::GlycoCT::Builder
       end
       residues[link.to] = to_residue
 
-      if (id.to_i == 1)
+      if (min_id == nil || id.to_i < min_id)
         root = residue
+        min_id = id.to_i
       end
       linkage = linkage_factory({:from => link.from_position, :to => link.to_position})
       residue.add_child(to_residue,linkage)

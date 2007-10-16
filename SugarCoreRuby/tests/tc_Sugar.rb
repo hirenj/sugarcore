@@ -23,15 +23,17 @@ RES
 6b:b-dmanp;
 7s:d;
 8s:nac;
+\\\\\\
 LIN
-1:1(4-1)5;
-2:1(6-1)4;
-3:5(4-1)6;
-4:6(3-1)2;
-5:6(6-1)3;
-6:1o(2-1)8;
-7:4o(6-1)7;
-8:5o(2-1)8;
+1:1o(4+1)5d;
+2:1o(6+1)4d;
+3:5o(4+1)6d;
+4:6o(3+1)2d;
+5:6o(6+1)3d;
+6:1d(2+1)8n;
+7:4d(6+1)7n;
+8:5d(2+1)8n;
+\\\\\\\\\\
 __FOO__
 
 	DebugLog.log_level(5)
@@ -109,6 +111,7 @@ __FOO__
     sugar.extend( Sugar::IO::CondensedIupac::Builder )
     sugar.extend( Sugar::IO::GlycoCT::Writer )
     sugar.sequence = LARGE_STRUCTURE
+    sugar.target_namespace = :ecdb
     assert_equal( LARGE_STRUCTURE_AS_CT, sugar.sequence)
 
   end 

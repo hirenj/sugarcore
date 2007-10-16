@@ -36,8 +36,8 @@ RES
 2b:b-dgalp;
 3s:nac;
 LIN
-1:1(3-1)2;
-2:1o(2-1)3;
+1:1o(3+1)2d;
+2:1d(2+1)3n;
 __FOO__
 
   SMALL_STRUCTURE_AS_IUPAC = 'Gal(b1-3)GlcNAc'
@@ -49,7 +49,11 @@ __FOO__
   def test_write_simple_sequence
     sug = WritableSugar.new()
     sug.sequence = SMALL_STRUCTURE_AS_IUPAC
-    assert_equal( SMALL_STRUCTURE_AS_CT, sug.sequence )
+    sug.target_namespace = :ecdb
+    seq = sug.sequence
+    seq.gsub!(/\\/,'')
+    seq.gsub!(/\n\n/,"\n")
+    assert_equal( SMALL_STRUCTURE_AS_CT, seq )
     sug.finish
   end
   

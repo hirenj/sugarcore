@@ -42,6 +42,14 @@ class Monosaccharide
       }
     end
 
+    def Monosaccharide.Show_Factory_Status
+      @@FACTORY_CACHES.keys.each { |clazz| 
+        @@FACTORY_CACHES[clazz].keys.each { |key|
+          p @@FACTORY_CACHES[classname][key].object_id
+        }
+      }
+    end
+
     # Instantiate a new Monosaccharide using a particular subclass, and having
     # the identifier as specified
     #
@@ -192,7 +200,7 @@ class Monosaccharide
   #++
   def add_child(mono,linkage)
     if (! can_accept?(linkage))
-      raise MonosaccharideException.new("Cannot attach linkage to this monosaccharide, attachment point already consumed")
+      raise MonosaccharideException.new("Cannot attach linkage to this monosaccharide, attachment point already consumed - want #{linkage.second_position}")
     end
     @children.push( :link => linkage, :residue => mono )
     linkage.set_first_residue(mono)
@@ -219,6 +227,9 @@ class Monosaccharide
   # be dynamically attaching this residue to the open position on the linkage.
   #++  
   def can_accept?(linkage)
+    if (linkage.second_position == 0)
+      return true
+    end
     ! self.attachment_position_consumed?(linkage.second_position)
   end
   
@@ -479,7 +490,7 @@ class NamespacedMonosaccharide < Monosaccharide
   		raise MonosaccharideException.new("Residue #{self.name} not found in default namespace #{ns} #{namespaces[ns]} from #{self.class.mono_data_filename ? self.class.mono_data_filename : @@MONO_DATA_FILENAME}")
   	end
 
-  	@alternate_name[ns] = self.name()
+  	#@alternate_name[ns] = self.name()
 
 
   	XPath.each(mono_data_node, "./name") { |altname|
@@ -490,6 +501,8 @@ class NamespacedMonosaccharide < Monosaccharide
     		debug "Adding #{alternate_name} in namespace #{namespace} for #{name}."
 		  end
   	}
+
+    @name = @alternate_name[ns]
 
     @raw_data_node = mono_data_node
 

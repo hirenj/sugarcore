@@ -132,10 +132,10 @@ class Sugar
     # Find the residues which comprise this sugar that match a particular prototype
     def composition_of_residue(prototype,start_residue=@root)
       if (prototype.class == String)
-        prototype = Monosaccharide.Factory( @root.class, prototype )
+        prototype = monosaccharide_factory( prototype )
       end
-    	return residue_composition(start_residue).delete_if { |mono| 
-    		mono.name != prototype.name
+    	return residue_composition(start_residue).reject { |m|
+    	  m.name != prototype.name
     	}
     end    
     

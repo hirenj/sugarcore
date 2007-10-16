@@ -15,15 +15,15 @@ end
 
 GlydeNamespacedMonosaccharide.logger = Logger.new(STDERR)
 GlydeNamespacedMonosaccharide.log_level(100)
-DebugLog.log_level(-1)
+DebugLog.log_level(5)
 
 class TC_Glyde < Test::Unit::TestCase
   SIMPLE_GLYDE = <<__GLYDE__
 <GlydeCT xmlns:GlydeCT="http://glycomics.ccrc.uga.edu/GLYDE-CT_v2.12"> 
 
      <structure type="molecule" id="molecule_1" name="pentaglycoside"> 
-        <part type="residue" partid="1" ref="&mDBget;=nac"/> 
-        <part type="residue" partid="2" ref="&mDBget;=nac"/> 
+        <part type="residue" partid="1" ref="&mDBget;=n-acetyl"/> 
+        <part type="residue" partid="2" ref="&mDBget;=n-acetyl"/> 
         <part type="residue" partid="3" ref="&mDBget;=b-dglc-hex-1:5"/> 
         <part type="residue" partid="4" ref="&mDBget;=b-dglc-hex-1:5"/> 
         <part type="residue" partid="5" ref="&mDBget;=b-dman-hex-1:5"/> 
