@@ -36,11 +36,30 @@ end
 DebugLog.log_level(5)
 count = 0
 
-buckets = {}
-parent_buckets = {}
-parent_buckets.default = 0
-buckets.default = 0
+all_sibs = {}
+all_parents = {}
+disaccharides = Array.new()
 
+results = Hash.new() { |hash,key| hash[key] = { :buckets => Hash.new() { |h,k| all_sibs[k] = 1; h[k] = 0 }, :parent_buckets => Hash.new() { |h,k| all_parents[k] = 1; h[k] = 0 } } }
+
+File.open("data/disaccharides_dump.txt","r") do |file|
+  seq = ''
+  while (line = file.gets)
+    if (line == "---\n")
+      sug = Sugar.new()
+      sug.extend(Sugar::IO::GlycoCT::Builder)
+      sug.extend(Sugar::IO::GlycoCT::Writer)
+      sug.target_namespace = :glyde
+      sug.sequence = seq
+      seq = ''
+      donor, substrate = sug.paths[0]
+      disaccharides << { :donor => donor.name, :substrate => substrate.name, :anomer => donor.anomer, :posn => donor.paired_residue_position}
+      sug.finish
+    else
+      seq += line
+    end
+  end
+end
 
 File.open("data/human_glycosciences.dump","r") do |file|
   while (line = file.gets)
@@ -53,23 +72,26 @@ File.open("data/human_glycosciences.dump","r") do |file|
     sug.target_namespace = :ic
     begin
       sug.sequence = sequence
-      residues = sug.composition_of_residue('dgal-hex-x:x')
-      residues.each { |res|
-        child_res = res.residue_at_position(4)
-        if child_res && child_res.anomer == 'b' && child_res.name(:ic) == "GalNAc"
-          siblings = res.children.reject {|r| r[:residue] == child_res }
-          siblings.each { |sibling|
-            sib = sibling[:residue]
-            link = sibling[:link]
-            name = "#{sib.name(:ic)}#{sib.anomer}#{link.get_position_for(sib)}#{link.get_position_for(res)}"
-            buckets[name] += 1
-            if res.parent
-              parent_name = res.parent.name(:ic).gsub!(/-ol/,'')
-              parent_buckets[res.parent.name(:ic)] += 1
-            end
-          }
-          count += 1
-        end
+      disaccharides.each { |disac|
+        residues = sug.composition_of_residue(disac[:substrate])
+        residues.each { |res|
+          child_res = res.residue_at_position(disac[:posn])
+          if child_res && child_res.anomer == disac[:anomer] && child_res.name(:glyde) == disac[:donor]
+            siblings = res.children.reject {|r| r[:residue] == child_res }
+            results[disac][:buckets]["total"] += 1
+            siblings.each { |sibling|
+              sib = sibling[:residue]
+              link = sibling[:link]
+              name = "#{sib.name(:ic)}#{sib.anomer}#{link.get_position_for(sib)}#{link.get_position_for(res)}"
+              results[disac][:buckets][name] += 1
+              if res.parent
+                parent_name = res.parent.name(:ic).gsub!(/-ol/,'')
+                results[disac][:parent_buckets][res.parent.name(:ic)] += 1
+              end
+            }
+            count += 1
+          end
+        }
       }
     rescue MonosaccharideException => err
         p err
@@ -79,9 +101,13 @@ File.open("data/human_glycosciences.dump","r") do |file|
   end
 end
 p count
-buckets.keys.each { |name|
-  p "Residue #{name} has #{buckets[name]}"
+File.open("results.csv","w") do |file|
+file << "Linkage,#{all_sibs.keys.sort.join(",")},#{all_parents.keys.sort.join(",")}\n"
+results.keys.sort_by{ |d| d[:donor] }.each { |disac|
+#  puts "Link: #{disac[:donor]} (#{disac[:anomer]}x-#{disac[:posn]}) #{disac[:substrate]}"
+  sibs_string = all_sibs.keys.sort.collect { |name| results[disac][:buckets][name] || 0 }.join(",")
+  parents_string = all_parents.keys.sort.collect { |name| results[disac][:parent_buckets][name] || 0 }.join(",") 
+  file << ["#{disac[:donor]}(#{disac[:anomer]}x-#{disac[:posn]})#{disac[:substrate]}",sibs_string,parents_string].join(",")
+  file << "\n"
 }
-parent_buckets.keys.each { |name|
-  p "Parent residue #{name} has #{parent_buckets[name]}"
-}
+end
