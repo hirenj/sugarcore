@@ -35,7 +35,6 @@ end
 
 DebugLog.log_level(5)
 count = 0
-matched_it = 0
 
 buckets = {}
 parent_buckets = {}
@@ -54,37 +53,32 @@ File.open("data/human_glycosciences.dump","r") do |file|
     sug.target_namespace = :ic
     begin
       sug.sequence = sequence
-#      p line
-#      p sug.sequence
-# p "Initing a residue"
-residues = sug.composition_of_residue('dgal-hex-x:x')
-residues.each { |res|
-  child_res = res.residue_at_position(4)
-  if child_res && child_res.anomer == 'b' && child_res.name(:ic) == "GalNAc"
-    siblings = res.children.reject {|r| r[:residue] == child_res }
-    siblings.each { |sibling|
-      sib = sibling[:residue]
-      link = sibling[:link]
-      name = "#{sib.name(:ic)}#{sib.anomer}#{link.get_position_for(sib)}#{link.get_position_for(res)}"
-      buckets[name] += 1
-      if res.parent
-        parent_name = res.parent.name(:ic).gsub!(/-ol/,'')
-        parent_buckets[res.parent.name(:ic)] += 1
-      end
-    }
-    count += 1
-  end
-}
+      residues = sug.composition_of_residue('dgal-hex-x:x')
+      residues.each { |res|
+        child_res = res.residue_at_position(4)
+        if child_res && child_res.anomer == 'b' && child_res.name(:ic) == "GalNAc"
+          siblings = res.children.reject {|r| r[:residue] == child_res }
+          siblings.each { |sibling|
+            sib = sibling[:residue]
+            link = sibling[:link]
+            name = "#{sib.name(:ic)}#{sib.anomer}#{link.get_position_for(sib)}#{link.get_position_for(res)}"
+            buckets[name] += 1
+            if res.parent
+              parent_name = res.parent.name(:ic).gsub!(/-ol/,'')
+              parent_buckets[res.parent.name(:ic)] += 1
+            end
+          }
+          count += 1
+        end
+      }
     rescue MonosaccharideException => err
-      #p err
+        p err
     ensure
-      sug.finish
+        sug.finish
     end
   end
 end
-
 p count
-p matched_it
 buckets.keys.each { |name|
   p "Residue #{name} has #{buckets[name]}"
 }
