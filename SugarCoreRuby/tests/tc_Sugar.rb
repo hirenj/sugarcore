@@ -13,6 +13,7 @@ class TC_Sugar < Test::Unit::TestCase
   SMALL_STRUCTURE = "GlcNAc(b1-4)GlcNAc"
   SMALL_STRUCTURE_2 = "GlcNAc(b1-3)GlcNAc"
   SMALL_STRUCTURE_3 = "GalNAc(b1-3)GalNAc"
+  UNKNOWN_STRUCTURE = "Gal(b1-u)[Fuc(a1-u)]GalNAc"
   LARGE_STRUCTURE_AS_CT = <<__FOO__
 RES
 1b:u-dglcp;
@@ -55,6 +56,7 @@ __FOO__
     monos[1].add_child(monos[3],sugar.linkage_factory('a1-6'))
     return { "sugar" => sugar , "monos" => [root_mono]+monos }
   end
+
 
   def build_sugar_from_string(sequence)
     sugar = Sugar.new()
@@ -162,6 +164,11 @@ __FOO__
         [ results['monos'][3], results['monos'][2],results['monos'][1],results['monos'][0]]
       ] - results['sugar'].paths
     )
+  end
+  
+  def test_unknown_linkages
+    sugar = build_sugar_from_string( UNKNOWN_STRUCTURE )
+    assert_equal( sugar.sequence, "Fuc(a1-u)[Gal(b1-u)]GalNAc" )
   end
   
   def test_leaves

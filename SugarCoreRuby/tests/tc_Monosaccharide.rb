@@ -99,6 +99,17 @@ class TC_Monosaccharide < Test::Unit::TestCase
       mono4.anomer = 'a'
     }
     
+    mono5 = Monosaccharide.Factory( NamespacedMonosaccharide, "Man")
+    mono6 = Monosaccharide.Factory( NamespacedMonosaccharide, "Gal")    
+    mono7 = Monosaccharide.Factory( NamespacedMonosaccharide, "Fuc")    
+
+    mono5.add_child(mono6, Linkage.Factory( Linkage, {:from => 0, :to => 1} ))
+    mono5.add_child(mono7, Linkage.Factory( Linkage, {:from => 0, :to => 1} ))
+
+    assert( mono6.parent == mono5)
+    assert( mono7.parent == mono5)
+    assert( mono5.children.collect { |child| child[:residue].name }.sort == [mono7.name,mono6.name].sort )
+    
     mono2.finish()
     mono3.finish()
     mono4.finish()
