@@ -53,23 +53,32 @@ module Sugar::IO::GlycoCT::Writer
       counter = counter + 1
     }
     
-    string_rep += "\\\\\\\nLIN\n"
+    string_rep += "\\\\\\\n" if self.target_namespace == NamespacedMonosaccharide::NAMESPACES[:glyde]
+    string_rep += "LIN\n"
     counter = 1
     self.breadth_first_traversal(root_element) { |res| 
       res.children.collect { |kid| kid[:link] }.each { |link|
         red_residue = link.reducing_end_substituted_residue
         opp_residue = link.get_paired_residue(red_residue)
-        string_rep += "#{counter}:#{residues[opp_residue]}o(#{write_linkage(link.get_position_for(opp_residue))}+#{write_linkage(link.get_position_for(red_residue))})#{residues[red_residue]}d;\n"
+        if self.target_namespace == NamespacedMonosaccharide::NAMESPACES[:glyde]
+          string_rep += "#{counter}:#{residues[opp_residue]}o(#{write_linkage(link.get_position_for(opp_residue))}+#{write_linkage(link.get_position_for(red_residue))})#{residues[red_residue]}d;\n"
+        else
+          string_rep += "#{counter}:#{residues[opp_residue]}(#{write_linkage(link.get_position_for(opp_residue))}-#{write_linkage(link.get_position_for(red_residue))})#{residues[red_residue]};\n"
+        end
         counter = counter + 1
       }
     }
     links.keys.sort_by { |res| residues[res] }.each { |res|
       links[res].each { |posn, sub|
-        string_rep += "#{counter}:#{residues[res]}d(#{posn}+1)#{residues[sub]}n;\n"
+        if self.target_namespace == NamespacedMonosaccharide::NAMESPACES[:glyde]
+          string_rep += "#{counter}:#{residues[res]}d(#{posn}+1)#{residues[sub]}n;\n"
+        else
+          string_rep += "#{counter}:#{residues[res]}o(#{posn}-1)#{residues[sub]};\n"
+        end
         counter = counter + 1
       }
     }
-    string_rep += "\\\\\\\\\\\n"
+    string_rep += "\\\\\\\\\\\n" if self.target_namespace == NamespacedMonosaccharide::NAMESPACES[:glyde]
     string_rep
   end
   
