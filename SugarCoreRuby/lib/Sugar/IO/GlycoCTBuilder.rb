@@ -65,9 +65,9 @@ module Sugar::IO::GlycoCT::Builder
     glycoct_linkages = Hash.new()
     sequence.gsub!(/\r/,'')
     sequence.gsub!(/[\\\/]*/,'')
-    residues, linkages = sequence.split(/(?:LIN|RES)\n/).reject{|s| s.empty? }.collect { |block| block.split(";\n") }
-    (residues || []).reject { |r| r.match(/^\s+$/) }.collect { |res_string| Sugar::IO::GlycoCT::Builder::Residue.factory(res_string.downcase) }.each { |res| glycoct_residues[res.res_id] = res }
-    (linkages || []).reject { |l| l.match(/^\s+$/) }.collect { |link_string| Sugar::IO::GlycoCT::Builder::ParseLinkage.factory(link_string.downcase) }.each { |link| glycoct_linkages[link.link_id] = link }
+    residues, linkages = sequence.split(/(?:LIN|RES)[\s\n]+/).reject{|s| s.empty? }.collect { |block| block.split(/;[\n\s]+/) }
+    (residues || []).reject { |r| r.match(/^[\n\s]+$/) }.collect { |res_string| Sugar::IO::GlycoCT::Builder::Residue.factory(res_string.downcase) }.each { |res| glycoct_residues[res.res_id] = res }
+    (linkages || []).reject { |l| l.match(/^[\n\s]+$/) }.collect { |link_string| Sugar::IO::GlycoCT::Builder::ParseLinkage.factory(link_string.downcase) }.each { |link| glycoct_linkages[link.link_id] = link }
 
     residues = glycoct_residues
     linkages = glycoct_linkages
