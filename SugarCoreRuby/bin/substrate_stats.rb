@@ -18,6 +18,7 @@ NamespacedMonosaccharide.Default_Namespace = NamespacedMonosaccharide::NAMESPACE
 module Sugar::IO::GlycoCT::Builder
   
   ALIASED_NAMES = {
+    'xgal-hex-1:5'            => 'dgal-hex-1:5',
     'dgal-hex-x:x'            => 'dgal-hex-1:5',
     'dgal-hex-x:x|2n-acetyl'  => 'dgal-hex-1:5|2n-acetyl',
     'dglc-hex-x:x'            => 'dglc-hex-1:5',
@@ -29,18 +30,20 @@ module Sugar::IO::GlycoCT::Builder
   
   alias_method :builder_factory, :monosaccharide_factory
   def monosaccharide_factory(name)
+    name.gsub!(/\|\dsulfate/,'')
     return builder_factory(ALIASED_NAMES[name] || name)
   end
 end
 
 DebugLog.log_level(5)
 count = 0
+disac_count = 0
 
 all_sibs = {}
 all_parents = {}
 disaccharides = Array.new()
 
-results = Hash.new() { |hash,key| hash[key] = { :buckets => Hash.new() { |h,k| all_sibs[k] = 1; h[k] = 0 }, :parent_buckets => Hash.new() { |h,k| all_parents[k] = 1; h[k] = 0 } } }
+results = Hash.new() { |hash,key| hash[key] = { :buckets => Hash.new() { |h,k| all_sibs[k] = 1; h[k] = 0 }, :parent_buckets => Hash.new() { |h,k| all_parents[k] = 1; h[k] = 1 } } }
 
 File.open("data/disaccharides_dump.txt","r") do |file|
   seq = ''
@@ -72,23 +75,28 @@ File.open("data/human_glycosciences.dump","r") do |file|
     sug.target_namespace = :ic
     begin
       sug.sequence = sequence
+      puts sug.sequence
       disaccharides.each { |disac|
         residues = sug.composition_of_residue(disac[:substrate])
         residues.each { |res|
           child_res = res.residue_at_position(disac[:posn])
           if child_res && child_res.anomer == disac[:anomer] && child_res.name(:glyde) == disac[:donor]
             siblings = res.children.reject {|r| r[:residue] == child_res }
+            if siblings.size == 0
+              results[disac][:buckets]["alone"] += 1
+            end
             results[disac][:buckets]["total"] += 1
             siblings.each { |sibling|
               sib = sibling[:residue]
               link = sibling[:link]
               name = "#{sib.name(:ic)}#{sib.anomer}#{link.get_position_for(sib)}#{link.get_position_for(res)}"
               results[disac][:buckets][name] += 1
-              if res.parent
-                parent_name = res.parent.name(:ic).gsub!(/-ol/,'')
-                results[disac][:parent_buckets][res.parent.name(:ic)] += 1
-              end
+              disac_count += 1
             }
+            if res.parent
+              parent_name = res.parent.name(:ic).gsub!(/-ol/,'')
+              results[disac][:parent_buckets][res.parent.name(:ic)] += 1
+            end
             count += 1
           end
         }
@@ -101,13 +109,14 @@ File.open("data/human_glycosciences.dump","r") do |file|
   end
 end
 p count
+p disac_count
 File.open("results.csv","w") do |file|
-file << "Linkage,#{all_sibs.keys.sort.join(",")},#{all_parents.keys.sort.join(",")}\n"
+file << "Linkage,#{all_sibs.keys.sort.join(",")},parents,#{all_parents.keys.sort.join(",")}\n"
 results.keys.sort_by{ |d| d[:donor] }.each { |disac|
 #  puts "Link: #{disac[:donor]} (#{disac[:anomer]}x-#{disac[:posn]}) #{disac[:substrate]}"
   sibs_string = all_sibs.keys.sort.collect { |name| results[disac][:buckets][name] || 0 }.join(",")
   parents_string = all_parents.keys.sort.collect { |name| results[disac][:parent_buckets][name] || 0 }.join(",") 
-  file << ["#{disac[:donor]}(#{disac[:anomer]}x-#{disac[:posn]})#{disac[:substrate]}",sibs_string,parents_string].join(",")
+  file << ["#{disac[:donor]}(#{disac[:anomer]}x-#{disac[:posn]})#{disac[:substrate]}",sibs_string,' ',parents_string].join(",")
   file << "\n"
 }
 end
