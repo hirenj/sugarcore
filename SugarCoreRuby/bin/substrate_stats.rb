@@ -21,7 +21,8 @@ OPTS = {
 	:outfile => 'results.csv',
 	:test => false,
 	:sulfation => false,
-	:removenacac => true
+	:removenacac => true,
+	:analysis => [:raw]
 }
 verbosity = 0
 
@@ -37,6 +38,7 @@ ARGV.options {
   opt.on("-t", "--test", TrueClass, "Test only (don't do anything)") { |OPTS[:test]| }
   opt.on("-s", "--[no-]sulfation", TrueClass, "Leave sulfation in residue names") { |OPTS[:sulfation]| }
   opt.on("-n", "--[no-]neuacac", TrueClass, "Translate NeuAcAc to NeuAc") { |OPTS[:removenacac]| }
+  opt.on("-a", "--analysis ANALYSISNAME", String, "Do an analysis") { |name| OPTS[:analysis] << name.to_sym }
   opt.parse!
 
 }
@@ -64,6 +66,19 @@ module Sugar::IO::GlycoCT::Builder
     name.gsub!(/\|\d(n-)?sulfate/,'') unless OPTS[:sulfation]
     return builder_factory(ALIASED_NAMES[name] || name)
   end
+end
+
+def mean(array)
+  (array.inject(0) { |sum, x| sum += x }) / array.size.to_f
+end
+
+def mean_and_standard_deviation(array)
+  m = mean(array)
+  if array.size == 1
+    return m, 0.0
+  end
+  variance = array.inject(0) { |variance, x| variance += (x - m) ** 2 }
+  return m, Math.sqrt(variance/(array.size-1))
 end
 
 DebugLog.log_level(5)
@@ -100,6 +115,8 @@ File.open("data/disaccharides_dump.txt","r") do |file|
   end
 end
 
+all_sibs["sibling"] = 1
+
 File.open("data/human_glycosciences.dump","r") do |file|
   while (line = file.gets)
     id,sequence = line.split(/\s+/)
@@ -121,6 +138,7 @@ File.open("data/human_glycosciences.dump","r") do |file|
               results[disac][:buckets]["alone"] += 1
             end
             results[disac][:buckets]["total"] += 1
+            results[disac][:buckets]["sibling"] = 1 - (results[disac][:buckets]["alone"].to_f / results[disac][:buckets]["total"].to_f)
             siblings.each { |sibling|
               sib = sibling[:residue]
               link = sibling[:link]
@@ -146,12 +164,39 @@ end
 p count
 p disac_count
 File.open(OPTS[:outfile],"w") do |file|
-file << "Linkage,#{all_sibs.keys.sort.join(",")},parents,#{all_parents.keys.sort.join(",")}\n"
-results.keys.sort_by{ |d| d[:donor] }.each { |disac|
-#  puts "Link: #{disac[:donor]} (#{disac[:anomer]}x-#{disac[:posn]}) #{disac[:substrate]}"
-  sibs_string = all_sibs.keys.sort.collect { |name| results[disac][:buckets][name] || 0 }.join(",")
-  parents_string = all_parents.keys.sort.collect { |name| results[disac][:parent_buckets][name] || 0 }.join(",") 
-  file << ["#{glycoct_to_ic[disac[:donor]]}(#{disac[:anomer]}x-#{disac[:posn]})#{glycoct_to_ic[disac[:substrate]]}",sibs_string,' ',parents_string].join(",")
-  file << "\n"
-}
+  
+  if OPTS[:analysis].include?(:raw)
+    file << "Linkage,#{all_sibs.keys.sort.reverse.join(",")},parents,#{all_parents.keys.sort.join(",")}\n"
+    results.keys.sort_by{ |d| d[:donor] }.each { |disac|
+    #  puts "Link: #{disac[:donor]} (#{disac[:anomer]}x-#{disac[:posn]}) #{disac[:substrate]}"
+      sibs_string = all_sibs.keys.sort.reverse.collect { |name| results[disac][:buckets][name] || 0 }.join(",")
+      parents_string = all_parents.keys.sort.collect { |name| results[disac][:parent_buckets][name] || 0 }.join(",") 
+      file << ["#{glycoct_to_ic[disac[:donor]]}(#{disac[:anomer]}x-#{disac[:posn]})#{glycoct_to_ic[disac[:substrate]]}",sibs_string,' ',parents_string].join(",")
+      file << "\n"
+    }
+  end
+
+  if OPTS[:analysis].include?(:donorsubstrate)
+    compressed_buckets = Hash.new() { |h,k| h[k] = Array.new() }
+    results.keys.each { |disac|
+      compressed_key = glycoct_to_ic[disac[:donor]]+"-"+glycoct_to_ic[disac[:substrate]]
+      compressed_buckets[compressed_key] << results[disac][:buckets]["sibling"]
+    }
+    file << "Disaccharide,Ave-sibs,stdev\n"
+    compressed_buckets.keys.sort.each { |disac|
+      file << ([disac] + mean_and_standard_deviation(compressed_buckets[disac])).join(',') + "\n"
+    }
+  end
+  
+  if OPTS[:analysis].include?(:donoronly)
+    compressed_buckets = Hash.new() { |h,k| h[k] = Array.new() }
+    results.keys.each { |disac|
+      compressed_key = glycoct_to_ic[disac[:donor]]+"-"+disac[:anomer]+"-"+disac[:posn].to_s
+      compressed_buckets[compressed_key] << results[disac][:buckets]["sibling"]
+    }
+    file << "Disaccharide,Ave-sibs,stdev\n"
+    compressed_buckets.keys.sort.each { |disac|
+      file << ([disac] + mean_and_standard_deviation(compressed_buckets[disac])).join(',') + "\n"
+    }    
+  end
 end
