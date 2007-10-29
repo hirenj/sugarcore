@@ -24,6 +24,9 @@ OPTS = {
 	:removenacac => true,
 	:analysis => [:raw]
 }
+
+VALID_ANALYSES = [:raw,:donorsubstrate,:donoronly]
+
 verbosity = 0
 
 ARGV.options {
@@ -37,8 +40,8 @@ ARGV.options {
   opt.on("-o", "--outfile FILE", String, "Import data into database") { |OPTS[:outfile]| }
   opt.on("-t", "--test", TrueClass, "Test only (don't do anything)") { |OPTS[:test]| }
   opt.on("-s", "--[no-]sulfation", TrueClass, "Leave sulfation in residue names") { |OPTS[:sulfation]| }
-  opt.on("-n", "--[no-]neuacac", TrueClass, "Translate NeuAcAc to NeuAc") { |OPTS[:removenacac]| }
-  opt.on("-a", "--analysis ANALYSISNAME", String, "Do an analysis") { |name| OPTS[:analysis] << name.to_sym }
+  opt.on("-n", "--[no-]neuacactran", TrueClass, "Translate NeuAcAc to NeuAc") { |OPTS[:removenacac]| }
+  opt.on("-a", "--analysis ANALYSISNAME", String, "Do an analysis (choose from #{VALID_ANALYSES.collect {|a| a.to_s}.join(',')})") { |name| OPTS[:analysis] << name.to_sym }
   opt.parse!
 
 }
@@ -163,6 +166,7 @@ File.open("data/human_glycosciences.dump","r") do |file|
 end
 p count
 p disac_count
+
 File.open(OPTS[:outfile],"w") do |file|
   
   if OPTS[:analysis].include?(:raw)
