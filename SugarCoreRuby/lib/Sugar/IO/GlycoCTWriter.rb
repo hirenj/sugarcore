@@ -47,7 +47,7 @@ module Sugar::IO::GlycoCT::Writer
       }
     }
     counter = 1
-    residues.keys.sort_by { |el| el.is_a?(String) ? '2'+el : el.parent == nil ? '00' : '1'+residues[el]+get_attachment_point_path_to_root(el).join(',') }.each { |res|
+    residues.keys.sort_by { |el| el.is_a?(String) ? '2'+el : el == root_element ? '00' : '1'+residues[el]+get_attachment_point_path_to_root(el).join(',') }.each { |res|
       string_rep += "#{counter}#{residues[res]}"
       residues[res] = counter
       counter = counter + 1
