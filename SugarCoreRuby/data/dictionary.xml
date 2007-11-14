@@ -306,13 +306,24 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 	<unit id="dgalp|2n">
 		<name ns="dkfz" value="D-Galp|2n" />		
 		<name ns="ic" value="GalN" />
-		<name ns="ecdb" value="dgalp"/>
+		<name ns="ecdb" value="dgalp|2n"/>
 		<name ns="glyde" value="dgal-hex-1:5|2n"/>
 		<ecdb:substituents>
 			<ecdb:substituent position="2">n</ecdb:substituent>
 		</ecdb:substituents>
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
+		<disp:icon scheme="boston">
+			<svg:svg>
+			    <svg:rect
+			       width="100"
+			       height="100"
+			       x="0"
+			       y="0"       style="stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000;fill:none;"
+			       />
+				<svg:path d="M 0 0 L 100 0 L 100 100 z" style="stroke:#000000; stroke-width=:1;stroke-miterlimit:4;stroke-opacity:1;fill:#ffff00;fill-opacity:1"/>
+			</svg:svg>
+		</disp:icon>
 	</unit>
 	<unit id="dglcp" >
 		<name ns="dkfz" value="D-Glcp" />	
@@ -370,6 +381,12 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		</ecdb:substituents>
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
+		<disp:icon scheme="boston">
+			<svg:svg>
+				<svg:path d="M 50 0 L 100 50 L 50 100 L 0 50 z" style="stroke:#000000; stroke-width=:1;stroke-miterlimit:4;stroke-opacity:1;fill:none;"/>
+				<svg:path d="M 50 0 L 100 50 L 0 50 z" style="stroke:#000000; stroke-width=:1;stroke-miterlimit:4;stroke-opacity:1;fill:#0000fa;fill-opacity:1"/>
+			</svg:svg>
+		</disp:icon>		
 	</unit>
 	<unit id="dglcp|2nac" >
 		<name ns="dkfz" value="D-Glcp|2nac" />
@@ -433,6 +450,17 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		</ecdb:substituents>		
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
+		<disp:icon scheme="boston">
+			<svg:svg>
+			    <svg:rect
+			       width="100"
+			       height="100"
+			       x="0"
+			       y="0"       style="stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000;fill:none;"
+			       />
+				<svg:path d="M 0 0 L 100 0 L 100 100 z" style="stroke:#000000; stroke-width=:1;stroke-miterlimit:4;stroke-opacity:1;fill:#0000fa;fill-opacity:1"/>
+			</svg:svg>
+		</disp:icon>
 	</unit>
 	<unit id="lidop" >
 		<name ns="dkfz" value="L-Idop" />	
@@ -456,6 +484,12 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		</ecdb:substituents>
 		
 		<property name="class" value="ic:Hex"/>
+		<disp:icon scheme="boston">
+			<svg:svg>
+				<svg:path d="M 50 0 L 100 50 L 50 100 L 0 50 z" style="stroke:#000000; stroke-width=:1;stroke-miterlimit:4;stroke-opacity:1;fill:none;"/>
+				<svg:path d="M 50 100 L 100 50 L 0 50 z" style="stroke:#000000; stroke-width=:1;stroke-miterlimit:4;stroke-opacity:1;fill:#966432;fill-opacity:1"/>
+			</svg:svg>
+		</disp:icon>
 	</unit>
 	<unit id="dkdo" >
 		<name ns="dkfz" value="D-Kdo"/>
@@ -628,6 +662,14 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="glyde" value="dxyl-pen-1:5"/>
 
 		<property name="class" value="ic:Pent"/>
+		<disp:icon scheme="boston">
+			<svg:svg>
+				<svg:path
+			       d="M 87.142858,80 C 86.679372,80.327392 58.221745,55.223759 57.654295,55.225835 C 57.092637,55.22789 29.314618,80.549213 28.864666,80.213049 C 28.410073,79.873418 43.491156,45.051157 43.31383,44.512121 C 43.138314,43.978588 10.472425,25.384841 10.653093,24.853031 C 10.835624,24.315735 48.613873,27.898028 49.07173,27.562809 C 49.524913,27.231013 57.114302,-9.5818779 57.675913,-9.574391 C 58.243317,-9.5668269 66.510476,27.469413 66.970773,27.801272 C 67.426371,28.129744 104.78276,23.971873 104.94919,24.508311 C 105.11733,25.050281 72.448467,44.357644 72.275089,44.897962 C 72.103482,45.432765 87.601611,79.675951 87.142858,80 z "
+			       transform="matrix(1.0446722,0,0,1.1025997,-10.439242,11.018952)"
+			       style="fill:#faead5;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+			</svg:svg>
+		</disp:icon>
 	</unit>
 	<unit id="dxylol">
 		<name ns="glyde" value="dxyl-pen-0:0|1:aldi"/>
