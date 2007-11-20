@@ -209,6 +209,10 @@ class Monosaccharide
     return mono
   end
 
+  def remove_child(mono)
+    @children.delete_if { |kid| kid[:residue] == mono }
+  end
+
   # Can this residue accept the given linkage. Will return true if the attachment
   # position on this residue is not already consumed
   #   linkage = Linkage.Factory( LinkageClass, '1-2' )
