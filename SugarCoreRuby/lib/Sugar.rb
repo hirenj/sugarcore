@@ -80,7 +80,13 @@ class Sugar
     		finish
     	end
       debug "Input sequence is " + seq
-      @root = parse_sequence(seq)
+      begin
+        @root = parse_sequence(seq)        
+      rescue Exception => e
+        error "Could not parse the sequence, setting root to nil:\n#{seq}\n\n#{e}"
+        @root = nil
+        throw SugarException.new("Could not parse the sequence, setting root to nil:\n#{seq}\n\nBase cause: #{e}")
+      end      
     end
     
     # Compute the sequence for this sugar. This method is an alias for computing 
