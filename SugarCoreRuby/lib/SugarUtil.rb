@@ -21,4 +21,10 @@ class SugarUtil
     }
     return all_links
   end
+  def self.SugarFromDisaccharide(sugar,child)
+    new_linkage = { :link => child.linkage_at_position, :residue => child }
+    new_sug = sugar.class.new()
+    new_sug.linkages = [ new_linkage ]
+    return new_sug
+  end
 end
