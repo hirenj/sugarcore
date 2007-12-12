@@ -12,7 +12,10 @@ require 'Sugar/IO/Glyde'
 require 'SugarException'
 
 Monosaccharide.Load_Definitions("data/dictionary.xml")
-NamespacedMonosaccharide.Default_Namespace = NamespacedMonosaccharide::NAMESPACES[:glyde]
+
+# We're going to do all of our work in the Glyde namespace (which is actually Glycoct)
+
+NamespacedMonosaccharide.Default_Namespace = :glyde
 
 require 'optparse'
 
@@ -158,6 +161,8 @@ File.open("data/human_glycosciences.dump","r") do |file|
         }
       }
     rescue MonosaccharideException => err
+        p err
+    rescue SugarException => err
         p err
     ensure
         sug.finish

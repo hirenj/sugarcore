@@ -11,6 +11,8 @@ class Sugar
   include  Sugar::IO::CondensedIupac::Writer
 end
 
+NamespacedMonosaccharide.Default_Namespace = :ic
+
 class TC_Glycotransferase < Test::Unit::TestCase
 
   LARGE_STRUCTURE = "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc"

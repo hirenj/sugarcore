@@ -17,7 +17,7 @@ require 'Render/SvgRenderer'
 require 'Render/HtmlTextRenderer'
 
 Monosaccharide.Load_Definitions("data/dictionary.xml")
-NamespacedMonosaccharide.Default_Namespace = NamespacedMonosaccharide::NAMESPACES[:ecdb]
+NamespacedMonosaccharide.Default_Namespace = :ecdb
 
 sugar = Sugar.new()
 sugar.extend(Sugar::IO::CondensedIupac::Builder)

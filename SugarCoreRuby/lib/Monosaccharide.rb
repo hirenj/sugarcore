@@ -427,7 +427,9 @@ class NamespacedMonosaccharide < Monosaccharide
 	NAMESPACES[:glyde] = "http://ns.eurocarbdb.org/glyde"
 	NAMESPACES[:stephan] = "http://www.dkfz.de/stephan"
 	
-	@@DEFAULT_NAMESPACE = NAMESPACES[:ic]
+	NAMESPACES[:id] = NAMESPACES[:ecdb]
+	
+	@@DEFAULT_NAMESPACE = NAMESPACES[:ecdb]
 
   # The Default Namespace that new residues will be created in, and in which
   # their names will be validated
@@ -438,6 +440,9 @@ class NamespacedMonosaccharide < Monosaccharide
   # Set the default namespace to initialise residues from
   # and validate their names in
 	def NamespacedMonosaccharide.Default_Namespace=(ns)
+    if ns.is_a? Symbol
+      ns = NAMESPACES[ns]
+    end
 		@@DEFAULT_NAMESPACE = ns
 	end
 
@@ -450,7 +455,7 @@ class NamespacedMonosaccharide < Monosaccharide
     return NAMESPACES.index(ns)
   end
 
-  def NamespacedMonosaccharide.Supported_Residues
+  def NamespacedMonosaccharide.Supported_Residues(ns=nil)
     ns = ns || self.Default_Namespace
 
 	  namespaces = Hash.new()

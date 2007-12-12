@@ -85,7 +85,7 @@ class Sugar
       rescue Exception => e
         error "Could not parse the sequence, setting root to nil:\n#{seq}\n\n#{e}"
         @root = nil
-        throw SugarException.new("Could not parse the sequence, setting root to nil:\n#{seq}\n\nBase cause: #{e}")
+        raise SugarException.new("Could not parse the sequence, setting root to nil:\n#{seq}\n\nBase cause: #{e}")
       end      
     end
     
@@ -189,7 +189,7 @@ class Sugar
         path_follower = lambda { |residue, children|
           if residue 
             test_residue = mypath.shift
-            if (residue.name == test_residue.name)
+            if (residue.name(:id) == test_residue.name(:id))
               matched[residue] = true
             end
             if (mypath[0])

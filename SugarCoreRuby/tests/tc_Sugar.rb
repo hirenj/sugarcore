@@ -1,6 +1,8 @@
 require 'test/unit'
 require 'Sugar'
 
+NamespacedMonosaccharide.Default_Namespace = :ic
+
 class TC_Sugar < Test::Unit::TestCase
 	require 'Sugar/IO/CondensedIupac'
 	require 'Sugar/IO/GlycoCT'
@@ -126,7 +128,7 @@ __FOO__
 			sugar.extend(  Sugar::IO::CondensedIupac::Builder )
 			sugar.sequence = IUPAC_DISACCHARIDE
 		}
-		assert_raises( MonosaccharideException ) {
+		assert_raises( SugarException ) {
 			sugar = Sugar.new()
 			sugar.extend(  Sugar::IO::CondensedIupac::Builder )			
 			sugar.sequence = INVALID_SEQUENCE		

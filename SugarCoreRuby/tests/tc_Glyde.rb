@@ -13,6 +13,8 @@ class ReadingSugar < Sugar
 
 end
 
+NamespacedMonosaccharide.Default_Namespace = :ic
+
 GlydeNamespacedMonosaccharide.logger = Logger.new(STDERR)
 GlydeNamespacedMonosaccharide.log_level(100)
 DebugLog.log_level(5)

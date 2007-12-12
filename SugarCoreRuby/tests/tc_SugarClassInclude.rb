@@ -9,6 +9,8 @@ class Sugar
   include  Sugar::IO::CondensedIupac::Writer
 end
 
+NamespacedMonosaccharide.Default_Namespace = :ic
+
 Monosaccharide.Load_Definitions('data/dictionary.xml')
 
 class TC_SugarClassInclude < Test::Unit::TestCase

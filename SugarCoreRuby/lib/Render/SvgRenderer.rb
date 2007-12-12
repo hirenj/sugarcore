@@ -57,7 +57,7 @@ class SvgRenderer
     nil_mono.extend(Renderable::Residue)
     [nil_mono, sugar.residue_composition].flatten.each { |res|
 
-      res_id = res.name(NamespacedMonosaccharide::NAMESPACES[:ecdb])
+      res_id = res.name(:id)
 
       anchors = Hash.new()
 
@@ -72,7 +72,7 @@ class SvgRenderer
                                         'transform' => 'translate(45,60)',
                                         'style'=>'fill:#0000ff;stroke:#000000;stroke-width:1;'
                                         }
-                          ).text=res.name(NamespacedMonosaccharide::NAMESPACES[$~[1].to_sym])
+                          ).text=res.name($~[1].to_sym)
         group.add_namespace('svg',SVG_ELEMENT_NS)
         prototypes[res_id] = group
         anchors[0] = { :x => 100, :y => 50 }
@@ -86,7 +86,7 @@ class SvgRenderer
         prototypes[res_id] = XPath.first(res.raw_data_node, "disp:icon[@scheme='#{scheme}']/svg:svg", { 'disp' => DISPLAY_ELEMENT_NS, 'svg' => SVG_ELEMENT_NS })
       end
       if prototypes[res_id] == nil
-        prototypes[res_id] = prototypes[nil_mono.name(NamespacedMonosaccharide::NAMESPACES[:ecdb])]
+        prototypes[res_id] = prototypes[nil_mono.name(:id)]
       end
       
       prototypes[res_id].add_attribute('width', 100)
@@ -271,7 +271,7 @@ class SvgRenderer
   
   def render_residue(res)
 
-    res_id = res.name(NamespacedMonosaccharide::NAMESPACES[:ecdb])
+    res_id = res.name(:id)
 
     icon = nil
 

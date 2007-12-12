@@ -6,6 +6,8 @@ require 'Render/Renderable'
 require 'Render/CondensedLayout'
 require 'Render/SvgRenderer'
 
+NamespacedMonosaccharide.Default_Namespace = :ic
+
 class SvgSugar < Sugar
   include Sugar::IO::CondensedIupac::Builder
   include  Sugar::IO::CondensedIupac::Writer

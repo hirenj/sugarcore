@@ -59,7 +59,7 @@ class Glycotransferase
     results = Array.new()
     sugar.depth_first_traversal { |residue|
       # FIXME - Should be a bit smarter about deciding which namespace to compare?
-      if substrate_pattern.alternate_name('http://glycosciences.de') == residue.alternate_name('http://glycosciences.de') && residue.can_accept?(donor)
+      if substrate_pattern.name(:id) == residue.name(:id) && residue.can_accept?(donor)
         residue
       end
     }.compact

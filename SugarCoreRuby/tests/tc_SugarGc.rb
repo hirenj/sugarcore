@@ -4,6 +4,8 @@ require 'Sugar/IO/CondensedIupac'
 require 'Sugar'
 include ObjectSpace
 
+NamespacedMonosaccharide.Default_Namespace = :ic
+
 class PrettySugar < Sugar
   include Sugar::IO::CondensedIupac::Builder
   include  Sugar::IO::CondensedIupac::Writer

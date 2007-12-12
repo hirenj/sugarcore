@@ -1,6 +1,8 @@
 require 'test/unit'
 require 'Monosaccharide'
 
+NamespacedMonosaccharide.Default_Namespace = :ic
+
 class TC_Monosaccharide < Test::Unit::TestCase
 	require 'Sugar/IO/CondensedIupac'
 	
@@ -45,7 +47,7 @@ class TC_Monosaccharide < Test::Unit::TestCase
 		# We should be able to use the DKFZ namespace here
 		
 		assert_nothing_raised {
-		  NamespacedMonosaccharide.Default_Namespace=NamespacedMonosaccharide::NAMESPACES[:dkfz]
+		  NamespacedMonosaccharide.Default_Namespace=:dkfz
 		  NamespacedMonosaccharide.Load_Definitions('data/dictionary.xml')
 			mono = Monosaccharide.Factory( DKFZNamespacedMonosaccharide, 'D-Araf')
 		}
@@ -62,7 +64,7 @@ class TC_Monosaccharide < Test::Unit::TestCase
 
 		
 		# We should reset the namespace here
-	  NamespacedMonosaccharide.Default_Namespace=NamespacedMonosaccharide::NAMESPACES[:ic]
+	  NamespacedMonosaccharide.Default_Namespace=:ic
 	  setup()
   end
 

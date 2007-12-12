@@ -4,7 +4,7 @@ module LinkageWriter
   def to_sequence
     second_pos_string = second_position > 0 ? second_position : '?'
     first_pos_string = first_position > 0 ? first_position : '?'
-		return "#{first_residue.alternate_name('http://glycosciences.de')}(#{self.first_residue.anomer}#{first_pos_string}-#{second_pos_string})#{second_residue.alternate_name('http://glycosciences.de')}"
+		return "#{first_residue.name(:dkfz)}(#{self.first_residue.anomer}#{first_pos_string}-#{second_pos_string})#{second_residue.name(:dkfz)}"
 	end
 end
 
