@@ -40,7 +40,7 @@ ARGV.options {
   opt.on("Options:\n")
   opt.on("-v", "--[no-]verbose", TrueClass, "Increase verbosity") { |verbose| OPTS[:verbose] = verbose ? (OPTS[:verbose] - 1) : (OPTS[:verbose] + 1) }
   opt.on("-h", "--help", "This text") { puts opt; exit 0 }
-  opt.on("-o", "--outfile FILE", String, "Import data into database") { |OPTS[:outfile]| }
+  opt.on("-o", "--outfile FILE", String, "Write results to file") { |OPTS[:outfile]| }
   opt.on("-t", "--test", TrueClass, "Test only (don't do anything)") { |OPTS[:test]| }
   opt.on("-s", "--[no-]sulfation", TrueClass, "Leave sulfation in residue names") { |OPTS[:sulfation]| }
   opt.on("-n", "--[no-]neuacactran", TrueClass, "Translate NeuAcAc to NeuAc") { |OPTS[:removenacac]| }
