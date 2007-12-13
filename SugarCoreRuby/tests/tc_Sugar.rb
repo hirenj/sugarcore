@@ -15,6 +15,7 @@ class TC_Sugar < Test::Unit::TestCase
   SMALL_STRUCTURE = "GlcNAc(b1-4)GlcNAc"
   SMALL_STRUCTURE_2 = "GlcNAc(b1-3)GlcNAc"
   SMALL_STRUCTURE_3 = "GalNAc(b1-3)GalNAc"
+  SMALL_STRUCTURE_4 = "GlcNAc(a1-4)GlcNAc"
   UNKNOWN_STRUCTURE = "Gal(b1-u)[Fuc(a1-u)]GalNAc"
   LARGE_STRUCTURE_AS_CT = <<__FOO__
 RES
@@ -241,6 +242,19 @@ __FOO__
       residue.name
     })
 
+  end
+  
+  def test_sugar_intersection_with_comparator
+		sugar = build_sugar_from_string( SMALL_STRUCTURE )
+    sugar2 = build_sugar_from_string( SMALL_STRUCTURE_4 )    
+    assert_equal( ['GlcNAc'], sugar.intersect(sugar2).collect { |residue| 
+      residue.name
+    })
+    assert_equal( ['GlcNAc','GlcNAc'], sugar.intersect(sugar2) { |r1,r2| 
+      r1.name(:ic) == r2.name(:ic)
+    }.collect { |residue| 
+      residue.name
+    })    
   end
   
   def test_sugar_subtraction

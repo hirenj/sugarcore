@@ -182,15 +182,21 @@ class Sugar
 
     # Calculate the intersection of two sugars aligned together at the root
     # returns the residues which have matched up with the given sugar
-    def intersect(sugar)
+    def intersect(sugar,&block)
       matched = Hash.new()
       sugar.paths.each { |path|
         mypath = path.reverse
         path_follower = lambda { |residue, children|
           if residue 
             test_residue = mypath.shift
-            if (residue.name(:id) == test_residue.name(:id))
-              matched[residue] = true
+            if block_given?
+               if yield(residue, test_residue)
+                 matched[residue] = true
+               end
+            else
+              if residue.name(:id) == test_residue.name(:id) && residue.anomer == test_residue.anomer
+                matched[residue] = true
+              end
             end
             if (mypath[0])
               path_follower.call(residue.residue_at_position(mypath[0].paired_residue_position()), nil)
@@ -205,8 +211,8 @@ class Sugar
 
     # Subtract the given sugar from this sugar. Returns a list of residues which exist in this sugar, but do
     # not exist in the sugar given as an argument
-    def subtract(sugar)
-      matched = intersect(sugar)
+    def subtract(sugar, &block)
+      matched = intersect(sugar,&block)
       results = Array.new()
       leaves.each { |leaf|
         node_to_root_traversal(leaf) { |residue|
