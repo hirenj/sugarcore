@@ -1,5 +1,6 @@
 require 'test/unit'
 require 'Sugar'
+require 'MultiSugar'
 
 NamespacedMonosaccharide.Default_Namespace = :ic
 
@@ -257,6 +258,16 @@ __FOO__
     })    
   end
   
+  def test_sugar_union
+    sugar = build_sugar_from_string("Gal(a1-3)GlcNAc")
+    sugar2 = build_sugar_from_string("GlcNAc(b1-4)Fuc(b1-6)GlcNAc")
+    sugar3 = build_sugar_from_string("Gal(b1-3)GlcNAc")
+    sugar4 = build_sugar_from_string("GlcNAc(b1-4)Gal(b1-3)GlcNAc")   
+    sugar.extend(Sugar::MultiSugar)
+    sugar.union!(sugar2).union!(sugar3).union!(sugar4)
+    p sugar.sequence
+  end
+  
   def test_sugar_subtraction
     sugar = build_sugar_from_string( LARGE_STRUCTURE )
 		sugar2 = build_sugar_from_string( SMALL_STRUCTURE )
@@ -270,6 +281,15 @@ __FOO__
       residue.name
     })
     
+  end
+  
+  def test_multisugar_intersect
+    sugar = build_sugar_from_string("Gal(a1-3)GlcNAc")
+    sugar2 = build_sugar_from_string("GlcNAc(b1-4)Fuc(b1-6)GlcNAc")
+    sugar3 = build_sugar_from_string("Gal(b1-3)GlcNAc")
+    sugar4 = build_sugar_from_string("Gal(a1-3)GlcNAc")
+    sugar.extend(Sugar::MultiSugar).union!(sugar2).union!(sugar3)
+    sugar.intersect(sugar4).each { |res| p res.name(:ic) }
   end
   
   def test_sugar_clone

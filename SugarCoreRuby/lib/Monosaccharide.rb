@@ -373,7 +373,7 @@ class Monosaccharide
   # String representation of this residue
   def to_s
       stringified = "#{@name}["
-      @children.each {|kid| stringified +="#{kid[:link]} -> #{kid[:residue]}"}
+      @children.each { |kid| stringified += "#{kid[:link]} -> #{kid[:residue]}" }
       stringified += "]\n" 
   end
 

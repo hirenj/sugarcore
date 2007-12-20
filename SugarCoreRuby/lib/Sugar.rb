@@ -128,7 +128,7 @@ class Sugar
     
     # Find the residue composition of this sugar
     def residue_composition(start_residue=@root)
-    	return start_residue.residue_composition
+    	return start_residue ? start_residue.residue_composition : []
     end
     
     def size(start_residue=@root)
@@ -187,7 +187,7 @@ class Sugar
       sugar.paths.each { |path|
         mypath = path.reverse
         path_follower = lambda { |residue, children|
-          if residue 
+          if residue
             test_residue = mypath.shift
             if block_given?
                if yield(residue, test_residue)
@@ -212,7 +212,7 @@ class Sugar
     # Subtract the given sugar from this sugar. Returns a list of residues which exist in this sugar, but do
     # not exist in the sugar given as an argument
     def subtract(sugar, &block)
-      matched = intersect(sugar,&block)
+      matched = self.intersect(sugar,&block)
       results = Array.new()
       leaves.each { |leaf|
         node_to_root_traversal(leaf) { |residue|
@@ -225,6 +225,34 @@ class Sugar
         }
       }
       results
+    end
+
+    def union(sugar, &block)
+      new_sug = self.deep_clone
+      new_sug.union!(sugar,&block)
+      return new_sug
+    end
+
+    def union!(sugar, &block)
+      matched_sugar = sugar.subtract(self)
+      if block_given?
+        self.intersect(sugar).each { |res|
+          yield res
+        }
+      end
+      matched_sugar = matched_sugar.delete_if { |res| matched_sugar.include? res.parent }
+      (matched_sugar).each { |res|
+        path = sugar.get_attachment_point_path_to_root(res.parent).reverse
+        attachment_res = self.find_residue_by_linkage_path(path)
+        new_res = res.deep_clone
+        if attachment_res.is_a? Array
+          attachment_res = attachment_res.delete_if { |m_res|
+            (m_res.name(:id) != res.parent.name(:id)) || (m_res.anomer != res.parent.anomer)
+          }.first
+        end
+        attachment_res.add_child(new_res,res.linkage_at_position.deep_clone)
+      }      
+      return self
     end
 
     # Run a comparator across the residues in a sugar, passing a block to use as a comparator, and optionally specifying a method
