@@ -265,7 +265,7 @@ __FOO__
     sugar4 = build_sugar_from_string("GlcNAc(b1-4)Gal(b1-3)GlcNAc")   
     sugar.extend(Sugar::MultiSugar)
     sugar.union!(sugar2).union!(sugar3).union!(sugar4)
-    p sugar.sequence
+    assert_equal('Gal(a1-3)[GlcNAc(b1-4)Fuc(b1-6)][GlcNAc(b1-4)Gal(b1-3)]GlcNAc', sugar.sequence)
   end
   
   def test_sugar_subtraction
@@ -283,13 +283,29 @@ __FOO__
     
   end
   
+  def test_sugar_path_to_root
+    sugar = build_sugar_from_string( LARGE_STRUCTURE )
+		assert_equal(
+		[ 'Man(a1-3)Man(b1-4)GlcNAc(b1-4)GlcNAc',
+		  'Man(a1-6)Man(b1-4)GlcNAc(b1-4)GlcNAc',
+		  'Fuc(a1-6)GlcNAc'
+		 ],		
+		sugar.leaves.collect { |leaf|
+		  new_sug = sugar.get_sugar_to_root(leaf).extend(  Sugar::IO::CondensedIupac::Writer )
+		  seq = new_sug.sequence
+		  new_sug.finish
+		  seq
+		})
+		
+  end
+  
   def test_multisugar_intersect
     sugar = build_sugar_from_string("Gal(a1-3)GlcNAc")
     sugar2 = build_sugar_from_string("GlcNAc(b1-4)Fuc(b1-6)GlcNAc")
     sugar3 = build_sugar_from_string("Gal(b1-3)GlcNAc")
     sugar4 = build_sugar_from_string("Gal(a1-3)GlcNAc")
     sugar.extend(Sugar::MultiSugar).union!(sugar2).union!(sugar3)
-    sugar.intersect(sugar4).each { |res| p res.name(:ic) }
+    assert_equal(['Gal','GlcNAc'],sugar.intersect(sugar4).collect { |r| r.name(:ic) })
   end
   
   def test_sugar_clone

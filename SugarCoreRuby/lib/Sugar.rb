@@ -104,9 +104,10 @@ class Sugar
     # if the linkages are not from disconnected graphs
     def linkages=(linkages)
       self.finish
+      new_residues = Hash.new() { |h,k| h[k] = k.shallow_clone }
       linkages.each { |link|
-        parent = link[:link].get_paired_residue(link[:residue]).shallow_clone
-        child = link[:residue].shallow_clone
+        parent = new_residues[link[:link].get_paired_residue(link[:residue])]
+        child = new_residues[link[:residue]]
         if @root == nil
           @root = parent
         end
@@ -169,6 +170,14 @@ class Sugar
   	def get_path_to_root(start_residue=@root)
       node_to_root_traversal(start_residue)
   	end
+
+    def get_sugar_to_root(start_residue=@root)
+      new_sugar = self.class.new()
+      residues = get_path_to_root(start_residue).reverse
+      residues.shift
+      new_sugar.linkages = residues.collect { |r| { :link => r.linkage_at_position, :residue => r } }
+      new_sugar
+    end
 
     # The linkage position path from the specified residue to the root.
   	def get_attachment_point_path_to_root(start_residue=@root)
