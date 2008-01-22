@@ -88,6 +88,7 @@ class Linkage
 	  if (@second_residue.linkage_at_position() == self)
 	    return @second_residue
     end
+    raise LinkageException.new("Neither residue has linkage as parent linkage")
   end
 
 	def non_reducing_end_substituted_residue # i.e. the parent residue

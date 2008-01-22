@@ -67,6 +67,10 @@ class Sugar
       self.sequence
     end
 	  
+	  def root=(new_root=@root)
+      @root = new_root
+    end
+	  
     # Set the sequence for this sugar. The Sugar must be able to 
     # parse this sequence (done by extending the Sugar), otherwise
     # it will raise a SugarException
@@ -175,8 +179,27 @@ class Sugar
       new_sugar = self.class.new()
       residues = get_path_to_root(start_residue).reverse
       residues.shift
-      new_sugar.linkages = residues.collect { |r| { :link => r.linkage_at_position, :residue => r } }
+      if residues.size > 0
+        new_sugar.linkages = residues.collect { |r| { :link => r.linkage_at_position, :residue => r } }
+      else
+        new_sugar.root = @root.shallow_clone
+      end
       new_sugar
+    end
+
+    def get_sugar_from_residue(start_residue=@root)
+      new_sugar = self.class.new()
+      new_sugar.root = start_residue.deep_clone
+      new_sugar
+    end
+
+    def get_unambiguous_path_to_root(start_residue=@root)
+  		if ( ! start_residue.parent )
+  			return []
+  		end
+  		linkage = start_residue.linkage_at_position();
+  		return [ { :link => linkage.get_position_for(linkage.get_paired_residue(start_residue)), :residue => start_residue },
+  				 get_unambiguous_path_to_root(start_residue.parent) ].flatten;
     end
 
     # The linkage position path from the specified residue to the root.
@@ -198,16 +221,18 @@ class Sugar
         path_follower = lambda { |residue, children|
           if residue
             test_residue = mypath.shift
-            if block_given?
-               if yield(residue, test_residue)
-                 matched[residue] = true
-               end
-            else
-              if residue.name(:id) == test_residue.name(:id) && residue.anomer == test_residue.anomer
-                matched[residue] = true
+            if ! matched[residue]
+              if block_given?
+                 if yield(residue, test_residue)
+                   matched[residue] = true
+                 end
+              else
+                if residue.equals?(test_residue)
+                  matched[residue] = true
+                end
               end
             end
-            if (mypath[0])
+            if (matched[residue] && mypath[0] != nil)
               path_follower.call(residue.residue_at_position(mypath[0].paired_residue_position()), nil)
             end
           end
@@ -243,21 +268,20 @@ class Sugar
     end
 
     def union!(sugar, &block)
-      matched_sugar = sugar.subtract(self)
+      matched_sugar = nil
       if block_given?
-        self.intersect(sugar).each { |res|
-          yield res
-        }
+        matched_sugar = sugar.subtract(self) { |a,b| block.call(b,a) }
+      else
+        matched_sugar = sugar.subtract(self)
       end
       matched_sugar = matched_sugar.delete_if { |res| matched_sugar.include? res.parent }
-      (matched_sugar).each { |res|
-        path = sugar.get_attachment_point_path_to_root(res.parent).reverse
-        attachment_res = self.find_residue_by_linkage_path(path)
+      matched_sugar.each { |res|        
+        path = sugar.get_unambiguous_path_to_root(res.parent).reverse
+        path_text = path.collect { |path_el| "#{path_el[:link]} -> #{path_el[:residue].anomer} - #{path_el[:residue].name(:ic)}"}.join(',')
+        attachment_res = self.find_residue_by_unambiguous_path(path)
         new_res = res.deep_clone
-        if attachment_res.is_a? Array
-          attachment_res = attachment_res.delete_if { |m_res|
-            (m_res.name(:id) != res.parent.name(:id)) || (m_res.anomer != res.parent.anomer)
-          }.first
+        if attachment_res == nil
+          raise SugarException.new("Could not find residue from path #{path_text}")
         end
         attachment_res.add_child(new_res,res.linkage_at_position.deep_clone)
       }      
@@ -281,6 +305,21 @@ class Sugar
       return sugars_equal && myresidues.empty? && compresidues.empty?
     end
 
+    def find_residue_by_unambiguous_path(path)
+	    #puts path.collect { |path_el| "#{path_el[:link]} -> #{path_el[:residue].anomer} - #{path_el[:residue].name(:ic)}" }.join(',')
+    	results = [@root]
+    	while (path || []).size > 0
+    	  path_element = path.shift
+    	  results = results.collect { |loop_residue|
+    	    [loop_residue.residue_at_position(path_element[:link])].flatten.delete_if { |res| ! res.equals?(path_element[:residue]) }
+    	  }.flatten
+  	  end
+  	  if results.size > 1
+  	    puts self.sequence
+  	    raise SugarException.new("Could not unambiguously find residue along path found instead #{results.size} residues")
+      end
+    	return results.first
+    end
 
     # Search for a residue based upon a traversal using the linkage path.
     # FIXME - UNTESTED

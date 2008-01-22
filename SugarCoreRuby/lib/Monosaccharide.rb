@@ -162,7 +162,14 @@ class Monosaccharide
     initialize_from_data()
   end
     
-    
+  # This should really be the == override, but I was so brilliant to use
+  # == all over the place when I was really testing for object equality which
+  # should be equal?. So now I've got to use yet another method for equality.
+  
+  def equals?(test_residue)
+    return self.name(:id) == test_residue.name(:id) && self.anomer == test_residue.anomer
+  end
+  
   # Perform a deep clone on this residue, copying all the children and any 
   # state for this object
   def deep_clone

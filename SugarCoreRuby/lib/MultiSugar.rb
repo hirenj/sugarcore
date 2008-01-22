@@ -1,3 +1,5 @@
+require 'SugarException'
+
 module Sugar::MultiResidue
   def can_accept?(linkage)
     true
@@ -22,6 +24,13 @@ module Sugar::MultiResidue
     linkage_at_position(attachment_position).get_position_for(residue_at_position(attachment_position)[0])
   end
   
+  def linkage_at_position(attachment_position=@parent_position)
+    if attachment_position == @parent_position 
+      return @ring_positions[attachment_position]
+    end    
+    return children.delete_if { |child| child[:link].get_position_for(self) != attachment_position }.collect { child[:link] }
+  end
+  
   def add_child(mono,linkage)
     mono.residue_composition.each { |res|
       res.extend(Sugar::MultiResidue)
@@ -31,6 +40,21 @@ module Sugar::MultiResidue
 end
 
 module Sugar::MultiSugar
+
+  def monosaccharide_factory(proto)
+    mono = super(proto)
+    mono.extend(Sugar::MultiResidue)
+    mono
+  end
+
+  def get_unique_sugar
+    leaf_paths = leaves.collect { |leaf| get_sugar_to_root(leaf) }
+    result = leaf_paths.shift.extend( Sugar::MultiSugar )
+    leaf_paths.each { |leaf_sug|
+      result.union!(leaf_sug.extend( Sugar::MultiSugar ))
+    }      
+    result
+  end
 
   def intersect(sugar,&block)
     matched = Hash.new()
@@ -42,16 +66,18 @@ module Sugar::MultiSugar
         end
         test_residue = mypath.shift
         (residues || []).each { |residue|
-          if block_given?
-             if yield(residue, test_residue)
-               matched[residue] = true
-             end
-          else
-            if residue.name(:id) == test_residue.name(:id) && residue.anomer == test_residue.anomer
-              matched[residue] = true
+          if ! matched[residue]
+            if block_given?
+               if yield(residue, test_residue)
+                 matched[residue] = true
+               end
+            else
+              if residue.equals?(test_residue)
+                matched[residue] = true
+              end
             end
           end
-          if (mypath[0])
+          if matched[residue] && mypath[0] != nil
             path_follower.call(residue.residue_at_position(mypath[0].paired_residue_position()), nil)
           end
         }
@@ -60,17 +86,6 @@ module Sugar::MultiSugar
       perform_traversal_with_algorithm(&path_follower)
     }
     return matched.keys
-  end
-  
-  def find_residue_by_linkage_path(linkage_path)
-  	results = [@root]
-  	while (linkage_path || []).size > 0
-  	  linkage_position = linkage_path.shift
-  	  results = results.collect { |loop_residue|
-  	    loop_residue.residue_at_position(linkage_position)
-  	  }.flatten
-	  end
-  	return results
   end
   
   def self.extend_object(sug)

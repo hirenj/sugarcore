@@ -12,8 +12,18 @@ class CondensedLayout
   end
 
   def layout(sugar)
+    remove_layout(sugar)
     do_initial_layout(sugar)
     do_box_layout(sugar)
+  end
+
+  def remove_layout(sugar)
+    sugar.residue_composition.each { |res|
+      res.position[:x1] = 0
+      res.position[:y1] = 0
+      res.dimensions[:width] = 0
+      res.dimensions[:height] = 0
+    }
   end
 
   def do_initial_layout(sugar)
