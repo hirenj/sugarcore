@@ -87,7 +87,7 @@ class Sugar
       begin
         @root = parse_sequence(seq)        
       rescue Exception => e
-        error "Could not parse the sequence, setting root to nil:\n#{seq}\n\n#{e}"
+        error "Could not parse the sequence, setting root to nil:\n#{seq}\n\n#{e}\n"+e.backtrace.join("\n")
         @root = nil
         raise SugarException.new("Could not parse the sequence, setting root to nil:\n#{seq}\n\nBase cause: #{e}")
       end      
@@ -309,7 +309,7 @@ class Sugar
     def find_residue_by_unambiguous_path(path)
     	results = [@root]
     	while (path || []).size > 0
-    	  path_element = path.shift    	  
+    	  path_element = path.shift
     	  results = results.collect { |loop_residue|
     	    [loop_residue.residue_at_position(path_element[:link])].flatten.delete_if { |res| ! res.equals?(path_element[:residue]) }
     	  }.flatten    	  

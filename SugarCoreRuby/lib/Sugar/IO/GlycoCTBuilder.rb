@@ -43,6 +43,9 @@ module Sugar::IO::GlycoCT::Builder
       if ( res.anomer == 'x')
         res.anomer = 'u'
       end
+      if res.res_type == nil
+        raise MonosaccharideException.new("Could not parse residue #{string}")
+      end
       res.res_type = res.res_type.to_sym
       res.substituents = Hash.new()
       res
@@ -55,6 +58,9 @@ module Sugar::IO::GlycoCT::Builder
       string.gsub!(/\d(\|\d)+/,'u')
       link = new()
       link.link_id, link.from, link.from_position, link.to_position, link.to = [ string.scan(/(\d+):(\d+)[a-z]?\(([\du]+)[\-\+]([\du]+)\)(\d+)[a-z]?/)].flatten
+      if link.link_id == nil
+        raise LinkageException.new("Could not parse linkage string #{string}")
+      end
       link
     end
   end
