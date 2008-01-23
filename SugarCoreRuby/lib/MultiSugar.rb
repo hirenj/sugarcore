@@ -56,6 +56,21 @@ module Sugar::MultiSugar
     result
   end
 
+  def find_residue_by_linkage_path(path)
+    results = [@root]
+  	while (path || []).size > 0
+  	  path_element = path.shift    	  
+  	  results = results.collect { |loop_residue|
+  	    loop_residue.residue_at_position(path_element)
+  	  }.flatten    	  
+	  end
+	  if results.size > 1
+	    puts self.sequence
+	    raise SugarException.new("Could not unambiguously find residue along path found instead #{results.size} residues")
+    end
+  	return results.first  	
+  end
+
   def intersect(sugar,&block)
     matched = Hash.new()
     sugar.paths.each { |path|
@@ -66,18 +81,19 @@ module Sugar::MultiSugar
         end
         test_residue = mypath.shift
         (residues || []).each { |residue|
-          if ! matched[residue]
-            if block_given?
-               if yield(residue, test_residue)
-                 matched[residue] = true
-               end
-            else
-              if residue.equals?(test_residue)
-                matched[residue] = true
-              end
+          test_success = false
+          if block_given?
+             if yield(residue, test_residue, matched[residue])
+               matched[residue] = true
+               test_success = true
+             end
+          else
+            if residue.equals?(test_residue)
+              matched[residue] = true
+              test_success = true
             end
           end
-          if matched[residue] && mypath[0] != nil
+          if test_success && mypath[0] != nil
             path_follower.call(residue.residue_at_position(mypath[0].paired_residue_position()), nil)
           end
         }

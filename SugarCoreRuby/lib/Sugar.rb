@@ -118,7 +118,7 @@ class Sugar
         parent.add_child(child,link[:link].deep_clone)
       }
     end
-    
+
     def linkages(start_residue=@root)
       return residue_composition(start_residue).collect { |r| r.linkage_at_position }
     end
@@ -174,7 +174,7 @@ class Sugar
   	def get_path_to_root(start_residue=@root)
       node_to_root_traversal(start_residue)
   	end
-
+    
     def get_sugar_to_root(start_residue=@root)
       new_sugar = self.class.new()
       residues = get_path_to_root(start_residue).reverse
@@ -221,18 +221,19 @@ class Sugar
         path_follower = lambda { |residue, children|
           if residue
             test_residue = mypath.shift
-            if ! matched[residue]
-              if block_given?
-                 if yield(residue, test_residue)
-                   matched[residue] = true
-                 end
-              else
-                if residue.equals?(test_residue)
-                  matched[residue] = true
-                end
+            test_success = false
+            if block_given?
+               if yield(residue, test_residue)
+                 matched[residue] = true
+                 test_success = true
+               end
+            else
+              if residue.equals?(test_residue)
+                matched[residue] = true
+                test_success = true
               end
             end
-            if (matched[residue] && mypath[0] != nil)
+            if test_success && mypath[0] != nil
               path_follower.call(residue.residue_at_position(mypath[0].paired_residue_position()), nil)
             end
           end
@@ -270,12 +271,12 @@ class Sugar
     def union!(sugar, &block)
       matched_sugar = nil
       if block_given?
-        matched_sugar = sugar.subtract(self) { |a,b| block.call(b,a) }
+        matched_sugar = sugar.subtract(self) { |a,b,c| block.call(b,a,c) }
       else
         matched_sugar = sugar.subtract(self)
       end
       matched_sugar = matched_sugar.delete_if { |res| matched_sugar.include? res.parent }
-      matched_sugar.each { |res|        
+      matched_sugar.each { |res|
         path = sugar.get_unambiguous_path_to_root(res.parent).reverse
         path_text = path.collect { |path_el| "#{path_el[:link]} -> #{path_el[:residue].anomer} - #{path_el[:residue].name(:ic)}"}.join(',')
         attachment_res = self.find_residue_by_unambiguous_path(path)
@@ -306,13 +307,12 @@ class Sugar
     end
 
     def find_residue_by_unambiguous_path(path)
-	    #puts path.collect { |path_el| "#{path_el[:link]} -> #{path_el[:residue].anomer} - #{path_el[:residue].name(:ic)}" }.join(',')
     	results = [@root]
     	while (path || []).size > 0
-    	  path_element = path.shift
+    	  path_element = path.shift    	  
     	  results = results.collect { |loop_residue|
     	    [loop_residue.residue_at_position(path_element[:link])].flatten.delete_if { |res| ! res.equals?(path_element[:residue]) }
-    	  }.flatten
+    	  }.flatten    	  
   	  end
   	  if results.size > 1
   	    puts self.sequence
