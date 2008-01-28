@@ -15,11 +15,11 @@ class CondensedLayout
   def layout(sugar)
     remove_layout(sugar)
     do_initial_layout(sugar)
-    #do_make_stub_residues(sugar)
     do_box_layout(sugar)
-    #do_tree_straightening(sugar)
-    do_sibling_bunching(sugar)
     do_center_boxes_more(sugar)
+    do_sibling_bunching(sugar)
+    do_tree_straightening(sugar)
+    do_multi_residue_widening(sugar)
   end
 
   def remove_layout(sugar)
@@ -179,15 +179,30 @@ class CondensedLayout
 
   def do_center_boxes_more(sugar)
     (0..(sugar.depth-1)).to_a.reverse.each { |dep|
-      sugar.residues_at_depth_by_parent(dep).each { |sib_group|        
-        if sib_group[0] != nil
-          par_res = sib_group[0]
+      sugar.residues_at_depth_by_parent(dep).each { |sib_group|
+        
+#        y1s = sib_group.collect { |r| r.position[:y1] }
+#        new_y1 = ((y1s.max - y1s.min) / 2) + y1s.min
+        
+        if sib_group[0] != nil && sib_group[0].parent != nil
+          par_res = sib_group[0].parent
           res_center = par_res.centre
           curr_center = par_res.box.centre
           delta = curr_center[:y] - res_center[:y]
           par_res.move(0,delta)
         end
       }
+    }    
+  end
+
+  def do_multi_residue_widening(sugar)
+    sugar.breadth_first_traversal { |res| 
+      if res.children.size > 4
+        multiplier = (res.children.size - 4)
+        res.children.each { |child|
+          child[:residue].translate(multiplier * DEFAULT_NODE_SPACING[:x],0)
+        }
+      end
     }    
   end
 
