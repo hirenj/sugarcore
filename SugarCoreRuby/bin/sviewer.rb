@@ -23,7 +23,7 @@ sugar = Sugar.new()
 sugar.extend(Sugar::IO::CondensedIupac::Builder)
 sugar.input_namespace = :ic
 sugar.extend(Sugar::IO::GlycoCT::Writer)
-sugar.sequence="Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc"
+sugar.sequence="Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc"
 sugar.extend(Renderable::Sugar)
 CondensedLayout.new().layout(sugar)
 

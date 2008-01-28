@@ -5,6 +5,7 @@ class CondensedLayout
 
   attr_accessor :node_dimensions
   attr_accessor :node_spacing
+  attr_accessor :seen_stubs
 
   def initialize()
     @node_dimensions = DEFAULT_NODE_DIMENSIONS
@@ -14,7 +15,10 @@ class CondensedLayout
   def layout(sugar)
     remove_layout(sugar)
     do_initial_layout(sugar)
+    do_make_stub_residues(sugar)
     do_box_layout(sugar)
+    do_tree_straightening(sugar)
+    do_sibling_bunching(sugar)
   end
 
   def remove_layout(sugar)
@@ -27,6 +31,7 @@ class CondensedLayout
   end
 
   def do_initial_layout(sugar)
+    @seen_stubs = []
     sugar.depth_first_traversal { |res| 
       if ( res.dimensions[:width] == 0 && res.dimensions[:height] == 0 )
         res.dimensions = DEFAULT_NODE_DIMENSIONS
@@ -46,15 +51,14 @@ class CondensedLayout
       sugar.node_to_root_traversal(residue) { |res|
         if res.parent != nil
           res_box = res.box
-          res.parent.children.each { |child|
-            if child[:residue] != res
-              sib_box = child[:residue].box
-              if (inter_box = calculate_intersection(sib_box, res_box)) != nil
-                spread_siblings(res.parent, inter_box.height)
-                sib_box = child[:residue].box
-                res_box = res.box
-              end
-            end 
+          siblings = res.parent.children.collect { |c| c[:residue] }.delete_if {|r| r == res }
+          siblings -= seen_stubs
+          siblings.each { |sibling|
+            sib_box = sibling.box
+            if (inter_box = calculate_intersection(sib_box, res_box)) != nil
+              spread_siblings(res.parent, inter_box.height)
+              res_box = res.box
+            end
           }
         end
       }
@@ -77,6 +81,99 @@ class CondensedLayout
         above_kids = above_kids + 1
       end
     }
+  end
+
+  def do_make_stub_residues(sugar)
+    sugar.leaves.collect { |r| r.parent }.uniq.each { |r|
+      make_children_stubs(r)
+    }
+  end
+
+  def make_children_stubs(node)
+    stubs = node.children.collect { |c| c[:residue] }.delete_if { |r| r.children.size > 0 }.sort_by { |r| r.paired_residue_position }
+    stubs = stubs.delete_if { |r| [4,5].include? r.paired_residue_position }
+    return if stubs.size > 3
+    return if stubs.collect { |r| r.paired_residue_position } == [3,6]
+    if stubs[2] != nil
+      stubs[2].move_absolute(node.position[:x1],node.position[:y2] + node_spacing[:y])
+      stubs[1].move_absolute(node.position[:x2] + node_spacing[:x],node.position[:y1])
+      stubs[0].move_absolute(node.position[:x1], node.position[:y1] - node_spacing[:y] - stubs[0].dimensions[:height])
+      seen_stubs << stubs[0]
+      seen_stubs << stubs[1]
+      seen_stubs << stubs[2]
+    elsif stubs[1] != nil
+      stubs[1].move_absolute(node.position[:x1],node.position[:y2] + node_spacing[:y])
+      stubs[0].move_absolute(node.position[:x1], node.position[:y1] - node_spacing[:y] - stubs[0].dimensions[:height])
+      seen_stubs << stubs[0]
+      seen_stubs << stubs[1]
+    elsif stubs[0] != nil && node.children.size > 1
+      stubs[0].move_absolute(node.position[:x1], node.position[:y1] - node_spacing[:y] - stubs[0].dimensions[:height])
+      seen_stubs << stubs[0]
+    end
+  end
+
+  def do_tree_straightening(sugar)
+    sugar.residue_composition.each { |r|
+      kids = r.children.collect { |c| c[:residue] }.delete_if { |res| seen_stubs.include?(res) }
+      if kids.size == 1
+        kid = kids[0]
+        delta = kid.position[:y1] - r.position[:y1]
+        kid.translate(0,delta * -1)
+      end
+    }
+  end
+
+  def do_sibling_bunching(sugar)
+    (0..(sugar.depth-1)).to_a.reverse.each { |dep|
+      sugar.residues_at_depth_by_parent(dep).each { |sib_group|        
+        group_siblings(sib_group)
+      }
+    }
+  end
+
+  def group_siblings(siblings)
+    if ! siblings.is_a? Array
+      siblings = [siblings]
+    end
+    siblings = siblings.sort_by { |r| r.position[:y1].abs }.delete_if { |res| seen_stubs.include?(res) }
+    
+    return unless siblings[0] && siblings[0].parent
+    
+    parent = siblings[0].parent
+    
+    center_y = parent.position[:y1]
+    
+    positive_siblings = siblings.select { |r| r.position[:y1] > center_y }
+    negative_siblings = siblings - positive_siblings
+    
+    first_down = negative_siblings[0]
+    first_up = positive_siblings[0]
+    
+    delta = 0
+    
+    delta = first_up.box[:y1] - first_down.box[:y2] - 100 if (first_up && first_down)
+    
+    if delta > 0
+      first_up.move_box(first_up.position[:x1], center_y )
+      first_down.move_box(first_down.position[:x1], center_y - DEFAULT_NODE_SPACING[:y] - first_down.box.height)
+    end
+    
+    current = positive_siblings.shift    
+    while positive_siblings.size > 0
+      current_box = current.box
+      next_sib = positive_siblings[0]
+      next_sib.move_box(next_sib.position[:x1],current_box[:y2] + DEFAULT_NODE_SPACING[:y])
+      current = positive_siblings.shift
+    end
+    current = negative_siblings.shift
+    while negative_siblings.size > 0
+      current_box = current.box
+      next_sib = negative_siblings[0]
+      next_sib_box = next_sib.box
+      next_sib.move_box(next_sib.position[:x1],current_box[:y1] - DEFAULT_NODE_SPACING[:y] - next_sib_box.height)
+      current = negative_siblings.shift
+    end
+
   end
 
   def calculate_intersection(rec1, rec2)

@@ -69,6 +69,19 @@ module Renderable
     position[:y1] = position[:y1] + deltay
     position[:y2] = position[:y2] + deltay
   end
+
+  def move_absolute(new_x,new_y)
+    delta_x = position[:x1] - new_x
+    delta_y = position[:y1] - new_y
+    translate(delta_x,delta_y)
+  end
+
+  def move_box(new_x,new_y)
+    current_box = box
+    delta_x = new_x - box[:x1]
+    delta_y = new_y - box[:y1]
+    translate(delta_x,delta_y)
+  end
   
 end
 
@@ -99,38 +112,37 @@ module Renderable::Residue
   end
 
   def box
-    # FIXME - This should be using Integer min and max values
-    min_x = 100000
-    min_y = 100000
-    max_x = -100000
-    max_y = -100000
+    min_x = nil
+    min_y = nil
+    max_x = nil
+    max_y = nil
 
     children.each { |child|
       link_box = child[:link].get_paired_residue(self).box
 
-      if link_box[:x1] < min_x
+      if min_x == nil || link_box[:x1] < min_x
         min_x = link_box[:x1]
       end
-      if link_box[:x2] > max_x
+      if max_x == nil || link_box[:x2] > max_x
         max_x = link_box[:x2]
       end
-      if link_box[:y1] < min_y
+      if min_y == nil || link_box[:y1] < min_y
         min_y = link_box[:y1]
       end
-      if link_box[:y2] > max_y
+      if max_y == nil || link_box[:y2] > max_y
         max_y = link_box[:y2]
       end      
     }
-    if position[:x1] < min_x
+    if min_x == nil || position[:x1] < min_x
       min_x = position[:x1]
     end
-    if position[:y1] < min_y
+    if min_y == nil || position[:y1] < min_y
       min_y = position[:y1]
     end
-    if position[:x2] > max_x
+    if max_x == nil || position[:x2] > max_x
       max_x = position[:x2]
     end
-    if position[:y2] > max_y
+    if max_y == nil || position[:y2] > max_y
       max_y = position[:y2]
     end
 
@@ -173,22 +185,21 @@ module Renderable::Link
   end
 
   def box
-    # FIXME - This should be using Integer min and max values
-    min_x = 100000
-    min_y = 100000
-    max_x = -100000
-    max_y = -100000
+    min_x = nil
+    min_y = nil
+    max_x = nil
+    max_y = nil
     
-    if position[:x1] < min_x
+    if min_x == nil || position[:x1] < min_x
       min_x = position[:x1]
     end
-    if position[:y1] < min_y
+    if min_y == nil || position[:y1] < min_y
       min_y = position[:y1]
     end
-    if position[:x2] > max_x
+    if max_x == nil || position[:x2] > max_x
       max_x = position[:x2]
     end
-    if position[:y2] > max_y
+    if max_y == nil || position[:y2] > max_y
       max_y = position[:y2]
     end
 
@@ -202,16 +213,16 @@ module Renderable::Link
     
     node_box = node.box
     
-    if node_box[:x1] < min_x
+    if min_x == nil || node_box[:x1] < min_x
       min_x = node_box[:x1]
     end
-    if node_box[:x2] > max_x
+    if max_x == nil || node_box[:x2] > max_x
       max_x = node_box[:x2]
     end
-    if node_box[:y1] < min_y
+    if min_y == nil || node_box[:y1] < min_y
       min_y = node_box[:y1]
     end
-    if node_box[:y2] > max_y
+    if max_y == nil || node_box[:y2] > max_y
       max_y = node_box[:y2]
     end
     

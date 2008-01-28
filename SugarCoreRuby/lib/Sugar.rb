@@ -170,6 +170,27 @@ class Sugar
   		}    	
     end
 
+    def depth(start_residue=@root)
+      leaves(start_residue).collect { |l| get_path_to_root(l).size }.max
+    end
+
+    def residues_at_depth(depth,start_residue=@root)
+      if depth == 0
+        return [start_residue]
+      end      
+      return leaves(start_residue).collect { |l| get_path_to_root(l).reverse[depth] }.uniq.compact
+    end
+    
+    def residues_at_depth_by_parent(depth,start_residue=@root)
+      return [[start_residue]] if (depth == 0)
+      
+      parents = Hash.new() { |h,k| h[k] = Array.new() }
+      residues_at_depth(depth,start_residue).each { |r|
+        parents[r.parent] << r
+      }
+      return parents.values || []
+    end
+    
     # The path to the root residue from the specified residue
   	def get_path_to_root(start_residue=@root)
       node_to_root_traversal(start_residue)
