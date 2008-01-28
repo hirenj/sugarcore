@@ -126,6 +126,12 @@ class SvgRenderer
     definitions = doc.root.add_element('svg:defs')
     
   	drawing = doc.root.add_element('svg:g')
+
+  	sugar.underlays.each { |el|
+  	  drawing.add_element(el)
+  	}
+
+
   	linkages = drawing.add_element('svg:g')
   	residues = drawing.add_element('svg:g')
   	labels = drawing.add_element('svg:g')

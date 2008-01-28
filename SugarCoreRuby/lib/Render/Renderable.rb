@@ -6,6 +6,10 @@ module Rectangle
   def width
     (self[:x2] - self[:x1]).abs
   end
+
+  def centre
+    { :x => ( self[:x1] + self[:x2] ) / 2 , :y => ( self[:y1] + self[:y2] ) / 2 }
+  end
   
 end
 
@@ -249,6 +253,12 @@ module Renderable::Sugar
     @overlays = Array.new() unless @overlays
     @overlays
   end
+
+  def underlays
+    @underlays = Array.new() unless @underlays
+    @underlays
+  end
+
   
   def box
     @root.box

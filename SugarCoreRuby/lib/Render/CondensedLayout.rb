@@ -15,10 +15,11 @@ class CondensedLayout
   def layout(sugar)
     remove_layout(sugar)
     do_initial_layout(sugar)
-    do_make_stub_residues(sugar)
+    #do_make_stub_residues(sugar)
     do_box_layout(sugar)
-    do_tree_straightening(sugar)
+    #do_tree_straightening(sugar)
     do_sibling_bunching(sugar)
+    do_center_boxes_more(sugar)
   end
 
   def remove_layout(sugar)
@@ -174,6 +175,20 @@ class CondensedLayout
       current = negative_siblings.shift
     end
 
+  end
+
+  def do_center_boxes_more(sugar)
+    (0..(sugar.depth-1)).to_a.reverse.each { |dep|
+      sugar.residues_at_depth_by_parent(dep).each { |sib_group|        
+        if sib_group[0] != nil
+          par_res = sib_group[0]
+          res_center = par_res.centre
+          curr_center = par_res.box.centre
+          delta = curr_center[:y] - res_center[:y]
+          par_res.move(0,delta)
+        end
+      }
+    }    
   end
 
   def calculate_intersection(rec1, rec2)
