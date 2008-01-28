@@ -191,13 +191,26 @@ class SvgRenderer
   def render_anomer(residue)
     linkage = residue.linkage_at_position
     return Element.new('svg:text') unless linkage
-    gradient = linkage.position[:y1] - linkage.position[:y2]
-    if (gradient < 5 && gradient > -5 )
-      gradient = 20
-    end
+
+    xpos = nil
+    ypos = nil
     
-    xpos = -1 * (residue.position[:x1] - 25)
-    ypos = -1 * (linkage.position[:y2] + (gradient / 2))
+    delta_x = (linkage.position[:x1] - linkage.position[:x2]).abs
+    if delta_x < 5
+      xpos = -1 * (residue.position[:x1] - 25 )
+      if linkage.position[:y1] > linkage.position[:y2]
+        ypos = linkage.position[:y1] - 10
+      else
+        ypos = linkage.position[:y2] - 10
+      end
+    else
+      xpos = -1 * (residue.position[:x1] - 25)
+      if linkage.position[:y1] < linkage.position[:y2]
+        ypos = -1 * (residue.position[:y2] - 45)
+      else
+        ypos = -1 * (residue.position[:y1] + 15)
+      end
+    end
     anomer = Element.new('svg:text')
     anomer.add_attributes({ 'x' => xpos, 
                                     'y' => ypos, 
@@ -207,27 +220,63 @@ class SvgRenderer
                                     }
                       )
     anomer.text= residue.anomer ? (residue.anomer+linkage.get_position_for(residue).to_s) : ''
-    return anomer
+    return anomer    
   end
 
   def render_substitution(parent,linkage)
-    xpos = -75 - 1 * (linkage.position[:x1])
-    #ypos = -25 - (linkage.position[:y1]-linkage.position[:y2])
-    gradient = linkage.position[:y2] - linkage.position[:y1]
-    if (gradient < 5 && gradient > -5 )
-      gradient = 20
+    residue = linkage.get_paired_residue(parent)
+
+    xpos = nil
+    ypos = nil
+    
+    delta_x = (linkage.position[:x1] - linkage.position[:x2]).abs
+    if delta_x < 5
+      xpos = -1 * (residue.position[:x1] - 25 )
+      if linkage.position[:y1] > linkage.position[:y2]
+        ypos = linkage.position[:y1] - 10
+      else
+        ypos = linkage.position[:y2] - 10
+      end
+    else
+      xpos = -1 * (residue.position[:x1] - 55)
+      if linkage.position[:y1] < linkage.position[:y2]
+        ypos = -1 * (residue.position[:y2] - 45)
+      else
+        ypos = -1 * (residue.position[:y1] + 15)
+      end
     end
-    ypos =  - 1 * ( linkage.position[:y1] + (gradient / 2) )
-    anomer = Element.new('svg:text')
-    anomer.add_attributes({ 'x' => xpos, 
+    subst = Element.new('svg:text')
+    subst.add_attributes({ 'x' => xpos, 
                                     'y' => ypos, 
                                     'font-size'=>'25',
+                                    'text-anchor' => 'middle',
                                     'style'=>'fill:#000000;stroke:#000000;stroke-width:1;'
                                     }
                       )
-    anomer.text= linkage.get_position_for(parent)
-    return anomer    
+    subst.text = "- #{linkage.get_position_for(parent)}"
+    return subst    
   end
+
+
+  # 
+  # def render_substitution(parent,linkage)
+  #   xpos = -75 - 1 * (linkage.position[:x1])
+  #   #ypos = -25 - (linkage.position[:y1]-linkage.position[:y2])
+  #   gradient = linkage.position[:y2] - linkage.position[:y1]
+  #   if (gradient < 5 && gradient > -5 )
+  #     gradient = 20
+  #   end
+  #   ypos =  - 1 * ( linkage.position[:y1] + (gradient / 2) )
+  #   anomer = Element.new('svg:text')
+  #   anomer.add_attributes({ 'x' => xpos, 
+  #                                   'y' => ypos, 
+  #                                   'font-size'=>'25',
+  #                                   'style'=>'fill:#000000;stroke:#000000;stroke-width:1;'
+  #                                   }
+  #                     )
+  #   anomer.text= linkage.get_position_for(parent)
+  #   return anomer    
+  # end
 
   def render_link(linkage)
     if (scheme == 'oxford' && linkage.is_unknown? )
