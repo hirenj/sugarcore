@@ -209,14 +209,23 @@ class Monosaccharide
     if (! can_accept?(linkage))
       raise MonosaccharideException.new("Cannot attach linkage to this monosaccharide, attachment point already consumed - want #{linkage.second_position}")
     end
+
     @children.push( :link => linkage, :residue => mono )
+    
     linkage.set_first_residue(mono)
     linkage.set_second_residue(self)
     mono.parent_position = linkage.get_position_for(mono)
     return mono
   end
 
+  def is_parent_of?(mono)
+    @children.collect { |r| r[:residue] }.include?(mono)
+  end
+  
   def remove_child(mono)
+    if ! self.is_parent_of?(mono)
+      raise MonosaccharideException.new("This residue is not the parent of the given residue")
+    end
     @children.delete_if { |kid| kid[:residue] == mono }
   end
 
