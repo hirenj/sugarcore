@@ -56,9 +56,11 @@ module Sugar::IO::GlycoCT::Builder
     attr_accessor :link_id, :from, :to, :from_position, :to_position
     def self.factory(string)
       string.gsub!(/\d(\|\d)+/,'u')
-      string.gsub!(/-1/,'u')
       link = new()
-      link.link_id, link.from, link.from_position, link.to_position, link.to = [ string.scan(/(\d+):(\d+)[a-z]?\(([\du]+)[\-\+]([\du]+)\)(\d+)[a-z]?/)].flatten
+      link.link_id, link.from, link.from_position, link.to_position, link.to = [ string.scan(/(\d+):(\d+)[a-z]?\(([\du\-]+)[\-\+]([\du]+)\)(\d+)[a-z]?/)].flatten
+      if link.from_position == '-1'
+        link.from_position = 'u'
+      end
       if link.link_id == nil
         raise LinkageException.new("Could not parse linkage string #{string}")
       end
