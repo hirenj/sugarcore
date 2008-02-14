@@ -371,6 +371,20 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<name ns="glyde" value="dglc-hex-0:0|1:aldi"/>
 		<name ns="ic" value="Glc-ol"/>
 	</unit>
+	<unit id="dglcp|1a">
+		<name ns="dkfz" value="D-Glcp|1a" />
+		<name ns="ic" value="Glc1A"/>
+		<name ns="ecdb" value="dglcp|1a"/>
+		<name ns="glyde" value="dglc-hex-1:5|1:a"/>
+		<name ns="stephan" value="-dglc-hex|1:a"/>
+	</unit>
+	<unit id="dglcp|2a">
+		<name ns="dkfz" value="D-Glcp|2a" />
+		<name ns="ic" value="Glc2A"/>
+		<name ns="ecdb" value="dglcp|2a"/>
+		<name ns="glyde" value="dglc-hex-1:5|2:a"/>
+		<name ns="stephan" value="-dglc-hex|2:a"/>
+	</unit>
 	<unit id="dglcp|6a" >
 		<name ns="dkfz" value="D-Glcp|6a" />
 		<name ns="ic" value="GlcA" />
@@ -440,6 +454,13 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 	<unit id="dglcol|2nac">
 		<name ns="glyde" value="dglc-hex-0:0|1:aldi|2n-acetyl"/>
 		<name ns="ic" value="GlcNAc-ol"/>
+	</unit>
+	<unit id="dglcp|6d|2nac">
+		<name ns="dkfz" value="D-Glcp|6d|2nac"/>
+		<name ns="ic" value="QuipNAc"/>
+		<name ns="ecdb" value="dglcp|6d|2nac"/>
+		<name ns="glyde" value="dglc-hex-1:5|6d|2n-acetyl"/>
+		<name ns="stephan" value="-dglc-hex(6)d(2)n-acetyl"/>		
 	</unit>
 	<unit id="dglcp|2n" >
 		<name ns="dkfz" value="D-Glcp|2n" />		
@@ -595,6 +616,11 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  </svg:svg>
 		</disp:icon>
 	</unit>
+	<unit id="dneu">
+		<name ns="ecdb" value="dneu|1a|2keto|3d|5n"/>
+		<name ns="glyde" value="dgro-dgal-non-2:6|1:a|2:keto|3:d"/>
+		<name ns="ic" value="Neu"/>
+	</unit>
 	<unit id="dneu|1a|2keto|3d|5nac" >
 		<name ns="dkfz" value="D-Neu|1a|2keto|3d|5nac" />
 		<name ns="ic" value="NeuAc" />
@@ -655,6 +681,12 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		<property name="ringsize" value="6"/>
 		<property name="class" value="ic:Hex"/>
 	</unit>	
+	<unit id="lmanp|6d" >
+		<name ns="dkfz" value="L-Manp|6d" />
+		<name ns="ic" value="LRha" />
+		<name ns="ecdb" value="lmanp|6d"/>
+		<name ns="glyde" value="lman-hex-1:5|6d"/>
+	</unit>
 	<unit id="dxylf" >
 		<name ns="dkfz" value="D-Xylf" />
 		<name ns="ic" value="Xyl" />
