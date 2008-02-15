@@ -176,7 +176,8 @@ class SvgRenderer
     sugbox[:y1] = -1*sugbox[:y1]
     sugbox[:y2] = -1*sugbox[:y2]
     
-  	doc.root.add_attribute('viewBox', "#{sugbox[:x2]} #{sugbox[:y2]} #{sugbox.width} #{sugbox.height}")
+  	doc.root.add_attribute('viewBox', "#{sugbox[:x2] - padding} #{sugbox[:y2] - padding } #{sugbox.width + padding} #{sugbox.height + padding}")
+  	  	
     if width == :auto
       doc.root.add_attribute('width', sugbox.width)
       doc.root.add_attribute('height', sugbox.height)
@@ -371,5 +372,6 @@ class SvgRenderer
     @scheme = "boston"
     @prototypes = Hash.new()
     @use_prototypes = true
+    @padding = 0
   end
 end
