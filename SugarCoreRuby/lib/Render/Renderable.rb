@@ -188,6 +188,10 @@ module Renderable::Link
     return result
   end
 
+  def length
+    Math.hypot(width,height)
+  end
+
   def box
     min_x = nil
     min_y = nil
