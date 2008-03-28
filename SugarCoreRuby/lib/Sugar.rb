@@ -349,7 +349,7 @@ class Sugar
     	loop_residue = @root
     	
     	(linkage_path || []).each{ |linkage_position|
-    		loop_residue = loop_residue.residue_at_position(linkage_position)
+    		loop_residue = loop_residue.residue_at_position(linkage_position) || return
     	}
     	return loop_residue
     end
