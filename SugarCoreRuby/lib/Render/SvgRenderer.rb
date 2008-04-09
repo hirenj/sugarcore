@@ -220,6 +220,9 @@ class SvgRenderer
                                     'style'=>'fill:#000000;stroke:#000000;stroke-width:1;'
                                     }
                       )
+    res_anomer = residue.anomer
+    res_anomer.gsub!(/b/,'β')
+    res_anomer.gsub!(/a/,'α')
     anomer.text= residue.anomer ? (residue.anomer+linkage.get_position_for(residue).to_s) : ''
     return anomer    
   end
@@ -239,7 +242,7 @@ class SvgRenderer
         ypos = linkage.position[:y2] - 10
       end
     else
-      xpos = -1 * (residue.position[:x1] - 55)
+      xpos = -1 * (residue.position[:x1] - 65)
       if linkage.position[:y1] < linkage.position[:y2]
         ypos = -1 * (residue.position[:y2] - 45)
       else
@@ -254,7 +257,7 @@ class SvgRenderer
                                     'style'=>'fill:#000000;stroke:#000000;stroke-width:1;'
                                     }
                       )
-    subst.text = "- #{linkage.get_position_for(parent)}"
+    subst.text = " → #{linkage.get_position_for(parent)}"
     return subst    
   end
 
