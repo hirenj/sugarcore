@@ -10,6 +10,7 @@ class SvgRenderer
   XLINK_NS = "http://www.w3.org/1999/xlink"
   
   attr_reader :min_y,:max_x,:max_y
+  attr_accessor :font_size
   
   def use_prototypes?
     @use_prototypes
@@ -49,7 +50,6 @@ class SvgRenderer
       end
     end
   end
-
     
   def initialise_prototypes
     throw Exception.new("Sugar is not renderable") unless sugar.kind_of? Renderable
@@ -215,7 +215,7 @@ class SvgRenderer
     anomer = Element.new('svg:text')
     anomer.add_attributes({ 'x' => xpos, 
                                     'y' => ypos, 
-                                    'font-size'=>'25',
+                                    'font-size'=>"#{font_size}",
                                     'text-anchor' => 'middle',
                                     'style'=>'fill:#000000;stroke:#000000;stroke-width:1;'
                                     }
@@ -235,14 +235,14 @@ class SvgRenderer
     
     delta_x = (linkage.position[:x1] - linkage.position[:x2]).abs
     if delta_x < 5
-      xpos = -1 * (residue.position[:x1] - 25 )
+      xpos = -1 * (residue.position[:x1] - font_size )
       if linkage.position[:y1] > linkage.position[:y2]
         ypos = linkage.position[:y1] - 10
       else
         ypos = linkage.position[:y2] - 10
       end
     else
-      xpos = -1 * (residue.position[:x1] - 65)
+      xpos = -1 * (residue.position[:x1] - 15 - (2 * font_size) )
       if linkage.position[:y1] < linkage.position[:y2]
         ypos = -1 * (residue.position[:y2] - 45)
       else
@@ -252,7 +252,7 @@ class SvgRenderer
     subst = Element.new('svg:text')
     subst.add_attributes({ 'x' => xpos, 
                                     'y' => ypos, 
-                                    'font-size'=>'25',
+                                    'font-size'=>"#{font_size}",
                                     'text-anchor' => 'middle',
                                     'style'=>'fill:#000000;stroke:#000000;stroke-width:1;'
                                     }
@@ -376,5 +376,6 @@ class SvgRenderer
     @prototypes = Hash.new()
     @use_prototypes = true
     @padding = 0
+    @font_size = 25
   end
 end

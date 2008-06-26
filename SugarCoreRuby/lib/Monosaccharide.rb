@@ -300,6 +300,11 @@ class Monosaccharide
     return newarray
   end
 
+  def siblings
+    parent.children.collect { |child| child[:residue] } - [ self ]
+  end
+
+
   # Test for seeing if a residue is a parent of this residue
   #   mono.children[0][:residue].child_of?(mono)             # true
   #   mono.children[0][:residue].children[0][:residue].child_of?(mono) # true
@@ -339,7 +344,7 @@ class Monosaccharide
   #   sugar = Sugar.new()
   #   sugar.sequence = Gal(b1-3)GlcNAc
   #   root.residue_at_position(3)       # Gal
-  #   glcnac.residue_at_position(1)     # GlcNAc
+  #   gal.residue_at_position(1)     # GlcNAc
   #   glcnac.residue_at_position(3)     # nil  
 	def residue_at_position(attachment_position)
 		if ( attachment_position_consumed?(attachment_position) )

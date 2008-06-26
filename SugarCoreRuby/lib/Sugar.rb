@@ -171,7 +171,11 @@ class Sugar
     end
 
     def depth(start_residue=@root)
-      leaves(start_residue).collect { |l| get_path_to_root(l).size }.max
+      absolute_depth = leaves(start_residue).collect { |l| get_path_to_root(l).size }.max
+      if start_residue != @root
+        absolute_depth -= get_path_to_root(start_residue).size
+      end
+      return absolute_depth
     end
 
     def residues_at_depth(depth,start_residue=@root)
