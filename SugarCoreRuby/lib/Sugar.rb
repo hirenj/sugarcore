@@ -122,7 +122,7 @@ class Sugar
     def linkages(start_residue=@root)
       return residue_composition(start_residue).collect { |r| r.linkage_at_position }
     end
-    
+
     # Compute the sequence for this sugar from a particular start residue.
     # If no residue is specified, the sequence is calculated from the root 
     # of the sugar.

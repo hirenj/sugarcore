@@ -175,15 +175,15 @@ class SvgRenderer
     sugbox[:x2] = -1*sugbox[:x2]
     sugbox[:y1] = -1*sugbox[:y1]
     sugbox[:y2] = -1*sugbox[:y2]
-    
-  	doc.root.add_attribute('viewBox', "#{sugbox[:x2] - padding} #{sugbox[:y2] - padding } #{sugbox.width + padding} #{sugbox.height + padding}")
-  	  	
+            
+  	doc.root.add_attribute('viewBox', "#{sugbox[:x2] - padding} #{sugbox[:y2] - padding } #{sugbox.width + 2*padding} #{sugbox.height + 2*padding}")
+  	  	  	
     if width == :auto
-      doc.root.add_attribute('width', sugbox.width)
-      doc.root.add_attribute('height', sugbox.height)
+      doc.root.add_attribute('width', (sugbox.width + padding))
+      doc.root.add_attribute('height', (sugbox.height + padding))
     elsif width && width < 10
-      doc.root.add_attribute('width', (sugbox.width * width).floor)
-      doc.root.add_attribute('height', (sugbox.height * width).floor)
+      doc.root.add_attribute('width', ((sugbox.width + padding) * width).floor)
+      doc.root.add_attribute('height', ((sugbox.height + padding) * width).floor)
     end
   	doc.root.add_attribute('preserveAspectRatio', 'xMinYMin')
     return doc
@@ -221,8 +221,8 @@ class SvgRenderer
                                     }
                       )
     res_anomer = residue.anomer
-    res_anomer.gsub(/b/,'β')
-    res_anomer.gsub(/a/,'α')
+    res_anomer = res_anomer.gsub(/b/,'β')
+    res_anomer = res_anomer.gsub(/a/,'α')
     anomer.text= residue.anomer ? (res_anomer+linkage.get_position_for(residue).to_s) : ''
     return anomer    
   end
