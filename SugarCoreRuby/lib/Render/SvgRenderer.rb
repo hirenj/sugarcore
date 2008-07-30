@@ -221,9 +221,9 @@ class SvgRenderer
                                     }
                       )
     res_anomer = residue.anomer
-    res_anomer.gsub!(/b/,'β')
-    res_anomer.gsub!(/a/,'α')
-    anomer.text= residue.anomer ? (residue.anomer+linkage.get_position_for(residue).to_s) : ''
+    res_anomer.gsub(/b/,'β')
+    res_anomer.gsub(/a/,'α')
+    anomer.text= residue.anomer ? (res_anomer+linkage.get_position_for(residue).to_s) : ''
     return anomer    
   end
 
