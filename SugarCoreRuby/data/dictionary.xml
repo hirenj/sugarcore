@@ -231,10 +231,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
 		  <svg:svg>
-		    <svg:path
-		       d="M 100 50 A 50 50 0 1 1 0,50 A 50 50 0 1 1 100 50 z"
-		       style="fill:#fffc00;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-		       />
+			<svg:circle cx="50" cy="50" r="49" style="fill:#fffc00;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
 		  </svg:svg>
 		</disp:icon>
 		<disp:icon scheme="oxford">
@@ -278,10 +275,10 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="6" x="50" y="50" />
 			<svg:svg>
 				<svg:rect
-				   width="100"
-				   height="100"
-				   x="0"
-				   y="0" style="fill:#fffc00;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
+				   width="98"
+				   height="98"
+				   x="1"
+				   y="1" style="fill:#fffc00;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
 				   />
 			</svg:svg>
 		</disp:icon>
@@ -345,10 +342,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
 		  <svg:svg>
-		    <svg:path
-		       d="M 99.500027 50.000000 A 49.500027 49.500027 0 1 1  0.49997330,50.000000 A 49.500027 49.500027 0 1 1  99.500027 50.000000 z"
-		       transform="translate(-2.670288e-5,-2.670288e-5)"  style="fill:#0008ff;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
-		       />
+			<svg:circle cx="50" cy="50" r="49" style="fill:#0008ff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
 		  </svg:svg>
 		</disp:icon>
 		<disp:icon scheme="oxford">
@@ -427,10 +421,10 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="6" x="50" y="50" />
 			<svg:svg>
 			    <svg:rect
-			       width="100"
-			       height="100"
-			       x="0"
-			       y="0"       style="fill:#0008ff;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
+			       width="98"
+			       height="98"
+			       x="1"
+			       y="1"       style="fill:#0008ff;fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000000;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
 			       />
 			</svg:svg>
 		</disp:icon>
@@ -541,11 +535,7 @@ style="fill:#000000;stroke:#000000;stroke-width:1;"
 		  <disp:anchor linkage="5" x="50" y="50" />
 		  <disp:anchor linkage="6" x="50" y="50" />
 		  <svg:svg>
-		    <svg:path
-		       d="M 95 47 A 47 47 0 1 1  0.5,47 A 47 47 0 1 1  95 47 z"
-		       transform="translate(-2.670288e-5,-2.670288e-5)"
-		       style="fill:#00ff14;fill-opacity:1.0000000;stroke:#000000;stroke-width:2.0;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
-		       />
+			<svg:circle cx="50" cy="50" r="49" style="fill:#00ff14;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>		
 		  </svg:svg>
 		</disp:icon>
 		<disp:icon scheme="oxford">

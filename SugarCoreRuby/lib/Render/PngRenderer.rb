@@ -25,6 +25,10 @@ class PngRenderer
   def render(sugar)
     svg_string = @svg_renderer.render(sugar).to_s
     svg_string.gsub!(/svg\:/,'')
+    svg_string.gsub!(/&#8594;/,'-')
+    svg_string.gsub!(/&#945;/,'a')
+    svg_string.gsub!(/&#946;/,'b')
+    
     temp_svg = Tempfile.new('pngrender.svg')
     temp_svg << svg_string
     temp_svg.close

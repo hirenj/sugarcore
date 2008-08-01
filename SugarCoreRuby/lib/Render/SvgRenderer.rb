@@ -212,17 +212,18 @@ class SvgRenderer
         ypos = -1 * (residue.position[:y1] + 15)
       end
     end
-    anomer = Element.new('svg:text')
+    anomer = Element.new('svg:text',nil,{:raw => :all})
     anomer.add_attributes({ 'x' => xpos, 
                                     'y' => ypos, 
                                     'font-size'=>"#{font_size}",
+                                    'font-family' => 'Helvetica,Arial,Sans',
                                     'text-anchor' => 'middle',
-                                    'style'=>'fill:#000000;stroke:#000000;stroke-width:1;'
+                                    'style'=>'fill:#000000;stroke:#000000;stroke-width:0pt;'
                                     }
                       )
     res_anomer = residue.anomer
-    res_anomer = res_anomer.gsub(/b/,'β')
-    res_anomer = res_anomer.gsub(/a/,'α')
+    res_anomer = res_anomer.gsub(/b/,'&#946;')
+    res_anomer = res_anomer.gsub(/a/,'&#945;')
     anomer.text= residue.anomer ? (res_anomer+linkage.get_position_for(residue).to_s) : ''
     return anomer    
   end
@@ -249,16 +250,17 @@ class SvgRenderer
         ypos = -1 * (residue.position[:y1] + 15)
       end
     end
-    subst = Element.new('svg:text')
+    subst = Element.new('svg:text',nil,{:raw => :all})
     subst.add_attributes({ 'x' => xpos, 
                                     'y' => ypos, 
                                     'font-size'=>"#{font_size}",
+                                    'font-family' => 'Helvetica,Arial,Sans',
                                     'text-anchor' => 'middle',
-                                    'style'=>'fill:#000000;stroke:#000000;stroke-width:1;'
+                                    'style'=>'fill:#000000;stroke:#000000;stroke-width:0pt;'
                                     }
                       )
-    subst.text = " → #{linkage.get_position_for(parent)}"
-    return subst    
+    subst.text = " &#8594; #{linkage.get_position_for(parent)}"
+    return subst
   end
 
 
