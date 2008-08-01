@@ -226,13 +226,15 @@ class SvgRenderer
     anomer = Element.new('svg:text',nil,{:raw => :all})
     anomer.add_attributes({ 'x' => xpos, 
                                     'y' => ypos, 
-                                    'transform' => "rotate(#{angle},#{-1*residue.centre[:x]},#{-1*residue.centre[:y]})",
                                     'font-size'=>"#{font_size}",
                                     'font-family' => 'Helvetica,Arial,Sans',
                                     'text-anchor' => 'middle',
                                     'style'=>'fill:#000000;stroke:#000000;stroke-width:0pt;'
                                     }
                       )
+    if use_prototypes?
+      anomer.add_attribute('transform',"rotate(#{angle},#{-1*residue.centre[:x]},#{-1*residue.centre[:y]})")
+    end
     res_anomer = residue.anomer
     res_anomer = res_anomer.gsub(/b/,'&#946;')
     res_anomer = res_anomer.gsub(/a/,'&#945;')
@@ -275,13 +277,17 @@ class SvgRenderer
 
     subst.add_attributes({  'x' => xpos, 
                             'y' => ypos, 
-                            'transform' => "rotate(#{angle},#{-1*residue.centre[:x]},#{-1*residue.centre[:y]})",
                             'font-size'=>"#{font_size}",
                             'font-family' => 'Helvetica,Arial,Sans',
                             'text-anchor' => 'middle',
                             'style'=>'fill:#000000;stroke:#000000;stroke-width:0pt;'
                           }
                       )
+
+    if use_prototypes?
+      subst.add_attribute('transform',"rotate(#{angle},#{-1*residue.centre[:x]},#{-1*residue.centre[:y]})")
+    end
+
     subst.text = " &#8594; #{linkage.get_position_for(parent)}"
     return subst
   end
