@@ -192,6 +192,8 @@ class SvgRenderer
   end
 
   def render_anomer(residue)
+    return Element.new('svg:text') if scheme == 'oxford'
+
     linkage = residue.linkage_at_position
     return Element.new('svg:text') unless linkage
 
@@ -245,6 +247,7 @@ class SvgRenderer
   end
 
   def render_substitution(parent,linkage)
+    return Element.new('svg:text') if scheme == 'oxford'
     residue = linkage.get_paired_residue(parent)
 
     xpos = nil
