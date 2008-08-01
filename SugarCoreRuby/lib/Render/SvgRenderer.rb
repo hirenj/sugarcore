@@ -233,7 +233,7 @@ class SvgRenderer
                                     }
                       )
     if use_prototypes?
-      anomer.add_attribute('transform',"rotate(#{angle},#{-1*residue.centre[:x]},#{-1*residue.centre[:y]})")
+      anomer.add_attribute('transform',"rotate(#{angle},#{-1*linkage.position[:x2]},#{-1*residue.centre[:y]})")
     end
     res_anomer = residue.anomer
     res_anomer = res_anomer.gsub(/b/,'&#946;')
@@ -285,7 +285,7 @@ class SvgRenderer
                       )
 
     if use_prototypes?
-      subst.add_attribute('transform',"rotate(#{angle},#{-1*residue.centre[:x]},#{-1*residue.centre[:y]})")
+      subst.add_attribute('transform',"rotate(#{angle},#{-1*linkage.position[:x2]},#{-1*residue.centre[:y]})")
     end
 
     subst.text = " &#8594; #{linkage.get_position_for(parent)}"
