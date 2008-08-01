@@ -65,14 +65,16 @@ class SvgRenderer
         group = Element.new('svg:svg')
         group.add_attributes({ 'viewBox' => '0 0 100 100' })
 #        group.add_element('svg:rect', { 'x' => '0', 'y' => '0', 'width' => '100', 'height' => '100', 'style' => 'fill:#ffffff;' })
+        my_name = res.name($~[1].to_sym)        
         group.add_element('svg:text', { #'x' => '50', 
                                         #'y' => '45', 
-                                        'font-size'=>'28',
+                                        'font-family' => 'Helvetica, Arial, Sans-Serif',
+                                        'font-size'=> my_name.size < 5 ? '28' : '24',
                                         'text-anchor' => 'middle',
                                         'transform' => 'translate(45,60)',
-                                        'style'=>'fill:#0000ff;stroke:#000000;stroke-width:1;'
+                                        'style'=>'fill:#0000ff;stroke:#000000;stroke-width:0;'
                                         }
-                          ).text=res.name($~[1].to_sym)
+                          ).text=my_name
         group.add_namespace('svg',SVG_ELEMENT_NS)
         prototypes[res_id] = group
         anchors[0] = { :x => 100, :y => 50 }
