@@ -237,6 +237,34 @@ class Sugar
   				 get_attachment_point_path_to_root(start_residue.parent) ].flatten;
   	end
 
+    def get_chains_from_residue(start_residue=@root)
+      if start_residue.name(:ic) == 'GlcNAc'
+        positions = [3,4]
+        next_name = 'Gal'
+      elsif start_residue.name(:ic) == 'Gal'
+        positions = [3,6]
+        next_name = 'GlcNAc'
+      else
+        return []
+      end
+      my_chains = []      
+      positions.each { |pos|
+        residue = start_residue.residue_at_position(pos)
+        if residue && residue.name(:ic) == next_name
+          new_chains = get_chains_from_residue(residue).collect {|arr| [start_residue] + arr }
+          if new_chains.size == 0
+            new_chains = [[start_residue,residue]]
+          end
+          my_chains += new_chains
+        end
+      }
+      if my_chains.size == 0
+        my_chains = [[start_residue]]
+      end
+      return my_chains
+    end
+
+
     # Calculate the intersection of two sugars aligned together at the root
     # returns the residues which have matched up with the given sugar
     def intersect(sugar,&block)

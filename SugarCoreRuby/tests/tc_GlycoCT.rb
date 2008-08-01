@@ -36,8 +36,8 @@ RES
 2b:b-dgalp;
 3s:nac;
 LIN
-1:1o(3+1)2d;
-2:1d(2+1)3n;
+1:1(3-1)2;
+2:1o(2-1)3;
 __FOO__
 
   SMALL_STRUCTURE_AS_IUPAC = 'Gal(b1-3)GlcNAc'

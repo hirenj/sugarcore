@@ -76,8 +76,7 @@ MASSIVE_UNION_STRUCTURES_2 =
 "Fuc(a1-2)Gal(b1-u)[Fuc(a1-u)]GlcNAc(b1-u)[Fuc(a1-2)Gal(b1-u)GlcNAc(b1-u)]Gal(b1-u)GlcNAc(b1-3)Gal"
 ]
   
-  
-  LARGE_STRUCTURE_AS_CT = <<__FOO__
+LARGE_STRUCTURE_AS_CT = <<__FOO__
 RES
 1b:u-dglcp;
 2b:a-dmanp;
@@ -87,17 +86,15 @@ RES
 6b:b-dmanp;
 7s:d;
 8s:nac;
-\\\\\\
 LIN
-1:1o(4+1)5d;
-2:1o(6+1)4d;
-3:5o(4+1)6d;
-4:6o(3+1)2d;
-5:6o(6+1)3d;
-6:1d(2+1)8n;
-7:4d(6+1)7n;
-8:5d(2+1)8n;
-\\\\\\\\\\
+1:1(4-1)5;
+2:1(6-1)4;
+3:5(4-1)6;
+4:6(3-1)2;
+5:6(6-1)3;
+6:1o(2-1)8;
+7:4o(6-1)7;
+8:5o(2-1)8;
 __FOO__
 
 	DebugLog.log_level(5)
@@ -336,36 +333,16 @@ __FOO__
 
   def test_sugar_unique_maker
     sugar = build_multi_sugar_from_string( 'Gal(b1-3)GlcNAc(a1-u)[Fuc(a1-3)GlcNAc(a1-u)]GlcNAc')
-    puts sugar.get_unique_sugar.extend(  Sugar::IO::CondensedIupac::Writer ).sequence
-  end
-
-  def test_union_here
-    seq_a = <<__FOO__
-Fuc(a1-3)[NeuAc(a2-8)NeuAc(a2-u)[Fuc(a1-2)[GalNAc(a1-3)]Gal(b1-4)GalNAc(b1-6)][Fuc(a1-2)[NeuAc(a2-6)][NeuAc(a2-3)][Gal(a1-3)][GalNAc(a1-3)]Gal(b1-4)GlcNAc(b1-6)][Fuc(a1-2)Gal(b1-4)GalNAc(a1-6)][NeuAc(a2-6)][GalNAc(b1-4)][Gal(a1-4)][Gal(a1-3)][Gal(b1-3)[Fuc(a1-4)][Fuc(a1-2)[GalNAc(a1-3)]Gal(b1-4)]GlcNAc(a1-3)][GlcA(b1-3)][NeuGc(a2-3)][NeuAc(a2-3)GalNAc(b1-3)][Gal(b1-3)][NeuGc(a2-8)NeuAc(a2-3)][Fuc(a1-2)Gal(b1-3)[NeuAc(a2-u)[NeuAc(a2-6)][Fuc(a1-2)[Gal(a1-3)]Gal(b1-4)GlcNAc(b1-6)][Gal(a1-4)][NeuAc(a2-8)NeuAc(a2-3)][GlcA(b1-3)][NeuGc(a2-3)][Gal(a1-3)][GalNAc(a1-3)][Fuc(a1-2)[NeuAc(a2-6)][Fuc(a1-3)[Fuc(a1-2)[NeuAc(a2-3)][Gal(a1-3)]Gal(b1-4)]GlcNAc(b1-3)][NeuAc(a2-3)][GalNAc(a1-3)][Gal(a1-3)]Gal(b1-4)GlcNAc(b1-3)]Gal(b1-4)][Fuc(a1-4)][Fuc(a1-3)][GalNAc(a1-3)]GlcNAc(b1-3)][Fuc(a1-2)Gal(b1-4)GalNAc(a1-3)][DFuc(a1-2)][NeuAc(a2-3)[NeuAc(a2-3)Gal(b1-4)GlcNAc(b1-6)][NeuAc(a2-3)Gal(b1-4)GlcNAc(b1-3)]Gal(b1-4)GlcNAc(b1-u)[NeuAc(a2-3)Gal(b1-4)GlcNAc(b1-6)][NeuAc(a2-3)][NeuAc(a2-3)[NeuAc(a2-3)Gal(b1-4)]GlcNAc(b1-3)]Gal(b1-4)GlcNAc(b1-u)]Gal(b1-4)]GlcNAc(b1-3)[Gal(b1-4)GlcNAc(b1-6)]Gal(b1-4)Glc
-__FOO__
-    seq_b = 'NeuAc(a2-3)Gal(b1-3)GalNAc(a1-3)Gal(b1-4)GlcNAc(b1-3)Gal(b1-4)Glc'
-    sug_a = build_multi_sugar_from_string(seq_a)
-    sug_b = build_multi_sugar_from_string(seq_b)
-    matched  = sug_b.intersect(sug_a)
-    matched.each { |r|
-      a_sug = sug_b.get_sugar_to_root(r).extend( Sugar::IO::CondensedIupac::Writer )
-      puts a_sug.sequence
-    }
-    matched  = sug_a.intersect(sug_b)
-    matched.each { |r|
-      a_sug = sug_a.get_sugar_to_root(r).extend( Sugar::IO::CondensedIupac::Writer )
-      puts a_sug.sequence
-    }
+    assert_equal('Fuc(a1-3)[Gal(b1-3)]GlcNAc(a1-u)GlcNAc', sugar.get_unique_sugar.extend(  Sugar::IO::CondensedIupac::Writer ).sequence)
   end
 
   def test_sugar_union_with_unknowns
     sugars = MASSIVE_UNION_STRUCTURES_2.collect { |sug| build_multi_sugar_from_string( sug ) }
     end_sugar = sugars.shift
-#		end_sugar.extend( Sugar::MultiSugar )
     sugars.each { |sug|
       end_sugar.union!(sug.get_unique_sugar)
     }
-    puts end_sugar.sequence
+    assert_equal('Fuc(a1-2)Gal(b1-u)GlcNAc(b1-u)[Fuc(a1-2)Gal(b1-4)GlcNAc(b1-6)][NeuAc(a2-6)][Fuc(a1-2)Gal(b1-u)[Fuc(a1-u)]GlcNAc(b1-u)[Fuc(a1-2)]Gal(b1-u)[Fuc(a1-2)[Gal(b1-4)GlcNAc(b1-6)][NeuAc(a2-6)][Fuc(a1-3)[Gal(b1-4)GlcNAc(b1-3)Gal(b1-4)GlcNAc(b1-3)Gal(b1-4)GlcNAc(b1-3)Gal(b1-4)]GlcNAc(b1-3)][NeuAc(a2-3)]Gal(b1-4)][Fuc(a1-4)][Fuc(a1-3)][Fuc(a1-2)[NeuAc(a2-3)][NeuAc(a2-3)Gal(b1-3)[Fuc(a1-4)]GlcNAc(b1-3)]Gal(b1-3)]GlcNAc(b1-3)][GalNAc(a1-3)][Gal(a1-3)][Fuc(a1-2)][NeuAc(a2-u)]Gal', end_sugar.sequence) 
   end
 
 
@@ -387,16 +364,34 @@ __FOO__
     assert_equal('Man(a1-3)[GlcNAc(b1-4)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc', sugar.sequence)
   end
 
-  def test_multi_sugar_union_again
-    sug_a = build_multi_sugar_from_string('GlcNAc(b1-4)Man(a1-3)[GlcNAc(b1-4)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc')
-    sug_b = build_multi_sugar_from_string('NeuAc(a2-3)[Fuc(a1-3)][Gal(a1-3)]GlcNAc(b1-4)Man(a1-3)Man(b1-4)GlcNAc(b1-4)GlcNAc')
-    puts sug_a.union!(sug_b) {|r,r2|
-      if r.equals?(r2)
-        true
-      else
-        false
-      end
-    }.sequence
+  # def test_multi_sugar_union_again
+  #   sug_a = build_multi_sugar_from_string('GlcNAc(b1-4)Man(a1-3)[GlcNAc(b1-4)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc')
+  #   sug_b = build_multi_sugar_from_string('NeuAc(a2-3)[Fuc(a1-3)][Gal(a1-3)]GlcNAc(b1-4)Man(a1-3)Man(b1-4)GlcNAc(b1-4)GlcNAc')
+  #   
+  #   puts sug_a.union!(sug_b) {|r,r2|
+  #     if r.equals?(r2)
+  #       true
+  #     else
+  #       false
+  #     end
+  #   }.sequence
+  # end
+
+  def test_chain_finding
+    sugar = build_sugar_from_string('Fuc(a1-6)GlcNAc(b1-3)[GlcNAc(b1-6)]Gal(b1-4)GlcNAc(b1-3)Gal(b1-3)[Fuc(a1-6)]GlcNAc')
+    chains = sugar.get_chains_from_residue
+    assert_equal([5,5], chains.collect { |c| c.size })
+    assert_equal(2, (sugar.residue_composition - chains.flatten.uniq).size )
+
+    sugar = build_sugar_from_string('Gal(b1-3)GlcNAc(b1-3)Gal(b1-4)Man(b1-4)GlcNAc(b1-3)Gal(b1-3)GlcNAc')
+    chains = sugar.get_chains_from_residue
+    assert_equal([3], chains.collect { |c| c.size })
+    assert_equal(4, (sugar.residue_composition - chains.flatten.uniq).size )
+
+    sugar = build_sugar_from_string('Gal(b1-3)GlcNAc(b1-3)Gal(b1-4)Man(b1-4)GlcNAc(b1-3)Gal(b1-3)GlcNAc(b1-4)GlcNAc')
+    chains = sugar.get_chains_from_residue
+    assert_equal([1], chains.collect { |c| c.size })
+    assert_equal(7, (sugar.residue_composition - chains.flatten.uniq).size )
   end
 
   
