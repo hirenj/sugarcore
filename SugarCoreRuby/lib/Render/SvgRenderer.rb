@@ -207,14 +207,26 @@ class SvgRenderer
     else
       xpos = -1 * (residue.position[:x1] - 25)
       if linkage.position[:y1] < linkage.position[:y2]
-        ypos = -1 * (residue.position[:y2] - 45)
+        ypos = -1 * (residue.position[:y2] - 25)
       else
         ypos = -1 * (residue.position[:y1] + 15)
       end
     end
+  
+    tan_x = (linkage.position[:x1] - linkage.position[:x2]).to_f
+    tan_y = (linkage.position[:y1] - linkage.position[:y2]).to_f
+
+    angle = 0
+    
+    if tan_x != 0
+      angle = (180 / Math::PI ) * Math.atan( tan_y / tan_x )
+    end
+    
+    
     anomer = Element.new('svg:text',nil,{:raw => :all})
     anomer.add_attributes({ 'x' => xpos, 
                                     'y' => ypos, 
+                                    'transform' => "rotate(#{angle},#{-1*residue.centre[:x]},#{-1*residue.centre[:y]})",
                                     'font-size'=>"#{font_size}",
                                     'font-family' => 'Helvetica,Arial,Sans',
                                     'text-anchor' => 'middle',
@@ -245,19 +257,30 @@ class SvgRenderer
     else
       xpos = -1 * (residue.position[:x1] - 15 - (2 * font_size) )
       if linkage.position[:y1] < linkage.position[:y2]
-        ypos = -1 * (residue.position[:y2] - 45)
+        ypos = -1 * (residue.position[:y2] - 25)
       else
         ypos = -1 * (residue.position[:y1] + 15)
       end
     end
     subst = Element.new('svg:text',nil,{:raw => :all})
-    subst.add_attributes({ 'x' => xpos, 
-                                    'y' => ypos, 
-                                    'font-size'=>"#{font_size}",
-                                    'font-family' => 'Helvetica,Arial,Sans',
-                                    'text-anchor' => 'middle',
-                                    'style'=>'fill:#000000;stroke:#000000;stroke-width:0pt;'
-                                    }
+    
+    tan_x = (linkage.position[:x1] - linkage.position[:x2]).to_f
+    tan_y = (linkage.position[:y1] - linkage.position[:y2]).to_f
+
+    angle = 0
+    
+    if tan_x != 0
+      angle = (180 / Math::PI ) * Math.atan( tan_y / tan_x )
+    end
+
+    subst.add_attributes({  'x' => xpos, 
+                            'y' => ypos, 
+                            'transform' => "rotate(#{angle},#{-1*residue.centre[:x]},#{-1*residue.centre[:y]})",
+                            'font-size'=>"#{font_size}",
+                            'font-family' => 'Helvetica,Arial,Sans',
+                            'text-anchor' => 'middle',
+                            'style'=>'fill:#000000;stroke:#000000;stroke-width:0pt;'
+                          }
                       )
     subst.text = " &#8594; #{linkage.get_position_for(parent)}"
     return subst
