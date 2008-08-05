@@ -241,9 +241,15 @@ class Sugar
       if start_residue.name(:ic) == 'GlcNAc'
         positions = [3,4]
         next_name = 'Gal'
+        if start_residue.parent && start_residue.parent.name(:ic) != 'Gal'
+          return []
+        end
       elsif start_residue.name(:ic) == 'Gal'
         positions = [3,6]
         next_name = 'GlcNAc'
+        if start_residue.parent && start_residue.parent.name(:ic) != 'GlcNAc'
+          return []
+        end
       else
         return []
       end

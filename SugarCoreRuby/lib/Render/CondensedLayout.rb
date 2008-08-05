@@ -1,7 +1,7 @@
 class CondensedLayout
 
   DEFAULT_NODE_DIMENSIONS = { :width => 100, :height => 100 }
-  DEFAULT_NODE_SPACING = { :x => 300, :y => 100 }
+  DEFAULT_NODE_SPACING = { :x => 150, :y => 100 }
 
   attr_accessor :node_dimensions
   attr_accessor :node_spacing

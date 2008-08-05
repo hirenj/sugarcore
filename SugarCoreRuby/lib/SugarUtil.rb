@@ -9,8 +9,11 @@ module LinkageWriter
 end
 
 class SugarUtil
-  def self.FindDisaccharides(sugar)
-    residues = sugar.residue_composition
+  def self.FindDisaccharides(sugar,start_residue=nil)
+    if start_residue == nil
+      start_residue = sugar.root
+    end
+    residues = sugar.residue_composition(start_residue)
     all_links = Hash.new() { |h,k| h[k] = Array.new() }
     residues.each { |res|
       res.children.each { |kid|
