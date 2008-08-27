@@ -392,6 +392,12 @@ __FOO__
     chains = sugar.get_chains_from_residue
     assert_equal([1], chains.collect { |c| c.size })
     assert_equal(7, (sugar.residue_composition - chains.flatten.uniq).size )
+    
+    sugar = build_sugar_from_string('NeuAc(a2-3)Gal(b1-4)GlcNAc(b1-u)[NeuAc(a2-3)Gal(b1-4)GlcNAc(b1-3)[NeuAc(a2-3)Gal(b1-4)GlcNAc(b1-6)]Gal(b1-4)GlcNAc(b1-u)]Gal(b1-4)GlcNAc(b1-u)[NeuAc(a2-3)Gal(b1-4)GlcNAc(b1-u)]Gal(b1-4)GlcNAc(b1-3)Gal')
+    chains = sugar.get_chains_from_residue
+    assert_equal([3], chains.collect { |c| c.size })
+    assert_equal(17, (sugar.residue_composition - chains.flatten.uniq).size )
+    
   end
 
   
