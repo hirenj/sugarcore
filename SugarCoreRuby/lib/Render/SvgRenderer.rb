@@ -86,6 +86,7 @@ class SvgRenderer
         anchors[6] = { :x => 100, :y => 50 }
       else
         prototypes[res_id] = XPath.first(res.raw_data_node, "disp:icon[@scheme='#{scheme}']/svg:svg", { 'disp' => DISPLAY_ELEMENT_NS, 'svg' => SVG_ELEMENT_NS })
+        prototypes[res_id].add_namespace('svg',SVG_ELEMENT_NS)
       end
       if prototypes[res_id] == nil
         prototypes[res_id] = prototypes[nil_mono.name(:id)]
