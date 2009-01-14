@@ -226,6 +226,7 @@ class Monosaccharide
     if ! self.is_parent_of?(mono)
       raise MonosaccharideException.new("This residue is not the parent of the given residue")
     end
+    release_attachment_position(mono.paired_residue_position)
     @children.delete_if { |kid| kid[:residue] == mono }
   end
 

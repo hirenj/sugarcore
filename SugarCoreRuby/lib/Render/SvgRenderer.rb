@@ -75,7 +75,6 @@ class SvgRenderer
                                         'style'=>'fill:#0000ff;stroke:#000000;stroke-width:0;'
                                         }
                           ).text=my_name
-        group.add_namespace('svg',SVG_ELEMENT_NS)
         prototypes[res_id] = group
         anchors[0] = { :x => 100, :y => 50 }
         anchors[1] = { :x => 0, :y => 50 }
@@ -86,11 +85,11 @@ class SvgRenderer
         anchors[6] = { :x => 100, :y => 50 }
       else
         prototypes[res_id] = XPath.first(res.raw_data_node, "disp:icon[@scheme='#{scheme}']/svg:svg", { 'disp' => DISPLAY_ELEMENT_NS, 'svg' => SVG_ELEMENT_NS })
-        prototypes[res_id].add_namespace('svg',SVG_ELEMENT_NS)
       end
       if prototypes[res_id] == nil
         prototypes[res_id] = prototypes[nil_mono.name(:id)]
       end
+      prototypes[res_id].add_namespace('svg',SVG_ELEMENT_NS)
       
       prototypes[res_id].add_attribute('width', 100)
       prototypes[res_id].add_attribute('height', 100)
