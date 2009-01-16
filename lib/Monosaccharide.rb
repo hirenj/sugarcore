@@ -296,7 +296,7 @@ class Monosaccharide
   #++
   def children
     newarray = @children.sort_by { |a|
-    	a[:link].get_position_for(self)
+  	  a[:link].get_position_for(self)
     }
     return newarray
   end

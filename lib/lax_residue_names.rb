@@ -25,6 +25,8 @@ module Sugar::IO::CondensedIupac::Builder
   HIDDEN_RESIDUES = {    
   }
 
+  alias_method :builder_factory, :monosaccharide_factory
+
   def monosaccharide_factory(name)
     begin
       my_res = builder_factory(name)
