@@ -20,18 +20,18 @@ module Sugar::IO::CondensedIupac::LinkageBuilder
 
   def read_linkage(linkage_string)
   	if linkage_string =~ /([abu])([\d\?u])-([\d\?u])/
-		result = {}
-		@anomer = $1
-		if @first_position =~ /[\?u]/
-		  @first_position = -1
-	  end
-		if @second_position =~ /[\?u]/
-		  @second_position = -1
-	  end
+  		result = {}
+  		@anomer = $1
+  		if @first_position =~ /[\?u]/
+  		  @first_position = -1
+  	  end
+  		if @second_position =~ /[\?u]/
+  		  @second_position = -1
+  	  end
 
-		@first_position = $2.to_i
-		@second_position = $3.to_i
-		return result
+  		@first_position = $2.to_i
+  		@second_position = $3.to_i
+  		return result
   	else
   		raise MonosaccharideException.new("Linkage #{linkage_string} is not a valid linkage")
   	end    
